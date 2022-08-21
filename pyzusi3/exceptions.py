@@ -13,6 +13,11 @@ class EncodingValueError(BaseException):
     pass
 
 
+class MissingLowLevelParameterError(BaseException):
+    """Raised when given class of object has no matching encoding rule"""
+    pass
+
+
 class MissingBytesDecodeError(BaseException):
     """Raised when binary state does not match expected content"""
     pass

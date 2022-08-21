@@ -1,7 +1,10 @@
 import logging
+from multiprocessing import parent_process
+from platform import node
 import struct
 
 from pyzusi3.messages import ParameterId, message_index, lowlevel_parameters, ContentType
+from pyzusi3.nodes import BasicNode
 
 def decode_data(data, contenttype, enumtype):
     if contenttype == ContentType.BYTE:
@@ -83,3 +86,49 @@ class MessageDecoder:
             params = {'id' + str(current_level + 1): child_node.id}
             child_pid = current_pid._replace(**params)
             self.map_parameters(child_node, child_pid, current_level + 1)
+
+
+def encode_obj(obj):
+    if type(obj) not in lowlevel_parameters:
+        raise MissingLowLevelParameterError("No known %s in low level parameter encoding list" % type(obj))
+
+    parametertree = lowlevel_parameters[type(obj)]
+    
+    encoded_ids = {}
+    root_node = None
+    current_node = None
+    current_level = 1
+    current_parameterid = None
+    for parameter in parametertree:
+        if parameter.contenttype is BasicNode:
+            current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=current_node)
+            if current_node.parent_node is None:
+                root_node = current_node
+            else:
+                current_node.parent_node.children.append(current_node)
+            current_parameterid = parameter.parameterid
+            current_level += 1
+            continue
+        for i in range(1, current_level + 1):
+            param_id = getattr(current_parameterid, "id" + str(i))
+            node_id = getattr(parameter.parameterid, "id" + str(i))
+            if param_id != None and param_id != node_id:
+                current_node = current_node.parent_node
+                current_level -= 1
+            if current_level == 1:
+                break
+        if current_level == 1:
+            break
+        parameter_value = getattr(obj, parameter.parametername, None)
+        if parameter_value is None:
+            continue
+        node_id = getattr(parameter.parameterid, "id" + str(current_level))
+        node_content = parameter_value
+        if type(node_content) == bytes and parameter.contenttype not in [ContentType.FILE, ContentType.RAW]:
+            node_contenttype = ContentType.RAW
+        else:
+            node_contenttype = parameter.contenttype
+        new_node = BasicNode(id=node_id, content=node_content, contenttype=node_contenttype, parent_node=current_node)
+        current_node.children.append(new_node)
+
+    return root_node

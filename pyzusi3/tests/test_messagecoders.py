@@ -1,6 +1,6 @@
 import unittest
 
-from pyzusi3.messagecoders import MessageDecoder
+from pyzusi3.messagecoders import MessageDecoder, encode_obj
 from pyzusi3 import messages
 from pyzusi3.nodes import StreamDecoder
 
@@ -66,3 +66,34 @@ class TestMessageDecoder(unittest.TestCase):
         self.assertEqual(decoded_message.startdatum, 41390.5)
         self.assertEqual(decoded_message.protokollversion, None)
 
+    def test_encodeObj(self):
+        bytes_written = b'' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x09\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x33\x2E\x30\x2E\x31\x2E\x30' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x30' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\x00' + \
+            b'\x0A\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'\x00\x00\x00\x00\xD0\x35\xE4\x40' + \
+            b'\xFF\xFF\xFF\xFF' + \
+            b'\xFF\xFF\xFF\xFF'
+
+        ack_message = messages.ACK_HELLO(
+            zusiversion = "3.0.1.0",
+            verbindungsinfo = "0",
+            status = b'\x00',
+            startdatum = 41390.5
+        )
+    
+        result = encode_obj(ack_message).encode()
+        self.assertEqual(result, bytes_written)
+    
