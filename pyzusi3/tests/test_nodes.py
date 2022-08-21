@@ -1,15 +1,8 @@
 import unittest
 
-if __name__ == "__main__":
-    import sys
-    import os
-    from os.path import join as pjoin
-    sys.path.append(os.getcwd())
-
 from pyzusi3.nodes import BasicNode, ContentType, StreamDecoder
 
 class TestManualExample1(unittest.TestCase):
-
     def setUp(self):
         self.bytes_written = b'' + \
             b'\x00\x00\x00\x00' + \
@@ -48,7 +41,6 @@ class TestManualExample1(unittest.TestCase):
 
 
 class TestManualExample2(unittest.TestCase):
-
     def setUp(self):
         self.bytes_written = b'' + \
             b'\x00\x00\x00\x00' + \
@@ -85,6 +77,3 @@ class TestManualExample2(unittest.TestCase):
         decoder = StreamDecoder()
         result = decoder.decode(self.bytes_written)
         self.assertEqual(result.encode(), self.bytes_written)
-
-if __name__ == "__main__":
-    unittest.main()

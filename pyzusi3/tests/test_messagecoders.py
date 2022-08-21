@@ -1,12 +1,5 @@
 import unittest
 
-if __name__ == "__main__":
-    import sys
-    import os
-    from os.path import join as pjoin
-    sys.path.append(os.getcwd())
-    sys.path.append(pjoin("..", ".."))
-
 from pyzusi3.messagecoders import MessageDecoder
 from pyzusi3 import messages
 from pyzusi3.nodes import StreamDecoder
@@ -73,5 +66,3 @@ class TestMessageDecoder(unittest.TestCase):
         self.assertEqual(decoded_message.startdatum, 41390.5)
         self.assertEqual(decoded_message.protokollversion, None)
 
-if __name__ == "__main__":
-    unittest.main()
