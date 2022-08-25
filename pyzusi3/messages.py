@@ -79,24 +79,24 @@ llps[STATUS_NOTBREMSSYSTEM] = (
 msgidx[PID(2, 0x0a, 0x22)] = STATUS_NOTBREMSSYSTEM
 
 #Sifa Status
-class STATUS_SIFA_HUPE(Enum)
+class STATUS_SIFA_HUPE(Enum):
     HUPE_AUS = 0
     HUPE_WARNUNG = 1
     HUPE_ZWANGSBREMSUNG = 2
-class SIFA_SCHALTER(Enum)
+class SIFA_SCHALTER(Enum):
     SIFA_SCHALTER_EIN = 1
     SIFA_SCHALTER_AUS = 2
-STATUS_SIFA = namedtuple("STATUS_SIFA", ['bauart', 'sifa_lm', 'sifa_hupe', 'sifa_hauptschalter', 'sifa_stoerschalter', 'sifa_Lufthan', 'sifa_weg'], defaults=[None, None, None, None, None, None, None])
+STATUS_SIFA = namedtuple("STATUS_SIFA", ['bauart', 'lm', 'hupe', 'hauptschalter', 'stoerschalter', 'Lufthan', 'weg'], defaults=[None, None, None, None, None, None, None])
 llps[STATUS_SIFA] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x64), None, BasicNode),
     LLP(PID(2, 0x0a, 0x64, 1), 'bauart', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x64, 2), 'sifa_lm', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x64, 3), 'sifa_hupe', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x64, 4), 'sifa_hauptschalter', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x64, 5), 'sifa_stoerschalter', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x64, 6), 'sifa_lufthan', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x64, 7), 'sifa_weg', ContentType.SINGLE)
+    LLP(PID(2, 0x0a, 0x64, 2), 'lm', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x64, 3), 'hupe', ContentType.BYTE, STATUS_SIFA_HUPE),
+    LLP(PID(2, 0x0a, 0x64, 4), 'hauptschalter', ContentType.BYTE, SIFA_SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 5), 'stoerschalter', ContentType.BYTE, SIFA_SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 6), 'lufthan', ContentType.BYTE, SIFA_SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 7), 'weg', ContentType.SINGLE)
 )
 msgidx[PID(2, 0x0a, 0x64)] = SATUS_SIFA
