@@ -48,10 +48,7 @@ llps[ACK_HELLO] = (
 )
 msgidx[PID(1, 2)] = ACK_HELLO
 
-
-STATUS_NOTBREMSSYSTEM = namedtuple("STATUS_NOTBREMSSYSTEM", , ['bauart', 'status', 'system_bereit', 'notbremsung', 'modus', 'LM_system_bereit', 'LM_notbremsung'], defaults=[None, None, None, None, None, None, None])
-
-#
+#Status NBÜ
 class STATUS_NB_UEBERBRUECKUNG(Enum):
     NBU_AUS = 0
     NBU_BEREIT = 1
