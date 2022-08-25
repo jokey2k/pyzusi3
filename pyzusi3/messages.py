@@ -14,6 +14,12 @@ PID = ParameterId
 llps = lowlevel_parameters
 msgidx = message_index
 
+# Lampenstatus
+class LMZUSTAND(Enum):
+    LM_AUS = 0
+    LM_AN = 1
+    LM_BLINKEN = 2
+
 # HELLO
 class ClientTyp(Enum):
     ZUSI = 1
@@ -42,4 +48,32 @@ llps[ACK_HELLO] = (
 )
 msgidx[PID(1, 2)] = ACK_HELLO
 
+
+STATUS_NOTBREMSSYSTEM = namedtuple("STATUS_NOTBREMSSYSTEM", , ['bauart', 'status', 'system_bereit', 'notbremsung', 'modus', 'LM_system_bereit', 'LM_notbremsung'], defaults=[None, None, None, None, None, None, None])
+
 #
+class STATUS_NB_UEBERBRUECKUNG(Enum):
+    NBU_AUS = 0
+    NBU_BEREIT = 1
+    NOTBREMSE_GEZOGEN = 2
+    NOTBREMSE_WIRKT_NBU_BEREIT = 3
+    NBU_AKTIVIERT_NOTBREMSE_GEBRUECKT = 4
+    NOTBREMSE_WIRKT_NBU_AUS = 5
+    NBU_DAUERAKTIV = 6
+class STATUS_NB_TEST(Enum):
+    NORMAL = 0
+    TEST_AKTIV = 1
+STATUS_NOTBREMSSYSTEM = namedtuple("STATUS_NOTBREMSSYSTEM", ['bauart', 'status', 'system_bereit', 'notbremsung', 'modus', 'LM_system_bereit', 'LM_notbremsung'], defaults=[None, None, None, None, None, None, None])
+llps[STATUS_NOTBREMSSYSTEM] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x22), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x22, 1), 'bauart', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x22, 2), 'status', ContentType.BYTE, STATUS_NB_UEBERBRUECKUNG),
+    LLP(PID(2, 0x0a, 0x22, 3), 'system_bereit', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x22, 4), 'notbremsung', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x22, 5), 'modus', ContentType.BYTE, STATUS_NB_TEST),
+    LLP(PID(2, 0x0a, 0x22, 6), 'LM_system_bereit', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x22, 7), 'LM_notbremsung', ContentType.BYTE, LMZUSTAND)
+)
+msgidx[PID(2, 0x0a, 0x22)] = STATUS_NOTBREMSSYSTEM
