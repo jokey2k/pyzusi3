@@ -107,3 +107,4 @@ llps[ZUGB_GRUND] = (
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 1), 'bauart', ContentType.STRING),
 )
+msgidx[PID(2, 0x0a, 0x65)] = ZUGB_GRUND
