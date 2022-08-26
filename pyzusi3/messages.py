@@ -97,3 +97,13 @@ llps[STATUS_SIFA] = (
     LLP(PID(2, 0x0a, 0x64, 7), 'weg', ContentType.SINGLE)
 )
 msgidx[PID(2, 0x0a, 0x64)] = SATUS_SIFA
+
+#Staus Zugbeeinflussung
+#Grundblock
+ZUGB_GRUND = namedtuple("ZUGB_GRUND", ['bauart'], defaults=[None])
+llps[ZUGB_GRUND] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 1), 'bauart', ContentType.STRING),
+)
