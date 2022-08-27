@@ -180,6 +180,9 @@ llps[INDUSI_ANALOG] = (
 )
 msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI_ANALOG
 #indusi I60R/I80/PZB90
+class
+
+
 
 #PZB90
 
@@ -262,13 +265,27 @@ class ANZEIGEMODUS(Enum):
 LZB = namedtuple("LZB", ['brh','bra','zl','vmz','zugart','modus','stoerschalter','lzb_klartextmeldung','funktionspruefung_starten','stoerschalterbaurt','systemstatus','zustand','ende_verfahren','Falschfahrauftrag_status','Vorsichtsauftrag_status','zielgeschwindigkeit','zielgeschwindigkeit_status','zielweg_cir_elke','lzb_nothalt','nothalt_gesendet','status_lzb_rechnerausfall','el_auftag','melder_h','melder_e40','melder_ende','melder_b','melder_u','melder_g','melder_el','melder_v40','melder_s','melder_pruef','sollgeschwindigkeit','zielgeschwindigkeit','zielweg','melder_g_status','melder_pruef_status','cir_elke_modus','anzeigemodus','melder_h_status','melder_e40_status','melder_ende_status','melder_b_status','melder_u_status','melder_el_status','melder_v40_status','melder_s_status',],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[LZB] = (
     LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 1),'brh', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 2), 'bra', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 3),  'zl', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 4),  'vmz', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 5),  'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 6), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 1),'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 2), 'bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 3),  'zl', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 4),  'vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 5),  'zugart', ContentType.BYTE, ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 6), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 1), 'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 2), 'bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 3), 'zl', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 4), 'vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 5), 'zugart', ContentType.BYTE, ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 6), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 1), 'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 2), 'bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 3), 'zl', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 4), 'vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 5), 'zugart', ContentType.BYTE, ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 6), 'modus', ContentType.BYTE, MODUS),
     LLP(PID(2, 0x0a, 0x65, 2, 0x09), 'stoerschalter', ContentType.BYTE, STOERSCHALTER),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0b), 'lzb_klartextmeldung', ContentType.BYTE, LZB_KLARTEXTMELDUNG),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0c), 'funktionspruefung_starten', ContentType.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
