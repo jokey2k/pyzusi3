@@ -118,7 +118,7 @@ class ZUGART(Enum):
 class SYSTEMSTATUS(Enum):
     AUSGESCHALTET = 0
     ABGESCHALTET = 1
-    UNTERDRÜCKT = 2
+    UNTERDRUECKT = 2
     AKTIV = 3
 class ZUSTAND(Enum):
     AUSGESCHALTET = 1
@@ -126,8 +126,8 @@ class ZUSTAND(Enum):
     HL_DRUCK_NIDRIG = 3
     AUFFODERUNG_ZUGDATENEINGABE = 4
     NORMALBETRIEB = 5
-    FUNKTIONSPRÜFUNG = 6
-    FUNKTIONSPRÜFUNG_QUTIERUNG_FEHLT = 7
+    FUNKTIONSPRUEFUNG = 6
+    FUNKTIONSPRUEFUNG_QUTIERUNG_FEHLT = 7
 class ZWANGSBREMSUNG(Enum):
     KEINE_ZWANGSBREMSUNG = 0
     WACHSAM = 1
@@ -155,8 +155,7 @@ class HUPE(Enum):
 class SCHALTER(Enum):
     SCHALTER_AN = 1
     SCHALTER_AUS = 2
-INDUSI_ANALOG = namedtuple("INDUSI_ANALOG", ['zugart', 'hauptschalter', 'stoerschalter', 'luftabsperhan', 'systemstatus', 'bauart', 'zustand', 'zwangsbremsung',
-'zwangsbremsung_grund', 'lm_100HZ', 'lm_u', 'lm_m', 'lm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'status_lm_1000hz'], defaults=[None, None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
+INDUSI_ANALOG = namedtuple("INDUSI_ANALOG", ['zugart', 'hauptschalter', 'stoerschalter', 'luftabsperhan', 'systemstatus', 'bauart', 'zustand', 'zwangsbremsung','zwangsbremsung_grund', 'lm_100HZ', 'lm_u', 'lm_m', 'lm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'status_lm_1000hz'], defaults=[None, None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[INDUSI_ANALOG] = (
     LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 1), 'zugart', ContentType.BYTE, ZUGART),
@@ -174,158 +173,180 @@ llps[INDUSI_ANALOG] = (
     LLP(PID(2, 0x0a, 0x65, 3, 7), 'lm_m', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 8), 'lm_o', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 9), 'hupe', ContentType.BYTE, HUPE),
-    LLP(PID(2, 0x0a, 0x65, 3, 2c), 'beeinflussung_1000hz', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 2d), 'beeinflussung_500hz', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 2e), 'beeinflussung_2000hz',  ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 2f), 'status_lm_1000hz', ContentType.BYTE, LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2c), 'beeinflussung_1000hz', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2d), 'beeinflussung_500hz', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2e), 'beeinflussung_2000hz',  ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2f), 'status_lm_1000hz', ContentType.BYTE, LMZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI_ANALOG
-#LZB
+#indusi I60R/I80/PZB90
 
-class ZUGARTEnum):
+#PZB90
+
+#PZB90 S-Bahn
+
+#LZB
+class ZUGART(Enum):
     NICHT_BESTIMMT = 1
     U = 2
     M = 3
     O = 4
-class MODUSEnum):
-
-class STOERSCHALTEREnum):
-class LZB_KLARTEXTMELDUNGEnum):
-class FUNKTIONSPRUEFUNG_STARTENEnum):
-class STOERSCHALTERBAURTEnum):
-class SYSTEMSTATUSEnum):
-class ZUSTANDEnum):
-class ENDE_VERFAHRENEnum):
-class FALSCHFAHRAUFTRAG_STATUSEnum):
-class VOORSICHTSAUFTRAG_STATUSEnum):
-class ZIELGESCHWINDIGKEIT_STATUSEnum):
-class LZB_NOTHALTEnum):
-class NOTHALT_GESENDETEnum):
-class STATUS_LZB_RECHNERAUSFALLEnum):
-class EL_AUFTAGEnum):
-class CIR_ELKE_MODUSEnum):
-class ANZEIGEMODUSEnum):
-
-
-
-
-
-
-LZB = namedtuple("LZB", [
-    'brh',
-    'bra',
-    'zl',
-    'vmz',
-    'zugart',
-    'modus',
-    'stoerschalter',
-    'lzb_klartextmeldung',
-    'funktionspruefung_starten',
-    'stoerschalterbaurt',
-    'systemstatus',
-    'zustand',
-    'ende_verfahren',
-    'Falschfahrauftrag_status',
-    'Voorsichtsauftrag_status',
-    'zielgeschwindigkeit',
-    'zielgeschwindigkeit_status',
-    'zielweg_cir_elke',
-    'lzb_nothalt',
-    'nothalt_gesendet',
-    'status_lzb_rechnerausfall',
-    'el_auftag',
-    'melder_h',
-    'melder_e40',
-    'melder_ende',
-    'melder_b',
-    'melder_u',
-    'melder_g',
-    'melder_el',
-    'melder_v40',
-    'melder_s',
-    'melder_pruef',
-    'sollgeschwindigkeit',
-    'zielgeschwindigkeit',
-    'zielweg',
-    'melder_g_status',
-    'melder_pruef_status',
-    'cir_elke_modus',
-    'anzeigemodus',
-    'melder_h_status',
-    'melder_e40_status',
-    'melder_ende_status',
-    'melder_b_status',
-    'melder_u_status',
-    'melder_el_status',
-    'melder_v40_status',
-    'melder_s_status',
-],
-defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
-          ]
-
-llps[INDUSI_ANALOG] = (
+class MODUS(Enum):
+    UNDEFINIERT = 1
+    U = 2
+    M = 3
+    O = 4
+class STOERSCHALTER(Enum):
+    LZB_ABGESCHALTET = 1
+    LZB_EINGESCHALTET = 2
+class LZB_KLARTEXTMELDUNG(Enum):
+    NICHT_MOEGLICH = 0
+    MOEGLICH_ABER_NICHT_AKTIV = 1
+    AKTIV = 2
+    NUR_MOEGLICH = 3
+class FUNKTIONSPRUEFUNG_STARTEN(Enum):
+    ZUSI_SOLL_STARTEN = 1
+    WURDE_QUITTIER = 2
+    WURDE_NICHT_QUITTIERT =3
+class STOERSCHALTERBAURT(Enum):
+    LEUCHTDRUCKTASTER = 0
+    DREHSCHALTER = 1
+class SYSTEMSTATUS(Enum):
+    AUSGESCHALTET = 0
+    ABGESCHALTET = 1
+    UNTERDRUECKT = 2
+    AKTIV = 3
+class ZUSTAND(Enum):
+    KEINE_FUEHRUNG = 0
+    NORMAL = 1
+    NOTHALT = 2
+    HALT_UEBERFAHREN = 3
+    RECHNERAUSFALL = 4
+    NACHFAHRAUFTAG = 5
+    FUNKTIONSPRUEFUNG = 6
+class ENDE_VERFAHREN(Enum):
+    EINGELETITET = 1
+    QUITTIERT = 2
+class FALSCHFAHRAUFTRAG_STATUS(Enum):
+    EINGELETITET = 1
+    QUITTIERT = 2
+class VORSICHTSAUFTRAG_STATUS(Enum):
+    EINGELETITET = 1
+    QUITTIERT = 2
+    FAHRT_AUF_SICHT = 3
+class ZIELGESCHWINDIGKEIT_STATUS(Enum):
+    EINGELEITET = 1
+    UE_BLINKT = 2
+    ERSTE_QUITTIERUNG = 3
+    BEDINGUNG_2_QUTTIERUNG = 4
+    ZWEITE_QUITTIERUNG = 5
+    AUSFALL = 6
+    BEFEHL_BLINKT = 7
+class LZB_NOTHALT(Enum):
+    NOTHAL_TEMPFANGEN = 1
+    NOTHALT_UEBERFAHREN = 2
+    NOTHALT_AUFGEHOBEN = 3
+class STATUS_LZB_RECHNERAUSFALL(Enum):
+    ALLES_DUNKEL = 1
+    BEFEHLSMELDER_BLINKT = 2
+    BEFEHLSMELDER_DAUERLICHT = 3
+class EL_AUFTAG(Enum):
+    HS_AUS = 1
+    SA_SENKEN = 2
+class CIR_ELKE_MODUS(Enum):
+    NORMALER_MODUS = 0
+    CIR_ELKE_MODUS = 1
+class ANZEIGEMODUS(Enum):
+    NORMALER_MODUS = 0
+    MFA = 1
+LZB = namedtuple("LZB", ['brh','bra','zl','vmz','zugart','modus','stoerschalter','lzb_klartextmeldung','funktionspruefung_starten','stoerschalterbaurt','systemstatus','zustand','ende_verfahren','Falschfahrauftrag_status','Vorsichtsauftrag_status','zielgeschwindigkeit','zielgeschwindigkeit_status','zielweg_cir_elke','lzb_nothalt','nothalt_gesendet','status_lzb_rechnerausfall','el_auftag','melder_h','melder_e40','melder_ende','melder_b','melder_u','melder_g','melder_el','melder_v40','melder_s','melder_pruef','sollgeschwindigkeit','zielgeschwindigkeit','zielweg','melder_g_status','melder_pruef_status','cir_elke_modus','anzeigemodus','melder_h_status','melder_e40_status','melder_ende_status','melder_b_status','melder_u_status','melder_el_status','melder_v40_status','melder_s_status',],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
+llps[LZB] = (
     LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x03), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 1),'brh', ContentType.WORD
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 2) 'bra', ContentType.WORD
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 3)  'zl', ContentType.WORD
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 4)  'vmz', ContentType.WORD
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 5)  'zugart', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 6)'modus', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 2, 0x09)'stoerschalter', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0b) 'lzb_klartextmeldung', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0c) 'funktionspruefung_starten', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 2, 0x10)'stoerschalterbaurt', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 2, 0x11)'systemstatus', ContentType.BYTE
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 1),'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 2), 'bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 3),  'zl', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 4),  'vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 5),  'zugart', ContentType.BYTE, ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03, 6), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x09), 'stoerschalter', ContentType.BYTE, STOERSCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0b), 'lzb_klartextmeldung', ContentType.BYTE, LZB_KLARTEXTMELDUNG),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0c), 'funktionspruefung_starten', ContentType.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x10), 'stoerschalterbaurt', ContentType.BYTE, STOERSCHALTERBAURT),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x11), 'systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     LLP(PID(2, 0x0a, 0x65, 3),None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0d'zustand', ContentType.WORD
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0d), 'zustand', ContentType.WORD, ZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x0e), None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0e, 1)'ende_verfahren', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0f), None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x10), None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x10, 1)'Falschfahrauftrag_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x11, None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x11, 1)'Voorsichtsauftrag_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x12), None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x13), None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x13, 1)'zielgeschwindigkeit', ContentType.SINGLE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x13, 2)'zielgeschwindigkeit_status', ContentType.WORD
-    LLP(PID(2, 0x0a, 0x65, 3, 0x13, 3)'zielweg_cir_elke', ContentType.SINGLE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x14) None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x14, 1)'lzb_nothalt', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x14, 2)'nothalt_gesendet', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x15, None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x15, 1)'status_lzb_rechnerausfall', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x16), None, BasicNode)
-    LLP(PID(2, 0x0a, 0x65, 3, 0x16, 1)'el_auftag', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x17)'melder_h', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x18)'melder_e40', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x19)'melder_ende', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x1a)'melder_b', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x1b)'melder_u', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x1c)'melder_g', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x1d)'melder_el', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x1e)'melder_v40', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x1f)'melder_s', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x20)'melder_pruef', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x21)'sollgeschwindigkeit', ContentType.SINGLE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x22)'zielgeschwindigkeit', ContentType.SINGLE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x23)'zielweg', ContentType.SINGLE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x24)'melder_g_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x25)'melder_pruef_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x26)'cir_elke_modus', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x27)'anzeigemodus', ContentType.BYTE
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0e, 1), 'ende_verfahren', ContentType.BYTE, ENDE_VERFAHREN),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0f), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x10), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x10, 1), 'Falschfahrauftrag_status', ContentType.BYTE, FALSCHFAHRAUFTRAG_STATUS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x11), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x11, 1), 'Vorsichtsauftrag_status', ContentType.BYTE, VORSICHTSAUFTRAG_STATUS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x12), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x13), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x13, 1), 'zielgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x13, 2), 'zielgeschwindigkeit_status', ContentType.WORD, ZIELGESCHWINDIGKEIT_STATUS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x13, 3), 'zielweg_cir_elke', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x14), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x14, 1), 'lzb_nothalt', ContentType.BYTE, LZB_NOTHALT),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x14, 2), 'nothalt_gesendet', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x15), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x15, 1), 'status_lzb_rechnerausfall', ContentType.BYTE, STATUS_LZB_RECHNERAUSFALL),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x16), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x16, 1), 'el_auftag', ContentType.BYTE, EL_AUFTAG),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x17), 'melder_h', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x18), 'melder_e40', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x19), 'melder_ende', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x1a), 'melder_b', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x1b), 'melder_u', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x1c), 'melder_g', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x1d), 'melder_el', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x1e), 'melder_v40', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x1f), 'melder_s', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x20), 'melder_pruef', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x21), 'sollgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x22), 'zielgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x23), 'zielweg', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x24), 'melder_g_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x25), 'melder_pruef_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x26), 'cir_elke_modus', ContentType.BYTE, CIR_ELKE_MODUS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x27), 'anzeigemodus', ContentType.BYTE, ANZEIGEMODUS),
     LLP(PID(2, 0x0a, 0x65, 3, 0x28), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x28,1), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x28,2), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x28,3), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x28,4), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x28,5), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x38)'melder_h_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x39)'melder_e40_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x3a)'melder_ende_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x3b)'melder_b_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x3c)'melder_u_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x3d)'melder_el_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x3e)'melder_v40_status', ContentType.BYTE
-    LLP(PID(2, 0x0a, 0x65, 3, 0x3d)'melder_s_status', ContentType.BYTE
+    LLP(PID(2, 0x0a, 0x65, 3, 0x38), 'melder_h_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x39), 'melder_e40_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x3a), 'melder_ende_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x3b), 'melder_b_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x3c), 'melder_u_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x3d), 'melder_el_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x3e), 'melder_v40_status', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x3d), 'melder_s_status', ContentType.BYTE, LMZUSTAND)
+)
+msgidx[PID(2, 0x0a, 0x65, 2, 0x03)] = LZB
+
+#ETCS
+
+#ZBS
+
+#Fahrsperre
+
+#Status Türen
+#Grundblock
+
+#Seitenselktive Systeme
+
+#Satus Fahrzeug
+
+#Status Zugverband
+
+#Status Weichen
+
+#Status LM Zusidisplay
+
+#Status Zug Fahrdaten
+
