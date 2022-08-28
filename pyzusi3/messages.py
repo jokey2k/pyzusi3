@@ -634,8 +634,6 @@ class ZUGTYP(Enum):
     GZ = 0
     RZ = 1
 STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBANDG",['fz_dateiname', 'beschreibung', 'vorgabe_bremsstellung', 'bezeichnung_zugbeeinflussungs', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbaurt', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellung', 'zugehoerige_Bremsmasse', 'bremsstellung_wirksam', 'bezeichnung_bremsbaurt', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkenzeichen', 'bezeichnung_tuersystem', 'bauart_tuerwachlschalter', 'antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv', 'bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'lastabhaehnige_bremse'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
-
-
 llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -707,4 +705,39 @@ msgidx[PID(2, 0x0a, 0x8e,0x01)] = STATUS_ZUGVERBAND
 #Status LM Zusidisplay
 
 #Status Zug Fahrdaten
+class ABSPERHAEHNE_HLL(Enum):
+    STANDARD = 0
+    HAN_VORNE_OFFEN = 1
+    HAN_HINTEN_OFFEN = 2
+    BEIDE_HAEHNE_OFFEN = 3
+    BEIDE_HAEHNE_ZU = 4
+STATUS_ZUG_FAHRDATEN = namedtuple("STATUS_ZUG_FAHRDATEN",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
+llps[STATUS_ZUG_FAHRDATEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xab), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xab,0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x01),'bremszylinderdruck', ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x02),'hll_druck',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x03),'zugkraft',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x04),'motordrehzahl_1',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x05),'maximal_moegliche_zugkraft',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x06),'maximale_dynamische_bremskraft',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x07),'absperhaehne_hll',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x0a),'motordrehzahl_2',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01), None, BasicNode)
+)
+msgidx[PID(2, 0x0a, 0xab,0x01)] = STATUS_ZUG_FAHRDATEN
+
+
+
+
+
+
+
+
+
+
+
+
 
