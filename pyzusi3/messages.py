@@ -242,8 +242,19 @@ msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI
 
 
 #PZB90
-
-
+class ZUSATZINFO_MELDERBILD(Enum):
+    NORMALZUSTAND = 0
+    1000HZ_NACH_700M = 1
+    RESTREKTIV = 2
+    RESTREKTIV_1000HZ = 3
+    RESTREKTIV_500HZ = 4
+    PRUEFABLAUF = 5
+PZB90 = namedtuple("PZB90", ['zusatzinfo_melderbild'],defaults=[None])
+llps[PZB90] = (
+LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
+LLP(PID(2, 0x0a, 0x65, 3, 0x0C),'zusatzinfo_melderbild', ContentType.BYTE, ZUSATZINFO_MELDERBILD)
+)
+msgidx[PID(2, 0x0a, 0x65, 3)] = PZB90
 
 
 #PZB90 S-Bahn
