@@ -180,11 +180,71 @@ llps[INDUSI_ANALOG] = (
 )
 msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI_ANALOG
 #indusi I60R/I80/PZB90
-class
+class ZUGART(Enum):
+    MUSS_NOCH_BESTIMMT_WERDEN = 1
+    U = 2
+    M = 3
+    O = 4
+    S_BAHN = 5
+class MODUS(Enum):
+    UNDEFINIERT = 0
+    ERSATZZUGDATEN = 5
+    NORMALBETRIEB = 6
+class KLARTEXTMELDUNGEN(Enum):
+    KEINE_MOEGLICH = 0
+    MOEGLICH_ABER_NICHT_AKTIV = 1
+    AKTIV = 2
+    NUR_KLARTEXTMELDUNGEN = 3
+class FUNKTIONSPRUEFUNG_STARTEN(Enum):
+    ZUSI_SOLL_STARTEN = 1
+    WURDE_QUITTIER = 2
+    WURDE_NICHT_QUITTIERT = 3
+class STOERSCHALTERBAURT(Enum):
+    LEUCHTDRUCKTASTER = 0
+    DREHSCHALTER = 1
+class LM_BLINKEN_INVERS(Enum):
+    AUS = 0
+    AN = 1
+    BLINKEND = 2
+    BLINKEND_INVERS = 3
+
+
+INDUSI = namedtuple("INDUSI", ['tf_nr','zn', 'brh','bra','zugart','modus','klartextmeldungen','funktionspruefung_starten','stoerschalterbaurt','lm_500hz','lm_befehl_an','lm_o','lm_m','lm_u','lm_500hz','lm_befehl'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
+llps[INDUSI] = (
+    LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x02), 'tf_nr', ContentTyp.String),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03), 'zn', ContentTyp.String),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x01), 'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x02), 'bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x05), 'zugart', ContentType.BYTE, ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x06), 'modus', ContentTyp.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x01), 'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x02), 'bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x05), 'zugart', ContentType.BYTE, ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x06), 'modus', ContentTyp.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0B),'klartextmeldungen',ContentTyp.BYTE, KLARTEXTMELDUNGEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0C),'funktionspruefung_starten',ContentTyp.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0F), 'stoerschalterbaurt',ContentTyp.BYTE, STOERSCHALTERBAURT),
+LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
+LLP(PID(2, 0x0a, 0x65, 3, 0x0A),'lm_500hz',ContentTyp.BYTE),
+LLP(PID(2, 0x0a, 0x65, 3, 0x0B),'lm_befehl_an',ContentTyp.BYTE),
+LLP(PID(2, 0x0a, 0x65, 3, 0x30),'lm_o',ContentTyp.BYTE, LM_BLINKEN_INVERS),
+LLP(PID(2, 0x0a, 0x65, 3, 0x31),'lm_m',ContentTyp.BYTE, LM_BLINKEN_INVERS),
+LLP(PID(2, 0x0a, 0x65, 3, 0x32),'lm_u',ContentTyp.BYTE, LM_BLINKEN_INVERS),
+LLP(PID(2, 0x0a, 0x65, 3, 0x33),'lm_500hz',ContentTyp.BYTE, LMZUSTAND),
+LLP(PID(2, 0x0a, 0x65, 3, 0x34),'lm_befehl',ContentTyp.BYTE, LMZUSTAND)
+)
+msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI
+
 
 
 
 #PZB90
+
+
+
 
 #PZB90 S-Bahn
 
