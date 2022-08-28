@@ -703,6 +703,24 @@ msgidx[PID(2, 0x0a, 0x8e,0x01)] = STATUS_ZUGVERBAND
 #Status Weichen
 
 #Status LM Zusidisplay
+class RAHMEN_MODUS(Enum):
+    GRAFIK_OHNE_RAHMEN = 0
+    GRAFIK_MIT_RAHMEN = 1
+    GRAFIKMIT_TASTEN = 2
+
+LM_ZUSIDISPLAY = namedtuple("LM_ZUSIDISPLAY", ['name', 'modus', 'breite', 'höhe'], defaults=[None, None, None, None])
+llps[LM_ZUSIDISPLAY] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xa9), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xa9, 0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x01), 'name', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x02), 'modus', ContentType.BYTE, RAHMEN_MODUS),
+    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x03), 'breite', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x04), 'höhe', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xa9, 0x01), None, BasicNode)
+)
+msgidx[PID(2, 0x0a, 0xa9,0x01)] = LM_ZUSIDISPLAY
 
 #Status Zug Fahrdaten
 class ABSPERHAEHNE_HLL(Enum):
