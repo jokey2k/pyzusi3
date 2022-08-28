@@ -451,7 +451,41 @@ msgidx[PID(2, 0x0a, 0x65, 2, 0x03)] = LZB
 
 #ETCS
 
+#ZUB
+class STATUS(Enum):
+    AUSGESCHALTET = 0
+    ABGESCHALTET = 1
+    UNTERDRUECKT = 2
+    AKTIV = 3
+ZUB = namedtuple("ZUB", ['brh','zuglaenge', 'vmz', 'status', 'bauart', 'lm_gnt', 'melder_gnt_ue', 'melder_gnt_g', 'melder_gnt_s', 'melder_gnt_gst', 'melder_gnt_gst_stoer', 'status_melder_ue', 'status_melder_gnt_'],defaults=[None, None, None, None, None])
+llps[ZUB] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 6, 1),'', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 6, 2),'', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 6, 3),'', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 6, 4),'', ContentType.BYTE, STATUS),
+    LLP(PID(2, 0x0a, 0x65, 6, 5),'', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 7), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 7, 1), '', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 2), '', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 3), '', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 4), '', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 5), '', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 6), '', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 7), '', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 7, 8), '', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 7, 9), '', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 7, 0x0a), '', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 0x0b), '', ContentType.BYTE)
+
+)
+msgidx[PID(2, 0x0a, 0x65)] = ZUB
+
+
 #ZBS
+
 
 #Fahrsperre
 
