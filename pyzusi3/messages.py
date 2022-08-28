@@ -481,7 +481,37 @@ llps[TUEREN_GRUNDBLOCK] = (
     LLP(PID(2, 0x0a, 0x66, 14),'zustand', ContentType.BYTE, TUERZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x66)] = TUEREN_GRUNDBLOCK
+
 #Seitenselktive Systeme
+class FREIGABE_STATUS(Enum):
+    ZU = 0
+    LINKS = 1
+    RECHTS = 2
+    BEIDE = 3
+TUEREN_SEITENSELEKTIV = namedtuple("TUEREN_SEITENSELEKTIV", ['freigabe', 'lm_links', 'lm_rechts', 'status_lm_links', 'status_lm_rechts', 'lm_zwnagsschliessen', 'status_lm_zwangsschliessen', 'lm_rechts_links', 'status_lm_rechts_links', 'zentrales_oeffnen_links', 'zentrales_oeffnen_rechts', 'status_lm_zentrales_oeffnen_links', 'status_lm_zentrales_oeffnen_rechts', 'lm_gruenschleife'],defaults=[None, None, None, None, None, None, None, None, None, None, None, None, None, None])
+llps[TUEREN_SEITENSELEKTIV] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x66), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x66,0x05), 'freigabe', ContentType.BYTE, FREIGABE_STATUS),
+    LLP(PID(2, 0x0a, 0x66,0x06), 'lm_links', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66,0x07), 'lm_rechts', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66,0x08), 'status_lm_links', ContentType.BYTE,LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66,0x09), 'status_lm_rechts', ContentType.BYTE,LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66,0x0a), 'lm_zwnagsschliessen', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66,0x0b), 'status_lm_zwangsschliessen', ContentType.BYTE,LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66,0x0c), 'lm_rechts_links', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66,0x0d), 'status_lm_rechts_links', ContentType.BYTE,LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66,0x0e), 'zentrales_oeffnen_links', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66,0x0f), 'zentrales_oeffnen_rechts', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66,0x10), 'status_lm_zentrales_oeffnen_links', ContentType.BYTE,LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66,0x11), 'status_lm_zentrales_oeffnen_rechts', ContentType.BYTE,LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66,0x12), 'lm_gruenschleife', ContentType.BYTE),LMZUSTAND)
+)
+msgidx[PID(2, 0x0a, 0x66)] = TUEREN_SEITENSELEKTIV
+
+
+
 
 #Satus Fahrzeug
 
