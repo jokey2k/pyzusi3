@@ -701,6 +701,58 @@ msgidx[PID(2, 0x0a, 0x8e,0x01)] = STATUS_ZUGVERBAND
 
 
 #Status Weichen
+class BAUART(Enum):
+    UNDEFINIERT = 0
+    HANDWEICHE_RECHTS = 1
+    HANDWEICHE_LINKS = 2
+    EOW_RECHTS = 3
+    EOW_LINKS = 4
+    HAND_DKW_GRUNDSTELLUNG_LINKS = 5
+    HAND_DKW_GRUNDSTELLUNG_RECHTS = 6
+    EOW_DKW_GRUNDSTELLUNG_LINKS = 7
+    EOW_DKW_GRUNDSTELLUNG_RECHTS = 8
+    HAND_GLEISSPERRE = 9
+    EOW_GLEISSPERRE = 10
+    HET = 11
+    UT = 12
+    ZLB = 13
+class TYP(Enum):
+    UNDEFINIERT = 0
+    OHNE_GRUNDSTELLUNG = 1
+    GRUNDSTELLUNG_RECHTS_WEISS = 2
+    GRUNDSTELLUNG_LINKS_WEISS = 3
+    GRUNDSTELLUNG_RECHTS_gelb = 4
+    GRUNDSTELLUNG_LINKS_gelb = 5
+class AKTUELLE_LAGE(Enum):
+    ZUSI_GRUNDSTELLUNG_SPITZ_BEFAHREN = 0
+    NICHT_IN_GRUNDSTELLUNG_SPITZ_BEFAHREN = 1
+    ZUSI_GRUNDSTELLUNG_STUMPF_BEFAHREN = 2
+    NICHT_IN_GRUNDSTELLUNG_STUMPF_BEFAHREN = 3
+class FAHRTRICHTUNG(Enum):
+    UNDEFINIERT = 0
+    SPITZ_BEFAHREN = 1
+    STUMPF_BEFAHREN = 2
+class UMLAUFMODUS_STUMPFBEFAHRUNG(Enum):
+    UNDEFINIERT = 0
+    WEICHE_LAUEFT_AUTOMATISCH_UM = 1
+    WEICHE_MUSS_GESTELLT_WERDEN = 2
+WEICHEN = namedtuple("WEICHEN", ['bezeichnung', 'bauart', 'typ', 'aktuelle_lage', 'fahrtrichtung', 'umlaufmodus'], defaults=[None, None, None, None, None, None])
+llps[WEICHEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x92), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x92, 0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x92, 0x01, 0x01), 'bezeichnung', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x92, 0x01, 0x02), 'bauart', ContentType.INTEGER, BAUART),
+    LLP(PID(2, 0x0a, 0x92, 0x01, 0x03), 'typ', ContentType.INTEGER, TYP),
+    LLP(PID(2, 0x0a, 0x92, 0x01, 0x04), 'aktuelle_lage', ContentType.BYTE, AKTUELLE_LAGE),
+    LLP(PID(2, 0x0a, 0x92, 0x01, 0x05), 'fahrtrichtung', ContentType.BYTE, FAHRTRICHTUNG),
+    LLP(PID(2, 0x0a, 0x92, 0x01, 0x06), 'umlaufmodus', ContentType.BYTE, UMLAUFMODUS_STUMPFBEFAHRUNG),
+    LLP(PID(2, 0x0a, 0x92, 0x01), None, BasicNode)
+)
+msgidx[PID(2, 0x0a, 0x92,0x01)] = WEICHEN
+
+
 
 #Status LM Zusidisplay
 class RAHMEN_MODUS(Enum):
