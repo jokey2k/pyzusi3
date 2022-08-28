@@ -258,6 +258,31 @@ msgidx[PID(2, 0x0a, 0x65, 3)] = PZB90
 
 
 #PZB90 S-Bahn
+class LM_BLINKEN_INVERS(Enum):
+    AUS = 0
+    AN = 1
+    BLINKEND = 2
+    BLINKEND_INVERS = 3
+
+PZB90_S_BAHN = namedtuple("PZB90_S_BAHN", ['lm_zugart_links', 'lm_zugart_65', 'lm_zugart_rechts', 'status_lm_zugart_rechts', 'status_lm_zugart_65', 'status_lm_zugart_links'],defaults=[None,None,None,None,None,None])
+llps[PZB90] = (
+    LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x29),'lm_zugart_links',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2a),'lm_zugart_65',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2b),'lm_zugart_rechts',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x35),'status_lm_zugart_rechts',ContentType.BYTE,LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x36),'status_lm_zugart_65',ContentType.BYTE,LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x37),'status_lm_zugart_links',ContentType.BYTE,LM_BLINKEN_INVERS)
+)
+msgidx[PID(2, 0x0a, 0x65, 3)] = PZB90_S_BAHN
+
+
+
+
+
+
+
+
 
 #LZB
 class ZUGART(Enum):
