@@ -510,10 +510,44 @@ llps[TUEREN_SEITENSELEKTIV] = (
 )
 msgidx[PID(2, 0x0a, 0x66)] = TUEREN_SEITENSELEKTIV
 
-
-
-
 #Satus Fahrzeug
+class GRUND_NULLSTELLUNGSZWANG(Enum):
+    NICHTS = 0
+    NIEDRIGER_HLL_DRUCK = 1
+    DYNAMISCHE_BREMSE = 2
+    TRAKTIONSSPERRE = 3
+class GRUND_TRAKTIONSSPERRE(Enum):
+    NICHTS = 0
+    FEDERSPEICHERBREMSE = 1
+    TUERSYSTEM = 2
+    BREMSPROBE_LAUFT = 3
+    SIFA_ASUGESCHALTET = 4
+class STATUS_SCHALTER(Enum):
+    DEAKTIVIERT = 1
+    NORMALZUSTAND = 2
+class SANDERZUSTAND(Enum):
+    SANDET_NICHT = 1
+    SANDET = 2
+class BREMSPROBEZUSTAND(Enum):
+    NORMALBETRIEB = 0
+    AKTIV = 1
+
+STATUS_FAHRZEUG = namedtuple("STATUS_FAHRZEUG", ['grund_nullstellungszwang', 'grund_traktionssperre', 'status_fahrschalter', 'status_dynamische_bremse', 'sanderzustand', 'bremsprobezustand', 'stellung_richtungsschalter'],defaults=[None, None, None, None, None, None, None])
+llps[STATUS_FAHRZEUG] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8d), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8d,0x01), 'grund_nullstellungszwang', ContentType.WORD, GRUND_NULLSTELLUNGSZWANG),
+    LLP(PID(2, 0x0a, 0x8d,0x02), 'grund_traktionssperre', ContentType.WORD, GRUND_TRAKTIONSSPERRE),
+    LLP(PID(2, 0x0a, 0x8d,0x03), 'status_fahrschalter', ContentType.BYTE, STATUS_SCHALTER),
+    LLP(PID(2, 0x0a, 0x8d,0x04), 'status_dynamische_bremse', ContentType.BYTE, STATUS_SCHALTER),
+    LLP(PID(2, 0x0a, 0x8d,0x06), 'sanderzustand', ContentType.BYTE, SANDERZUSTAND),
+    LLP(PID(2, 0x0a, 0x8d,0x07), 'bremsprobezustand', ContentType.WORD, BREMSPROBEZUSTAND),
+    LLP(PID(2, 0x0a, 0x8d,0x08), 'stellung_richtungsschalter', ContentType.WORD)
+)
+msgidx[PID(2, 0x0a, 0x8d)] = STATUS_FAHRZEUG
+
+
 
 #Status Zugverband
 
