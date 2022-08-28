@@ -157,6 +157,9 @@ class SCHALTER(Enum):
     SCHALTER_AUS = 2
 INDUSI_ANALOG = namedtuple("INDUSI_ANALOG", ['zugart', 'hauptschalter', 'stoerschalter', 'luftabsperhan', 'systemstatus', 'bauart', 'zustand', 'zwangsbremsung','zwangsbremsung_grund', 'lm_100HZ', 'lm_u', 'lm_m', 'lm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'status_lm_1000hz'], defaults=[None, None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[INDUSI_ANALOG] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 1), 'zugart', ContentType.BYTE, ZUGART),
     LLP(PID(2, 0x0a, 0x65, 2, 7), 'hauptschalter', ContentType.BYTE, SCHALTER),
@@ -211,6 +214,9 @@ class LM_BLINKEN_INVERS(Enum):
 
 INDUSI = namedtuple("INDUSI", ['tf_nr','zn', 'brh','bra','zugart','modus','klartextmeldungen','funktionspruefung_starten','stoerschalterbaurt','lm_500hz','lm_befehl_an','lm_o','lm_m','lm_u','lm_500hz','lm_befehl'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[INDUSI] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x02), 'tf_nr', ContentTyp.String),
     LLP(PID(2, 0x0a, 0x65, 2, 0x03), 'zn', ContentTyp.String),
@@ -227,14 +233,14 @@ llps[INDUSI] = (
     LLP(PID(2, 0x0a, 0x65, 2, 0x0B),'klartextmeldungen',ContentTyp.BYTE, KLARTEXTMELDUNGEN),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0C),'funktionspruefung_starten',ContentTyp.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0F), 'stoerschalterbaurt',ContentTyp.BYTE, STOERSCHALTERBAURT),
-LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
-LLP(PID(2, 0x0a, 0x65, 3, 0x0A),'lm_500hz',ContentTyp.BYTE),
-LLP(PID(2, 0x0a, 0x65, 3, 0x0B),'lm_befehl_an',ContentTyp.BYTE),
-LLP(PID(2, 0x0a, 0x65, 3, 0x30),'lm_o',ContentTyp.BYTE, LM_BLINKEN_INVERS),
-LLP(PID(2, 0x0a, 0x65, 3, 0x31),'lm_m',ContentTyp.BYTE, LM_BLINKEN_INVERS),
-LLP(PID(2, 0x0a, 0x65, 3, 0x32),'lm_u',ContentTyp.BYTE, LM_BLINKEN_INVERS),
-LLP(PID(2, 0x0a, 0x65, 3, 0x33),'lm_500hz',ContentTyp.BYTE, LMZUSTAND),
-LLP(PID(2, 0x0a, 0x65, 3, 0x34),'lm_befehl',ContentTyp.BYTE, LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0A),'lm_500hz',ContentTyp.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0B),'lm_befehl_an',ContentTyp.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x30),'lm_o',ContentTyp.BYTE, LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x31),'lm_m',ContentTyp.BYTE, LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x32),'lm_u',ContentTyp.BYTE, LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x33),'lm_500hz',ContentTyp.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x34),'lm_befehl',ContentTyp.BYTE, LMZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI
 
@@ -251,8 +257,11 @@ class ZUSATZINFO_MELDERBILD(Enum):
     PRUEFABLAUF = 5
 PZB90 = namedtuple("PZB90", ['zusatzinfo_melderbild'],defaults=[None])
 llps[PZB90] = (
-LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
-LLP(PID(2, 0x0a, 0x65, 3, 0x0C),'zusatzinfo_melderbild', ContentType.BYTE, ZUSATZINFO_MELDERBILD)
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0C),'zusatzinfo_melderbild', ContentType.BYTE, ZUSATZINFO_MELDERBILD)
 )
 msgidx[PID(2, 0x0a, 0x65, 3)] = PZB90
 
@@ -266,6 +275,9 @@ class LM_BLINKEN_INVERS(Enum):
 
 PZB90_S_BAHN = namedtuple("PZB90_S_BAHN", ['lm_zugart_links', 'lm_zugart_65', 'lm_zugart_rechts', 'status_lm_zugart_rechts', 'status_lm_zugart_65', 'status_lm_zugart_links'],defaults=[None,None,None,None,None,None])
 llps[PZB90] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x29),'lm_zugart_links',ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x2a),'lm_zugart_65',ContentType.BYTE),
@@ -275,14 +287,6 @@ llps[PZB90] = (
     LLP(PID(2, 0x0a, 0x65, 3, 0x37),'status_lm_zugart_links',ContentType.BYTE,LM_BLINKEN_INVERS)
 )
 msgidx[PID(2, 0x0a, 0x65, 3)] = PZB90_S_BAHN
-
-
-
-
-
-
-
-
 
 #LZB
 class ZUGART(Enum):
@@ -358,8 +362,11 @@ class CIR_ELKE_MODUS(Enum):
 class ANZEIGEMODUS(Enum):
     NORMALER_MODUS = 0
     MFA = 1
-LZB = namedtuple("LZB", ['brh','bra','zl','vmz','zugart','modus','stoerschalter','lzb_klartextmeldung','funktionspruefung_starten','stoerschalterbaurt','systemstatus','zustand','ende_verfahren','Falschfahrauftrag_status','Vorsichtsauftrag_status','zielgeschwindigkeit','zielgeschwindigkeit_status','zielweg_cir_elke','lzb_nothalt','nothalt_gesendet','status_lzb_rechnerausfall','el_auftag','melder_h','melder_e40','melder_ende','melder_b','melder_u','melder_g','melder_el','melder_v40','melder_s','melder_pruef','sollgeschwindigkeit','zielgeschwindigkeit','zielweg','melder_g_status','melder_pruef_status','cir_elke_modus','anzeigemodus','melder_h_status','melder_e40_status','melder_ende_status','melder_b_status','melder_u_status','melder_el_status','melder_v40_status','melder_s_status',],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
+LZB = namedtuple("LZB", ['brh','bra','zl','vmz','zugart','modus','stoerschalter','lzb_klartextmeldung','funktionspruefung_starten','stoerschalterbaurt','systemstatus','zustand','ende_verfahren','Falschfahrauftrag_status','Vorsichtsauftrag_status','zielgeschwindigkeit','zielgeschwindigkeit_status','zielweg_cir_elke','lzb_nothalt','nothalt_gesendet','status_lzb_rechnerausfall','el_auftag','melder_h','melder_e40','melder_ende','melder_b','melder_u','melder_g','melder_el','melder_v40','melder_s','melder_pruef','sollgeschwindigkeit','zielgeschwindigkeit','zielweg','melder_g_status','melder_pruef_status','cir_elke_modus','anzeigemodus','melder_h_status','melder_e40_status','melder_ende_status','melder_b_status','melder_u_status','melder_el_status','melder_v40_status','melder_s_status'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[LZB] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x04), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x04, 1),'brh', ContentType.WORD),
@@ -451,6 +458,29 @@ msgidx[PID(2, 0x0a, 0x65, 2, 0x03)] = LZB
 #Status Türen
 #Grundblock
 
+class STATUS_TUEREN(Enum):
+    ZU = 0
+    OEFFNEND = 1
+    OFEN = 2
+    FAHRGASTWECHSEL_ABGESCHLOSSEN = 3
+    SCHLIESSEND = 4
+    GESTOERT = 5
+    BLOCKIERT = 6
+class TUERZUSTAND(Enum):
+    ALLE_ZU = 0
+    MIN_EINE_OFFEN = 1
+TUEREN_GRUNDBLOCK = namedtuple("TUEREN_GRUNDBLOCK", ['bezeichnung','linke_seite', 'rechte_seite', 'traktionssperre', 'zustand'],defaults=[None, None, None, None, None])
+llps[TUEREN_GRUNDBLOCK] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x66), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x66, 1),'bezeichnung', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x66, 2),'linke_seite', ContentType.BYTE, STATUS_TUEREN),
+    LLP(PID(2, 0x0a, 0x66, 3),'rechte_seite', ContentType.BYTE, STATUS_TUEREN),
+    LLP(PID(2, 0x0a, 0x66, 4),'traktionssperre', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 14),'zustand', ContentType.BYTE, TUERZUSTAND)
+)
+msgidx[PID(2, 0x0a, 0x66)] = TUEREN_GRUNDBLOCK
 #Seitenselktive Systeme
 
 #Satus Fahrzeug
