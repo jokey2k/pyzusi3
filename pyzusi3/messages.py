@@ -105,7 +105,7 @@ llps[ZUGB_GRUND] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 1), 'bauart', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 1), 'bauart', ContentType.STRING)
 )
 msgidx[PID(2, 0x0a, 0x65)] = ZUGB_GRUND
 #Indusi Analogsysteme und Basisdaten
@@ -447,7 +447,7 @@ llps[LZB] = (
     LLP(PID(2, 0x0a, 0x65, 3, 0x3e), 'melder_v40_status', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x3d), 'melder_s_status', ContentType.BYTE, LMZUSTAND)
 )
-msgidx[PID(2, 0x0a, 0x65, 2, 0x03)] = LZB
+msgidx[PID(2, 0x0a, 0x65, 2, 0x04)] = LZB
 
 #ETCS
 
@@ -479,7 +479,6 @@ llps[ZUB] = (
     LLP(PID(2, 0x0a, 0x65, 7, 9), '', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 7, 0x0a), '', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 7, 0x0b), '', ContentType.BYTE)
-
 )
 msgidx[PID(2, 0x0a, 0x65)] = ZUB
 
@@ -540,7 +539,7 @@ llps[TUEREN_SEITENSELEKTIV] = (
     LLP(PID(2, 0x0a, 0x66,0x0f), 'zentrales_oeffnen_rechts', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x66,0x10), 'status_lm_zentrales_oeffnen_links', ContentType.BYTE,LMZUSTAND),
     LLP(PID(2, 0x0a, 0x66,0x11), 'status_lm_zentrales_oeffnen_rechts', ContentType.BYTE,LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66,0x12), 'lm_gruenschleife', ContentType.BYTE),LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x66,0x12), 'lm_gruenschleife', ContentType.BYTE,LMZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x66)] = TUEREN_SEITENSELEKTIV
 
@@ -794,7 +793,7 @@ class RAHMEN_MODUS(Enum):
     GRAFIK_MIT_RAHMEN = 1
     GRAFIKMIT_TASTEN = 2
 
-LM_ZUSIDISPLAY = namedtuple("LM_ZUSIDISPLAY", ['name', 'modus', 'breite', 'höhe'], defaults=[None, None, None, None])
+LM_ZUSIDISPLAY = namedtuple("LM_ZUSIDISPLAY", ['name', 'modus', 'breite', 'hoehe'], defaults=[None, None, None, None])
 llps[LM_ZUSIDISPLAY] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -803,7 +802,7 @@ llps[LM_ZUSIDISPLAY] = (
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x01), 'name', ContentType.STRING),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x02), 'modus', ContentType.BYTE, RAHMEN_MODUS),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x03), 'breite', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x04), 'höhe', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x04), 'hoehe', ContentType.WORD),
     LLP(PID(2, 0x0a, 0xa9, 0x01), None, BasicNode)
 )
 msgidx[PID(2, 0x0a, 0xa9,0x01)] = LM_ZUSIDISPLAY
@@ -827,7 +826,7 @@ llps[STATUS_ZUG_FAHRDATEN] = (
     LLP(PID(2, 0x0a, 0xab,0x01, 0x04),'motordrehzahl_1',ContentType.SIGNLE),
     LLP(PID(2, 0x0a, 0xab,0x01, 0x05),'maximal_moegliche_zugkraft',ContentType.SIGNLE),
     LLP(PID(2, 0x0a, 0xab,0x01, 0x06),'maximale_dynamische_bremskraft',ContentType.SIGNLE),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x07),'absperhaehne_hll',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x07),'absperhaehne_hll',ContentType.BYTE, ABSPERHAEHNE_HLL),
     LLP(PID(2, 0x0a, 0xab,0x01, 0x0a),'motordrehzahl_2',ContentType.SIGNLE),
     LLP(PID(2, 0x0a, 0xab,0x01), None, BasicNode)
 )
