@@ -96,7 +96,7 @@ llps[STATUS_SIFA] = (
     LLP(PID(2, 0x0a, 0x64, 6), 'lufthan', ContentType.BYTE, SIFA_SCHALTER),
     LLP(PID(2, 0x0a, 0x64, 7), 'weg', ContentType.SINGLE)
 )
-msgidx[PID(2, 0x0a, 0x64)] = SATUS_SIFA
+msgidx[PID(2, 0x0a, 0x64)] = STATUS_SIFA
 
 #Staus Zugbeeinflussung
 #Grundblock
@@ -171,7 +171,7 @@ llps[INDUSI_ANALOG] = (
     LLP(PID(2, 0x0a, 0x65, 3, 2), 'zustand', ContentType.WORD, ZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 3), 'zwangsbremsung', ContentType.WORD, ZWANGSBREMSUNG),
     LLP(PID(2, 0x0a, 0x65, 3, 4), 'zwangsbremsung_grund', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x65, 3, 5), 'lm_100HZ',ContentType.
+    LLP(PID(2, 0x0a, 0x65, 3, 5), 'lm_100HZ',ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 6), 'lm_u', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 7), 'lm_m', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 8), 'lm_o', ContentType.BYTE),
@@ -214,35 +214,35 @@ class LM_BLINKEN_INVERS(Enum):
     BLINKEND_INVERS = 3
 
 
-INDUSI = namedtuple("INDUSI", ['tf_nr','zn', 'brh','bra','zugart','modus','klartextmeldungen','funktionspruefung_starten','stoerschalterbaurt','lm_500hz','lm_befehl_an','lm_o','lm_m','lm_u','lm_500hz','lm_befehl'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
+INDUSI = namedtuple("INDUSI", ['tf_nr','zn', 'brh','bra','zugart','modus','klartextmeldungen','funktionspruefung_starten','stoerschalterbaurt','m_500hz','m_befehl_an','lm_o','lm_m','lm_u','lm_500hz','lm_befehl'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[INDUSI] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x02), 'tf_nr', ContentTyp.String),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03), 'zn', ContentTyp.String),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x02), 'tf_nr', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03), 'zn', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x01), 'brh', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x02), 'bra', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x05), 'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x06), 'modus', ContentTyp.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x06), 'modus', ContentType.BYTE, MODUS),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x01), 'brh', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x02), 'bra', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x05), 'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x06), 'modus', ContentTyp.BYTE, MODUS),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0B),'klartextmeldungen',ContentTyp.BYTE, KLARTEXTMELDUNGEN),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0C),'funktionspruefung_starten',ContentTyp.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0F), 'stoerschalterbaurt',ContentTyp.BYTE, STOERSCHALTERBAURT),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x06), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0B),'klartextmeldungen',ContentType.BYTE, KLARTEXTMELDUNGEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0C),'funktionspruefung_starten',ContentType.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0F), 'stoerschalterbaurt',ContentType.BYTE, STOERSCHALTERBAURT),
     LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0A),'lm_500hz',ContentTyp.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0B),'lm_befehl_an',ContentTyp.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x30),'lm_o',ContentTyp.BYTE, LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x31),'lm_m',ContentTyp.BYTE, LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x32),'lm_u',ContentTyp.BYTE, LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x33),'lm_500hz',ContentTyp.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x34),'lm_befehl',ContentTyp.BYTE, LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0A),'m_500hz',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0B),'m_befehl_an',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x30),'lm_o',ContentType.BYTE, LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x31),'lm_m',ContentType.BYTE, LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x32),'lm_u',ContentType.BYTE, LM_BLINKEN_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x33),'lm_500hz',ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x34),'lm_befehl',ContentType.BYTE, LMZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI
 
@@ -252,7 +252,7 @@ msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI
 #PZB90
 class ZUSATZINFO_MELDERBILD(Enum):
     NORMALZUSTAND = 0
-    1000HZ_NACH_700M = 1
+    _1000HZ_NACH_700M = 1
     RESTREKTIV = 2
     RESTREKTIV_1000HZ = 3
     RESTREKTIV_500HZ = 4
@@ -364,7 +364,7 @@ class CIR_ELKE_MODUS(Enum):
 class ANZEIGEMODUS(Enum):
     NORMALER_MODUS = 0
     MFA = 1
-LZB = namedtuple("LZB", ['brh','bra','zl','vmz','zugart','modus','stoerschalter','lzb_klartextmeldung','funktionspruefung_starten','stoerschalterbaurt','systemstatus','zustand','ende_verfahren','Falschfahrauftrag_status','Vorsichtsauftrag_status','zielgeschwindigkeit','zielgeschwindigkeit_status','zielweg_cir_elke','lzb_nothalt','nothalt_gesendet','status_lzb_rechnerausfall','el_auftag','melder_h','melder_e40','melder_ende','melder_b','melder_u','melder_g','melder_el','melder_v40','melder_s','melder_pruef','sollgeschwindigkeit','zielgeschwindigkeit','zielweg','melder_g_status','melder_pruef_status','cir_elke_modus','anzeigemodus','melder_h_status','melder_e40_status','melder_ende_status','melder_b_status','melder_u_status','melder_el_status','melder_v40_status','melder_s_status'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
+LZB = namedtuple("LZB", ['brh','bra','zl','vmz','zugart','modus','stoerschalter','lzb_klartextmeldung','funktionspruefung_starten','stoerschalterbaurt','systemstatus','zustand','ende_verfahren','Falschfahrauftrag_status','Vorsichtsauftrag_status','zielgeschwindigkeit','zielgeschwindigkeit_status','zielweg_cir_elke','lzb_nothalt','nothalt_gesendet','status_lzb_rechnerausfall','el_auftag','melder_h','melder_e40','melder_ende','melder_b','melder_u','melder_g','melder_el','melder_v40','melder_s','melder_pruef','sollgeschwindigkeit','zielgeschwindigkeit_','zielweg','melder_g_status','melder_pruef_status','cir_elke_modus','anzeigemodus','melder_h_status','melder_e40_status','melder_ende_status','melder_b_status','melder_u_status','melder_el_status','melder_v40_status','melder_s_status'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[LZB] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -398,7 +398,7 @@ llps[LZB] = (
     LLP(PID(2, 0x0a, 0x65, 2, 0x11), 'systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     LLP(PID(2, 0x0a, 0x65, 3),None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x0d), 'zustand', ContentType.WORD, ZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0e), None, BasicNode)
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0e), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x0e, 1), 'ende_verfahren', ContentType.BYTE, ENDE_VERFAHREN),
     LLP(PID(2, 0x0a, 0x65, 3, 0x0f), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3, 0x10), None, BasicNode),
@@ -428,7 +428,7 @@ llps[LZB] = (
     LLP(PID(2, 0x0a, 0x65, 3, 0x1f), 'melder_s', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x20), 'melder_pruef', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x21), 'sollgeschwindigkeit', ContentType.SINGLE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x22), 'zielgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x22), 'zielgeschwindigkeit_', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x23), 'zielweg', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x24), 'melder_g_status', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x25), 'melder_pruef_status', ContentType.BYTE, LMZUSTAND),
@@ -588,9 +588,9 @@ class BREMSSTELLUNG(Enum):
     KEINE = 0
     G = 1
     P = 2
-    P+MG = 3
+    P_MG = 3
     R = 4
-    R+MG = 5
+    R_MG = 5
     BREMSE_AUS = 6
     H = 7
     E = 8
@@ -648,12 +648,12 @@ class ANTRIEBSTYP(Enum):
 class STROMTYP(Enum):
     OHNE = 0
     UNBESTIMMT = 1
-    15KV_16HZ = 2
-    25KV_50HZ = 3
-    1500VDC = 4
-    1200VDC_STROMSCHIENE_HAMBURG = 5
-    3KVDC = 6
-    750VDC_STROMSCHIENE_BERLIN =7
+    _15KV_16HZ = 2
+    _25KV_50HZ = 3
+    _1500VDC = 4
+    _1200VDC_STROMSCHIENE_HAMBURG = 5
+    _3KVDC = 6
+    _750VDC_STROMSCHIENE_BERLIN =7
 class BREMSTYP(Enum):
     UNBESTIMMT = 0
     ELEKTRISCH_DREHSTROM = 1
@@ -668,7 +668,7 @@ class LASTABHAENIGE_BREMSE(Enum):
 class ZUGTYP(Enum):
     GZ = 0
     RZ = 1
-STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBANDG",['fz_dateiname', 'beschreibung', 'vorgabe_bremsstellung', 'bezeichnung_zugbeeinflussungs', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbaurt', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellung', 'zugehoerige_Bremsmasse', 'bremsstellung_wirksam', 'bezeichnung_bremsbaurt', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkenzeichen', 'bezeichnung_tuersystem', 'bauart_tuerwachlschalter', 'antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv', 'bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'lastabhaehnige_bremse'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
+STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBANDG",['fz_dateiname', 'beschreibung', 'vorgabe_bremsstellung', 'bezeichnung_zugbeeinflussungs', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbaurt', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellung', 'zugehoerige_Bremsmasse', 'bremsstellung_wirksam', 'bezeichnung_bremsbaurt', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkenzeichen', 'bezeichnung_tuersystem', 'bauart_tuerwachlschalter', 'antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv', 'bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'lastabhaehnige_bremse'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
 llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -708,7 +708,7 @@ llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b, 0x03),'bremsstellung_wirksam', ContentType.BYTE, BREMSSTELLUNG_WIRKSAM),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b), None, BasicNode),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1c),'bezeichnung_bremsbaurt', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1d),'grafik_seitenansicht', ContentType.DATEI),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1d),'grafik_seitenansicht', ContentType.FILE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1e),'hbl', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1f),'fz_verbund', ContentType.BYTE, FAHRZEUG_VERBUND),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x20),'lokstatus', ContentType.BYTE, LOKSTATUS),
@@ -822,14 +822,14 @@ llps[STATUS_ZUG_FAHRDATEN] = (
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0xab), None, BasicNode),
     LLP(PID(2, 0x0a, 0xab,0x01), None, BasicNode),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x01),'bremszylinderdruck', ContentType.SIGNLE),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x02),'hll_druck',ContentType.SIGNLE),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x03),'zugkraft',ContentType.SIGNLE),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x04),'motordrehzahl_1',ContentType.SIGNLE),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x05),'maximal_moegliche_zugkraft',ContentType.SIGNLE),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x06),'maximale_dynamische_bremskraft',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x01),'bremszylinderdruck', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x02),'hll_druck',ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x03),'zugkraft',ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x04),'motordrehzahl_1',ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x05),'maximal_moegliche_zugkraft',ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x06),'maximale_dynamische_bremskraft',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab,0x01, 0x07),'absperhaehne_hll',ContentType.BYTE, ABSPERHAEHNE_HLL),
-    LLP(PID(2, 0x0a, 0xab,0x01, 0x0a),'motordrehzahl_2',ContentType.SIGNLE),
+    LLP(PID(2, 0x0a, 0xab,0x01, 0x0a),'motordrehzahl_2',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab,0x01), None, BasicNode)
 )
 msgidx[PID(2, 0x0a, 0xab,0x01)] = STATUS_ZUG_FAHRDATEN
