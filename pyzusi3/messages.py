@@ -48,6 +48,29 @@ llps[ACK_HELLO] = (
 )
 msgidx[PID(1, 2)] = ACK_HELLO
 
+# NEEDED_DATA
+NEEDED_DATA = namedtuple("NEEDED_DATA", ['anzeigen', 'bedienung', 'programmdaten'], defaults=[None, None, None])
+llps[NEEDED_DATA] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 3), None, BasicNode),
+    LLP(PID(2, 3, 0x0a), None, BasicNode),
+    LLP(PID(2, 3, 0x0a, 1), 'anzeigen', ContentType.WORD),
+    LLP(PID(2, 3, 0x0b), None, BasicNode),
+    LLP(PID(2, 3, 0x0b, 1), 'bedienung', ContentType.WORD),
+    LLP(PID(2, 3, 0x0c), None, BasicNode),
+    LLP(PID(2, 3, 0x0c, 1), 'programmdaten', ContentType.WORD),
+)
+msgidx[PID(2, 3)] = NEEDED_DATA
+
+# ACK_NEEDED_DATA
+ACK_NEEDED_DATA = namedtuple("ACK_NEEDED_DATA", ['status'], defaults=[None])
+llps[ACK_NEEDED_DATA] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 4), None, BasicNode),
+    LLP(PID(2, 4, 1), 'status', ContentType.BYTE),
+)
+msgidx[PID(2, 4)] = ACK_NEEDED_DATA
+
 #Status NBÜ
 class STATUS_NB_UEBERBRUECKUNG(Enum):
     NBU_AUS = 0
