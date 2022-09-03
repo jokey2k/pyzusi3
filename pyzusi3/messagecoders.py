@@ -1,5 +1,6 @@
 import logging
 from multiprocessing import parent_process
+from enum import Enum
 from platform import node
 import struct
 
@@ -124,6 +125,8 @@ def encode_obj(obj):
             continue
         node_id = getattr(parameter.parameterid, "id" + str(current_level))
         node_content = parameter_value
+        if isinstance(node_content, Enum):
+            node_content = node_content.value
         if type(node_content) == bytes and parameter.contenttype not in [ContentType.FILE, ContentType.RAW]:
             node_contenttype = ContentType.RAW
         else:
