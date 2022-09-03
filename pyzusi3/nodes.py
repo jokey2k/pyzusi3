@@ -164,6 +164,7 @@ class StreamDecoder:
         self.root_node = None
         self.current_node = None
         self.content_length = None
+        self.level = 1
 
     def decode(self, bytecontent):
         if not isinstance(bytecontent, bytes):
@@ -171,70 +172,89 @@ class StreamDecoder:
         self.log.info("Start decoding")
         self.reset()
         self.bytecontent = iter(bytecontent)
-        self._decode()
+        self._decode_loop()
         self.log.debug("Decoding result:")
         self.log.debug(repr(self.root_node))
         return self.root_node
 
-    def _get_bytes(self, length):
+    def _next_content_length(self):
+        if self.state == DecoderState.RESET:
+            length = 4
+        elif self.state == DecoderState.NODEID or self.state == DecoderState.NODEIDFORCONTENT:
+            length = 2
+        elif self.state == DecoderState.CONTRENTLENGTH:
+            length = 4
+        elif self.state == DecoderState.CONTENT:
+            length = self.content_length
+        else:
+            raise NotImplementedError("State %s not implemented in length check" % self.state)
+
+        return length
+
+    def _get_bytes(self):
         data = []
-        for i in range(length):
+        for i in range(self._next_content_length()):
             try:
                 data.append(next(self.bytecontent))
             except StopIteration:
                 raise MissingBytesDecodeError("Not enough bytes to get from datastream")
         return bytes(data)
 
-    def _decode(self):
+    def _decode_loop(self):
         previous_state = None
         while previous_state != self.state:
-            self.log.debug("Current state: %s" % self.state)
             previous_state = self.state # healthcheck
-            if self.state == DecoderState.RESET:
-                incoming_bytes = self._get_bytes(4)
-                if incoming_bytes != (0).to_bytes(4, byteorder='little'):
-                    raise DecodeValueError("Expected 4 empty bytes for root node start but got %s" % incoming_bytes)
-                self.root_node = self.current_node = BasicNode()
-                self.log.debug("Created new node")
-                self.state = DecoderState.NODEID
-            elif self.state == DecoderState.NODEID or self.state == DecoderState.NODEIDFORCONTENT:
-                incoming_bytes = self._get_bytes(2)
-                self.current_node.id = struct.unpack("<H", incoming_bytes)[0]
-                self.log.debug("Set node id to %s" % self.current_node.id)
-                if self.state == DecoderState.NODEIDFORCONTENT:
-                    self.state = DecoderState.CONTENT
-                else:
-                    self.state = DecoderState.CONTRENTLENGTH
-            elif self.state == DecoderState.CONTRENTLENGTH:
-                incoming_bytes = self._get_bytes(4)
-                if incoming_bytes == (0xffffffff).to_bytes(4, byteorder='little'):
-                    # marks end of nodetree
-                    self.log.debug("Finished current node")
-                    self.current_node = self.current_node.parent_node
-                    self.state = DecoderState.CONTRENTLENGTH
-                    if self.current_node == self.root_node:
-                        return
-                    continue
-                self.log.debug("Creating new child node")
-                new_node = BasicNode(parent_node=self.current_node)
-                self.current_node.children.append(new_node)
-                self.current_node = new_node
-
-                content_length = struct.unpack("<I", incoming_bytes)[0]
-                if content_length == 0:
-                    # just subnodes, possibly with children themselves
-                    self.state = DecoderState.NODEID
-                    self.log.debug("No content, just setting id afterwards")
-                else:
-                    # real content follows after id
-                    self.content_length = struct.unpack("<I", incoming_bytes)[0] - 2
-                    self.log.debug("Setting id and adding content with length %s to node" % self.content_length)
-                    self.state = DecoderState.NODEIDFORCONTENT
-            elif self.state == DecoderState.CONTENT:
-                self.current_node.content = self._get_bytes(self.content_length)
-                self.current_node.contenttype = ContentType.RAW
-                self.log.debug("Got content %s" % self.current_node.content)
-                self.current_node = self.current_node.parent_node
-                self.state = DecoderState.CONTRENTLENGTH
+            incoming_bytes = self._get_bytes()
+            self._decode_single_pass(incoming_bytes)
+            if self.current_node == self.root_node and self.state == DecoderState.CONTRENTLENGTH and self.level == 1:
+                # finished decoding
+                return
         if self.current_node != self.root_node:
             raise DecodeValueError("Not all nodes have been closed, data incomplete")
+
+    def _decode_single_pass(self, incoming_bytes):
+        self.log.debug("Current state: %s" % self.state)
+        if self.state == DecoderState.RESET:
+            if incoming_bytes != (0).to_bytes(4, byteorder='little'):
+                raise DecodeValueError("Expected 4 empty bytes for root node start but got %s" % incoming_bytes)
+            self.root_node = self.current_node = BasicNode()
+            self.log.debug("Created new node")
+            self.state = DecoderState.NODEID
+            self.level += 1
+        elif self.state == DecoderState.NODEID or self.state == DecoderState.NODEIDFORCONTENT:
+            self.current_node.id = struct.unpack("<H", incoming_bytes)[0]
+            self.log.debug("Set node id to %s" % self.current_node.id)
+            if self.state == DecoderState.NODEIDFORCONTENT:
+                self.state = DecoderState.CONTENT
+            else:
+                self.state = DecoderState.CONTRENTLENGTH
+        elif self.state == DecoderState.CONTRENTLENGTH:
+            if incoming_bytes == (0xffffffff).to_bytes(4, byteorder='little'):
+                # marks end of nodetree
+                self.log.debug("Finished current node")
+                self.current_node = self.current_node.parent_node
+                self.state = DecoderState.CONTRENTLENGTH
+                self.level -= 1
+                return
+            self.log.debug("Creating new child node")
+            new_node = BasicNode(parent_node=self.current_node)
+            self.current_node.children.append(new_node)
+            self.current_node = new_node
+            self.level += 1
+            content_length = struct.unpack("<I", incoming_bytes)[0]
+            if content_length == 0:
+                # just subnodes, possibly with children themselves
+                self.state = DecoderState.NODEID
+                self.log.debug("No content, just setting id afterwards")
+            else:
+                # real content follows after id
+                self.content_length = struct.unpack("<I", incoming_bytes)[0] - 2
+                self.log.debug("Setting id and adding content with length %s to node" % self.content_length)
+                self.state = DecoderState.NODEIDFORCONTENT
+        elif self.state == DecoderState.CONTENT:
+            self.current_node.content = incoming_bytes
+            self.current_node.contenttype = ContentType.RAW
+            self.log.debug("Got content %s" % self.current_node.content)
+            self.current_node = self.current_node.parent_node
+            self.state = DecoderState.CONTRENTLENGTH
+        return self.root_node
