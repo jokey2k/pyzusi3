@@ -70,7 +70,7 @@ class MessageDecoder:
             current_node = current_node.children[0]
 
         if current_pid not in message_index:
-            raise NotImplementedError("Message for index %s not yet implemented" % current_pid)
+            raise NotImplementedError("Message for index %s not yet implemented" % str(current_pid))
         
         return message_index[current_pid], current_pid
 
