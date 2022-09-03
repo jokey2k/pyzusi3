@@ -71,6 +71,16 @@ llps[ACK_NEEDED_DATA] = (
 )
 msgidx[PID(2, 4)] = ACK_NEEDED_DATA
 
+# DATA_FTD
+DATA_FTD = namedtuple("DATA_FTD", ['geschwindigkeit'], defaults=[None])
+llps[DATA_FTD] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 10), None, BasicNode),
+    LLP(PID(2, 10, 1), 'geschwindigkeit', ContentType.SINGLE),
+)
+msgidx[PID(2, 10)] = DATA_FTD
+
+
 #Status NBÜ
 class STATUS_NB_UEBERBRUECKUNG(Enum):
     NBU_AUS = 0
