@@ -1,6 +1,7 @@
 from enum import Enum
 import struct
 import logging
+import asyncio
 
 from pyzusi3.exceptions import DecodeValueError, EncodingValueError, MissingBytesDecodeError, MissingContentTypeError
 
@@ -257,4 +258,32 @@ class StreamDecoder:
             self.log.debug("Got content %s" % self.current_node.content)
             self.current_node = self.current_node.parent_node
             self.state = DecoderState.CONTRENTLENGTH
+
+class AsyncStreamDecoder(StreamDecoder):
+
+    async def _get_bytes(self):
+        data = await self.bytecontent.readexactly(self._next_content_length())
+        return data
+
+    async def decode(self, stream):
+        if not isinstance(stream, asyncio.StreamReader):
+            raise ValueError("Need stream to decode, not %s" % type(stream))
+        self.log.info("Start decoding")
+        self.reset()
+        self.bytecontent = stream
+        await self._decode_loop()
+        self.log.debug("Decoding result:")
+        self.log.debug(repr(self.root_node))
         return self.root_node
+
+    async def _decode_loop(self):
+        previous_state = None
+        while previous_state != self.state:
+            previous_state = self.state # healthcheck
+            incoming_bytes = await self._get_bytes()
+            self._decode_single_pass(incoming_bytes)
+            if self.current_node == self.root_node and self.state == DecoderState.CONTRENTLENGTH and self.level == 1:
+                # finished decoding
+                return
+        if self.current_node != self.root_node:
+            raise DecodeValueError("Not all nodes have been closed, data incomplete")
