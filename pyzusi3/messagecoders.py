@@ -124,13 +124,25 @@ def encode_obj(obj):
             continue
         node_id = getattr(parameter.parameterid, "id" + str(current_level))
         node_content = parameter_value
-        if isinstance(node_content, Enum):
-            node_content = node_content.value
         if type(node_content) == bytes and parameter.contenttype not in [ContentType.FILE, ContentType.RAW]:
             node_contenttype = ContentType.RAW
         else:
             node_contenttype = parameter.contenttype
-        new_node = BasicNode(id=node_id, content=node_content, contenttype=node_contenttype, parent_node=current_node)
-        current_node.children.append(new_node)
+        if isinstance(node_content, list):
+           # So far only used in needed_data
+           for entry in node_content:
+               if isinstance(entry, Enum):
+                   entry_content = entry.value
+               else:
+                   entry_content = entry
+               new_node = BasicNode(id=node_id, content=entry_content, contenttype=node_contenttype, parent_node=current_node)
+               if new_node.content is not None:
+                   current_node.children.append(new_node)
+        else:
+            if isinstance(node_content, Enum):
+                node_content = node_content.value
+            new_node = BasicNode(id=node_id, content=node_content, contenttype=node_contenttype, parent_node=current_node)
+            if new_node.content is not None:
+                current_node.children.append(new_node)
 
     return root_node
