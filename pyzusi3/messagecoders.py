@@ -145,4 +145,17 @@ def encode_obj(obj):
             if new_node.content is not None:
                 current_node.children.append(new_node)
 
+    def optimize_tree(node):
+        """Removes all empty child nodes"""
+
+        new_children = []
+        for child in node.children:
+            if child.children:
+                optimize_tree(child)
+            if child.children or child.content:
+               new_children.append(child)
+        node.children = new_children
+    
+    optimize_tree(root_node)
+
     return root_node
