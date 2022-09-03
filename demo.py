@@ -37,6 +37,19 @@ async def zusitalk(ip, port):
     if not (isinstance(response, messages.ACK_HELLO) and response.status == b'\x00'):
         log.error("Zusi did not report success for HELLO")
 
+    log.info("Request train speed")
+    need_msg = messages.NEEDED_DATA([0x01])
+    writer.write(encode_obj(need_msg).encode())
+    response = await decode_bytes(reader)
+    log.debug(response)
+
+    try:
+        while True:
+            response = await decode_bytes(reader)
+            log.info("Got response: %s" % response)
+            asyncio.sleep(0.1)
+    except KeyboardInterrupt:
+        pass
     log.info("Disconnecting")
     writer.close()
 
