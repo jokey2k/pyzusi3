@@ -32,7 +32,7 @@ class BasicNode:
         self.parent_node = parent_node
 
     def __eq__(self, other):
-        return self.id == other.id and self.content == other.content and self.contenttype == other.contenttype and self.children == other.children
+        return other is not None and self.id == other.id and self.content == other.content and self.contenttype == other.contenttype and self.children == other.children
 
     def __repr__(self):
         return "<%s id=%s content=%s contenttype=%s parent_node=%s children=%s>" % (self.__class__.__name__, self.id, self.content, self.contenttype, self.parent_node, self.children)
@@ -202,14 +202,12 @@ class StreamDecoder:
         return bytes(data)
 
     def _decode_loop(self):
-        previous_state = None
-        while previous_state != self.state:
-            previous_state = self.state # healthcheck
+        while self.level > 0:
             incoming_bytes = self._get_bytes()
             self._decode_single_pass(incoming_bytes)
-            if self.current_node == self.root_node and self.state == DecoderState.CONTRENTLENGTH and self.level == 1:
+            if self.current_node == self.root_node and self.level == 1:
                 # finished decoding
-                return
+                break
         if self.current_node != self.root_node:
             raise DecodeValueError("Not all nodes have been closed, data incomplete")
 
@@ -222,6 +220,8 @@ class StreamDecoder:
             self.log.debug("Created new node")
             self.state = DecoderState.NODEID
             self.level += 1
+            self.log.debug("New level: %s" % self.level)
+
         elif self.state == DecoderState.NODEID or self.state == DecoderState.NODEIDFORCONTENT:
             self.current_node.id = struct.unpack("<H", incoming_bytes)[0]
             self.log.debug("Set node id to %s" % self.current_node.id)
@@ -236,17 +236,19 @@ class StreamDecoder:
                 self.current_node = self.current_node.parent_node
                 self.state = DecoderState.CONTRENTLENGTH
                 self.level -= 1
+                self.log.debug("New level: %s" % self.level)
                 return
             self.log.debug("Creating new child node")
             new_node = BasicNode(parent_node=self.current_node)
             self.current_node.children.append(new_node)
             self.current_node = new_node
-            self.level += 1
             content_length = struct.unpack("<I", incoming_bytes)[0]
             if content_length == 0:
                 # just subnodes, possibly with children themselves
                 self.state = DecoderState.NODEID
                 self.log.debug("No content, just setting id afterwards")
+                self.level += 1
+                self.log.debug("New level: %s" % self.level)
             else:
                 # real content follows after id
                 self.content_length = struct.unpack("<I", incoming_bytes)[0] - 2
@@ -263,6 +265,7 @@ class AsyncStreamDecoder(StreamDecoder):
 
     async def _get_bytes(self):
         data = await self.bytecontent.readexactly(self._next_content_length())
+        self.log.debug("Got data: %s" % data)
         return data
 
     async def decode(self, stream):
@@ -277,13 +280,12 @@ class AsyncStreamDecoder(StreamDecoder):
         return self.root_node
 
     async def _decode_loop(self):
-        previous_state = None
-        while previous_state != self.state:
-            previous_state = self.state # healthcheck
+        while self.level > 0:
             incoming_bytes = await self._get_bytes()
+            self.log.debug("Next decode pass")
             self._decode_single_pass(incoming_bytes)
-            if self.current_node == self.root_node and self.state == DecoderState.CONTRENTLENGTH and self.level == 1:
+            if self.state == DecoderState.CONTRENTLENGTH and self.level == 1:
                 # finished decoding
-                return
-        if self.current_node != self.root_node:
+                break
+        if self.current_node != self.root_node and self.current_node != None:
             raise DecodeValueError("Not all nodes have been closed, data incomplete")
