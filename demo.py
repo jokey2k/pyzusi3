@@ -12,6 +12,7 @@ ZUSI_IP = "127.0.0.1"
 ZUSI_PORT = "1436"
 
 log = logging.getLogger("ZusiDemo")
+logging.basicConfig(level=logging.DEBUG)
 
 async def decode_bytes(stream_bytes):
     decoder = AsyncStreamDecoder()
