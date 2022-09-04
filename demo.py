@@ -46,7 +46,7 @@ async def zusitalk(ip, port):
     try:
         while True:
             response = await decode_bytes(reader)
-            log.info("Got response: %s" % response)
+            log.info("Got response: %s" % str(response))
             await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         pass
