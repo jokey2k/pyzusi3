@@ -36,12 +36,15 @@ async def zusitalk(ip, port):
     log.debug(response)
     if not (isinstance(response, messages.ACK_HELLO) and response.status == b'\x00'):
         log.error("Zusi did not report success for HELLO")
+        return
 
     log.info("Request train speed")
     need_msg = messages.NEEDED_DATA([0x01])
     writer.write(encode_obj(need_msg).encode())
     response = await decode_bytes(reader)
     log.debug(response)
+    if not (isinstance(response, messages.ACK_NEEDED_DATA) and response.status == b'\x00'):
+        log.error("Zusi did not report success for HELLO")
 
     try:
         while True:
