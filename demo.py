@@ -12,7 +12,7 @@ ZUSI_IP = "127.0.0.1"
 ZUSI_PORT = "1436"
 
 log = logging.getLogger("ZusiDemo")
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
 
 async def decode_bytes(stream_bytes):
     decoder = AsyncStreamDecoder()
@@ -39,7 +39,7 @@ async def zusitalk(ip, port):
         return
 
     log.info("Request train speed")
-    need_msg = messages.NEEDED_DATA([0x01])
+    need_msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT])
     writer.write(encode_obj(need_msg).encode())
     response = await decode_bytes(reader)
     log.debug(response)
@@ -49,7 +49,8 @@ async def zusitalk(ip, port):
     try:
         while True:
             response = await decode_bytes(reader)
-            log.info("Got response: %s" % str(response))
+            if response.geschwindigkeit_absolut is not None:
+                log.warning("Got new speed info: %s" % str(response.geschwindigkeit_absolut))
             await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         pass
