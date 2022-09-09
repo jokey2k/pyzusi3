@@ -150,9 +150,9 @@ class FAHRPULT_ANZEIGEN(Enum):
     KILOMETRIEUNG = 97
     MOTORSTROM = 98
     MOTORSPANNUNG = 99
-    # XXX STATUS_SIFA = 100
     # XXX STATUS_ZUGBEEINFLUSSUNG = 101
     # XXX STATUS_TUEREN = 102
+    STATUS_SIFA = 100
     FAHRPULTINTERN_21 = 103
     FAHRPULTINTERN_22 = 104
     FAHRPULTINTERN_23 = 105
@@ -462,9 +462,9 @@ class STATUS_SIFA_HUPE(Enum):
     HUPE_WARNUNG = 1
     HUPE_ZWANGSBREMSUNG = 2
 class SIFA_SCHALTER(Enum):
-    SIFA_SCHALTER_EIN = 1
-    SIFA_SCHALTER_AUS = 2
-STATUS_SIFA = namedtuple("STATUS_SIFA", ['bauart', 'lm', 'hupe', 'hauptschalter', 'stoerschalter', 'Lufthan', 'weg'], defaults=[None, None, None, None, None, None, None])
+    SCHALTER_EIN = 1
+    SCHALTER_AUS = 2
+STATUS_SIFA = namedtuple("STATUS_SIFA", ['bauart', 'lm', 'hupe', 'hauptschalter', 'stoerschalter', 'lufthahn', 'weg'], defaults=[None, None, None, None, None, None, None])
 llps[STATUS_SIFA] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -474,7 +474,7 @@ llps[STATUS_SIFA] = (
     LLP(PID(2, 0x0a, 0x64, 3), 'hupe', ContentType.BYTE, STATUS_SIFA_HUPE),
     LLP(PID(2, 0x0a, 0x64, 4), 'hauptschalter', ContentType.BYTE, SIFA_SCHALTER),
     LLP(PID(2, 0x0a, 0x64, 5), 'stoerschalter', ContentType.BYTE, SIFA_SCHALTER),
-    LLP(PID(2, 0x0a, 0x64, 6), 'lufthan', ContentType.BYTE, SIFA_SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 6), 'lufthahn', ContentType.BYTE, SIFA_SCHALTER),
     LLP(PID(2, 0x0a, 0x64, 7), 'weg', ContentType.SINGLE)
 )
 msgidx[PID(2, 0x0a, 0x64)] = STATUS_SIFA
