@@ -40,16 +40,31 @@ def decode_data(data, contenttype, enumtype):
 class MessageDecoder:
     def __init__(self) -> None:
         self.log = logging.getLogger("pyzusi3.messagecoders.MessageDecoder")
+        self.reset()
 
     def reset(self):
         self.message_class = None
+        self.submessage_prefixes = {}
     
     def parse(self, root_node):
         self.message_class, self.message_pid = self.find_messageclass(root_node)
         self.mapped_parameters = {}
         self.lowlevel_parameter = lowlevel_parameters[self.message_class]
         self.map_parameters(root_node, ParameterId(root_node.id), 1)
-        return self.message_class(**self.mapped_parameters)
+
+        if not self.submessage_prefixes:
+            return (self.message_class(**self.mapped_parameters), [])
+
+        used_prefixes = {prefix: msgclass for prefix, msgclass in self.submessage_prefixes.values()}
+        submessages = []
+        for prefix, msgclass in used_prefixes.items():
+            msgclass_params = {key[key.find("::")+2:]: value for key, value in self.mapped_parameters.items() if key.startswith(prefix)}
+            submessages.append(msgclass(**msgclass_params))
+            for msgkey in msgclass_params.keys():
+                del self.mapped_parameters[prefix + msgkey]
+
+        basemessage = self.message_class(**self.mapped_parameters)
+        return (basemessage, submessages)
 
     def find_messageclass(self, root_node):
         current_pid = ParameterId()
@@ -76,10 +91,34 @@ class MessageDecoder:
         if current_node.content is not None:
             mapping_parameter = [param for param in self.lowlevel_parameter if param.parameterid == current_pid]
             if not len(mapping_parameter):
-                self.log.debug("Parameter %s is not known for %s, skipping" % (current_pid, self.message_class))
+                self.log.debug("Parameter %s is not known for %s, checking for submessage" % (current_pid, self.message_class))
+                submessage_class = None
+                for i in range(len(current_pid), 1, -1):
+                    check_param_index = ParameterId(*current_pid[:i])
+                    if check_param_index in message_index:
+                        submessage_class = message_index[check_param_index]
+                        self.log.debug("Found submessage of type %s" % submessage_class)
+                        break
+                if submessage_class is None:
+                    self.log.debug("Parameter %s is not known for %s and no submessage, discarding" % (current_pid, self.message_class))
+                    return
+
+                prefix_name = "%s::" % submessage_class
+                self.submessage_prefixes[check_param_index] = (prefix_name, submessage_class)
+
+                mapping_parameter = [param for param in lowlevel_parameters[submessage_class] if param.parameterid == current_pid]
+                if len(mapping_parameter) > 1:
+                    raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, submessage_class))
+                elif not len(mapping_parameter):
+                    raise NotImplementedError("Parameter %s is unknown for %s, programming error!" % (current_pid, submessage_class))
+                mapping_parameter = mapping_parameter[0]
+                self.mapped_parameters[prefix_name + mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+                return
+
             if len(mapping_parameter) > 1:
                 raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, self.message_class))
             mapping_parameter = mapping_parameter[0]
+
             self.mapped_parameters[mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
         for child_node in current_node.children:
             params = {'id' + str(current_level + 1): child_node.id}
