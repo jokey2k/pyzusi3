@@ -18,8 +18,8 @@ async def decode_bytes(stream_bytes):
     decoder = AsyncStreamDecoder()
     decoded_tree = await decoder.decode(stream_bytes)
     messagedecoder = MessageDecoder()
-    decoded_message = messagedecoder.parse(decoded_tree)  
-    return decoded_message
+    decoded_messages = messagedecoder.parse(decoded_tree)  
+    return decoded_messages
 
 async def zusitalk(ip, port):
     log.info("Connecting to Zusi3")
@@ -32,25 +32,28 @@ async def zusitalk(ip, port):
     writer.write(encode_obj(hello_msg).encode())
 
     log.info("Waiting for response")
-    response = await decode_bytes(reader)
-    log.debug(response)
-    if not (isinstance(response, messages.ACK_HELLO) and response.status == b'\x00'):
+    basemessage, submessages = await decode_bytes(reader)
+    log.debug(basemessage)
+    if not (isinstance(basemessage, messages.ACK_HELLO) and basemessage.status == 0):
         log.error("Zusi did not report success for HELLO")
         return
 
-    log.info("Request train speed")
-    need_msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT])
+    log.info("Request train speed and emer brake status")
+    need_msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT, messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM])
     writer.write(encode_obj(need_msg).encode())
-    response = await decode_bytes(reader)
-    log.debug(response)
-    if not (isinstance(response, messages.ACK_NEEDED_DATA) and response.status == b'\x00'):
+    basemessage, submessages = await decode_bytes(reader)
+    log.debug(basemessage)
+    if not (isinstance(basemessage, messages.ACK_NEEDED_DATA) and basemessage.status == 0):
         log.error("Zusi did not report success for HELLO")
 
     try:
         while True:
-            response = await decode_bytes(reader)
-            if response.geschwindigkeit_absolut is not None:
-                log.warning("Got new speed info: %s" % str(response.geschwindigkeit_absolut))
+            basemessage, submessages = await decode_bytes(reader)
+            if isinstance(basemessage, messages.DATA_FTD) and basemessage.geschwindigkeit_absolut is not None:
+                log.warning("Got new speed info: %s" % str(basemessage.geschwindigkeit_absolut))
+            for submessage in submessages:
+                if isinstance(submessage, messages.STATUS_NOTBREMSSYSTEM):
+                    log.warning("New state for emer brakes: %s" % str(submessage))
             await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         pass
