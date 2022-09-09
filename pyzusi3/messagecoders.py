@@ -7,7 +7,7 @@ from pyzusi3.nodes import BasicNode
 
 def decode_data(data, contenttype, enumtype):
     if contenttype == ContentType.BYTE:
-        result = struct.unpack("<c", data)[0]
+        result = int.from_bytes(data, byteorder='little')
     elif contenttype == ContentType.SHORTINT:
         result = struct.unpack("<b", data)[0]
     elif contenttype == ContentType.WORD:
