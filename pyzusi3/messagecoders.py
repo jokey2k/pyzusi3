@@ -1,6 +1,5 @@
 import logging
 from enum import Enum
-from platform import node
 import struct
 
 from pyzusi3.messages import ParameterId, message_index, lowlevel_parameters, ContentType
