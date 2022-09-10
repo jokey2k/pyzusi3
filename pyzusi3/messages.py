@@ -14,13 +14,20 @@ PID = ParameterId
 llps = lowlevel_parameters
 msgidx = message_index
 
+#
+# allgemeine Helfer
+#
+
 # Lampenstatus
 class LMZUSTAND(Enum):
     LM_AUS = 0
     LM_AN = 1
     LM_BLINKEN = 2
 
+#
 # HELLO
+# Client -> Zusi
+#
 class ClientTyp(Enum):
     ZUSI = 1
     FAHRPULT = 2
@@ -35,7 +42,10 @@ llps[HELLO] = (
 )
 msgidx[PID(1, 1)] = HELLO
 
+#
 # ACK_HELLO
+# Zusi -> Client
+#
 ACK_HELLO = namedtuple("ACK_HELLO", ['zusiversion', 'verbindungsinfo', 'status', 'startdatum', 'protokollversion'], defaults=([None] * 5))
 llps[ACK_HELLO] = (
     LLP(PID(1), None, BasicNode),
@@ -48,7 +58,10 @@ llps[ACK_HELLO] = (
 )
 msgidx[PID(1, 2)] = ACK_HELLO
 
+#
 # NEEDED_DATA
+# Client -> Zusi
+#
 class FAHRPULT_ANZEIGEN(Enum):
     KEINE_FUNKTION = 0
     GESCHWINDIGKEIT = 1
@@ -242,7 +255,10 @@ llps[NEEDED_DATA] = (
 )
 msgidx[PID(2, 3)] = NEEDED_DATA
 
+#
 # ACK_NEEDED_DATA
+# Zusi -> Client
+#
 ACK_NEEDED_DATA = namedtuple("ACK_NEEDED_DATA", ['status'], defaults=[None])
 llps[ACK_NEEDED_DATA] = (
     LLP(PID(2), None, BasicNode),
@@ -251,8 +267,10 @@ llps[ACK_NEEDED_DATA] = (
 )
 msgidx[PID(2, 4)] = ACK_NEEDED_DATA
 
-
+#
 # DATA_FTD
+# Zusi -> Client
+#
 DATA_FTD = namedtuple("DATA_FTD", ['geschwindigkeit', 'druck_hauptluftleitung', 'druck_bremszylinder', 'druck_hauptluftbehaelter', 'luftpresser_laeuft', 'luftstrom_fbv', 'luftstrom_zbv', 'luefter_an', 'zugkraft_gesamt', 'zugkraft_pro_achse', 'zugkraft_soll_gesamt', 'zugkraft_soll_pro_achse', 'oberstrom', 'fahrleitungsspannung', 'motordrehzahl', 'uhrzeit_stunde', 'uhrzeit_minute', 'uhrzeit_sekunde', 'hauptschalter', 'trennschuetz', 'fahrstufe', 'fenster_3d', 'afb_sollgeschwindigkeit', 'druck_hilfsbehaelter', 'zurueckgelegter_gesamtweg', 'lm_getriebe', 'lm_schleudern', 'lm_gleiten', 'lm_mg_bremse', 'lm_h_bremse', 'lm_r_bremse', 'lm_hochabbremsung', 'lm_schnellbremsung', 'lm_uhrzeit', 'lm_drehzahlverstellung', 'lm_fahrtrichtung_vor', 'lm_fahrtrichtung_zurueck', 'lm_fahrtrichtung_m', 'motordrehmoment', 'motorlast_normiert', 'tunnel', 'schienenstoss_weiche', 'stahlbruecke', 'steinbruecke', 'x_koordinate', 'y_koordinate', 'z_koordinate', 'utm_referenzpunkt_x', 'utm_referenzpunkt_y', 'utm_zone', 'utm_zone_2', 'afb_an', 'fahrpultintern_01', 'fahrpultintern_02', 'fahrpultintern_03', 'fahrpultintern_04', 'fahrpultintern_05', 'fahrpultintern_06', 'fahrpultintern_07', 'fahrpultintern_08', 'fahrpultintern_09', 'fahrpultintern_10', 'fahrpultintern_11', 'fahrpultintern_12', 'fahrpultintern_13', 'fahrpultintern_14', 'fahrpultintern_15', 'fahrpultintern_16', 'fahrpultintern_17', 'fahrpultintern_18', 'fahrpultintern_19', 'fahrpultintern_20', 'datum', 'gleiskruemung', 'streckenvmax', 'zugkraftvorschlag_autopilot', 'beschleunigung_x', 'beschleunigung_y', 'beschleunigung_z', 'drehbeschleunigung_x', 'drehbeschleunigung_y', 'drehbeschleunigung_z', 'stromabnehmer', 'lm_federspeicherbremse_angelegt', 'zustand_federspeicherbremse', 'stw_lm_getriebe', 'stw_lm_schleudern', 'stw_lm_gleiten', 'stw_lm_h_bremse', 'stw_lm_r_bremse', 'stw_lm_drehzahlverstellung', 'druck_zeitbehaelter', 'geschwindigkeit_absolut', 'zug_ist_entgleist', 'kilometrieung', 'motorstrom', 'motorspannung', 'fahrpultintern_21', 'fahrpultintern_22', 'fahrpultintern_23', 'fahrpultintern_24', 'fahrpultintern_25', 'fahrpultintern_26', 'fahrpultintern_27', 'fahrpultintern_28', 'fahrpultintern_29', 'fahrpultintern_30', 'fahrpultintern_31', 'fahrpultintern_32', 'fahrpultintern_33', 'fahrpultintern_34', 'fahrpultintern_35', 'fahrpultintern_36', 'fahrpultintern_37', 'fahrpultintern_38', 'fahrpultintern_39', 'fahrpultintern_40', 'stw_luefter_an', 'stw_zugkraft_gesamt', 'stw_zugkraft_pro_achse', 'stw_zugkraft_soll_gesamt', 'stw_zugkraft_soll_pro_achse', 'stw_oberstrom', 'stw_fahrleitungsspannung', 'stw_motordrehzahl_1', 'stw_hauptschalter', 'stw_trennschuetz', 'stw_fahrstufe', 'stw_motordrehmoment_1', 'stw_motorlast_normiert', 'stw_stromabnehmer', 'stw_motorstrom_1', 'stw_motorspannung_1', 'geschwindigkeit_absolut_mit_schleudern', 'batteriehauptschalter_aus', 'bremsprobefunktion', 'zug_und_bremskraft_normiert', 'stw_zug_und_bremskraft_normiert', 'zug_und_bremskraft_absolut_normiert', 'stw_zug_und_bremskraft_absolut_normiert', 'fahrzeugintern_01', 'fahrzeugintern_02', 'fahrzeugintern_03', 'fahrzeugintern_04', 'fahrzeugintern_05', 'fahrzeugintern_06', 'fahrzeugintern_07', 'fahrzeugintern_08', 'fahrzeugintern_09', 'fahrzeugintern_10', 'fahrzeugintern_11', 'fahrzeugintern_12', 'fahrzeugintern_13', 'fahrzeugintern_14', 'fahrzeugintern_15', 'fahrzeugintern_16', 'fahrzeugintern_17', 'fahrzeugintern_18', 'fahrzeugintern_19', 'fahrzeugintern_20', 'aussenhelligkeit', 'fuehrerstand_deaktiviert', 'solldruck_hl', 'stw_motordrehzahl_2', 'stw_motordrehmoment_2', 'stw_motorstrom_2', 'stw_motorspannung_2_'], defaults=([None] * 167))
 llps[DATA_FTD] = (
     LLP(PID(2), None, BasicNode),
@@ -428,8 +446,10 @@ llps[DATA_FTD] = (
 )
 msgidx[PID(2, 10)] = DATA_FTD
 
-
-#Status NBÜ
+#
+# STATUS_NOTBREMSSYSTEM
+# Zusi -> Client (Submessage)
+#
 class STATUS_NB_UEBERBRUECKUNG(Enum):
     NBU_AUS = 0
     NBU_BEREIT = 1
@@ -456,7 +476,10 @@ llps[STATUS_NOTBREMSSYSTEM] = (
 )
 msgidx[PID(2, 0x0a, 0x22)] = STATUS_NOTBREMSSYSTEM
 
-#Sifa Status
+#
+# STATUS_SIFA
+# Zusi <-> Client (Submessage)
+#
 class STATUS_SIFA_HUPE(Enum):
     HUPE_AUS = 0
     HUPE_WARNUNG = 1
