@@ -241,7 +241,6 @@ class FAHRPULT_ANZEIGEN(Enum):
     STW_MOTORDREHMOMENT_2 = 175
     STW_MOTORSTROM_2 = 176
     STW_MOTORSPANNUNG_2_ = 177
-
 NEEDED_DATA = namedtuple("NEEDED_DATA", ['anzeigen', 'bedienung', 'programmdaten'], defaults=([None] * 3))
 llps[NEEDED_DATA] = (
     LLP(PID(2), None, BasicNode),
