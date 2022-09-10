@@ -190,7 +190,7 @@ def encode_obj(obj):
         for child in node.children:
             if child.children:
                 optimize_tree(child)
-            if child.children or child.content:
+            if child.children or child.content is not None:
                new_children.append(child)
         node.children = new_children
     

@@ -28,12 +28,13 @@ class TestMessageDecoder(unittest.TestCase):
         decoder = StreamDecoder()
         decoded_tree = decoder.decode(bytes_written)
         messagedecoder = MessageDecoder()
-        decoded_message = messagedecoder.parse(decoded_tree)        
-        self.assertEqual(type(decoded_message), messages.HELLO)
-        self.assertEqual(decoded_message.protokollversion, 2)
-        self.assertEqual(decoded_message.clienttyp, messages.ClientTyp.FAHRPULT)
-        self.assertEqual(decoded_message.clientname, "Fahrpult")
-        self.assertEqual(decoded_message.clientversion, "2.0")
+        basemessage, submessages = messagedecoder.parse(decoded_tree)        
+        self.assertEqual(type(basemessage), messages.HELLO)
+        self.assertEqual(submessages, [])
+        self.assertEqual(basemessage.protokollversion, 2)
+        self.assertEqual(basemessage.clienttyp, messages.ClientTyp.FAHRPULT)
+        self.assertEqual(basemessage.clientname, "Fahrpult")
+        self.assertEqual(basemessage.clientversion, "2.0")
 
     def testDecodeAckHello(self):
         bytes_written = b'' + \
@@ -58,13 +59,14 @@ class TestMessageDecoder(unittest.TestCase):
         decoder = StreamDecoder()
         decoded_tree = decoder.decode(bytes_written)
         messagedecoder = MessageDecoder()
-        decoded_message = messagedecoder.parse(decoded_tree)        
-        self.assertEqual(type(decoded_message), messages.ACK_HELLO)
-        self.assertEqual(decoded_message.zusiversion, "3.0.1.0")
-        self.assertEqual(decoded_message.verbindungsinfo, "0")
-        self.assertEqual(decoded_message.status, b'\x00')
-        self.assertEqual(decoded_message.startdatum, 41390.5)
-        self.assertEqual(decoded_message.protokollversion, None)
+        basemessage, submessages = messagedecoder.parse(decoded_tree)        
+        self.assertTrue(isinstance(basemessage, messages.ACK_HELLO))
+        self.assertEqual(submessages, [])
+        self.assertEqual(basemessage.zusiversion, "3.0.1.0")
+        self.assertEqual(basemessage.verbindungsinfo, "0")
+        self.assertEqual(basemessage.status, 0)
+        self.assertEqual(basemessage.startdatum, 41390.5)
+        self.assertEqual(basemessage.protokollversion, None)
 
     def test_encodeObj(self):
         bytes_written = b'' + \
@@ -90,7 +92,7 @@ class TestMessageDecoder(unittest.TestCase):
         ack_message = messages.ACK_HELLO(
             zusiversion = "3.0.1.0",
             verbindungsinfo = "0",
-            status = b'\x00',
+            status = 0,
             startdatum = 41390.5
         )
     

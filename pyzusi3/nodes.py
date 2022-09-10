@@ -205,10 +205,10 @@ class StreamDecoder:
         while self.level > 0:
             incoming_bytes = self._get_bytes()
             self._decode_single_pass(incoming_bytes)
-            if self.current_node == self.root_node and self.level == 1:
+            if self.state == DecoderState.CONTRENTLENGTH and self.level == 1:
                 # finished decoding
                 break
-        if self.current_node != self.root_node:
+        if self.current_node != self.root_node and self.current_node != None:
             raise DecodeValueError("Not all nodes have been closed, data incomplete")
 
     def _decode_single_pass(self, incoming_bytes):
