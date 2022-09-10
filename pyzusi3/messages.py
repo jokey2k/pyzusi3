@@ -113,7 +113,7 @@ class FAHRPULT_ANZEIGEN(Enum):
     LM_FAHRTRICHTUNG_VOR = 37
     LM_FAHRTRICHTUNG_ZURUECK = 38
     LM_FAHRTRICHTUNG_M = 39
-    # XXX HINTERGRUNDBILD = 40
+    HINTERGRUNDBILD = 40
     MOTORDREHMOMENT = 41
     MOTORLAST_NORMIERT = 42
     TUNNEL = 43
@@ -173,9 +173,9 @@ class FAHRPULT_ANZEIGEN(Enum):
     KILOMETRIEUNG = 97
     MOTORSTROM = 98
     MOTORSPANNUNG = 99
-    # XXX STATUS_TUEREN = 102
     STATUS_SIFA = 100
     STATUS_ZUGBEEINFLUSSUNG = 101
+    STATUS_TUEREN = 102
     FAHRPULTINTERN_21 = 103
     FAHRPULTINTERN_22 = 104
     FAHRPULTINTERN_23 = 105
@@ -214,8 +214,8 @@ class FAHRPULT_ANZEIGEN(Enum):
     STW_MOTORSPANNUNG_1 = 138
     GESCHWINDIGKEIT_ABSOLUT_MIT_SCHLEUDERN = 139
     BATTERIEHAUPTSCHALTER_AUS = 140
-    # XXX STATUS_FZ = 141
-    # XXX STATUS_ZUGVERBAND = 142
+    STATUS_FZ = 141
+    STATUS_ZUGVERBAND = 142
     BREMSPROBEFUNKTION = 143
     ZUG_UND_BREMSKRAFT_NORMIERT = 144
     STW_ZUG_UND_BREMSKRAFT_NORMIERT = 145
@@ -242,9 +242,9 @@ class FAHRPULT_ANZEIGEN(Enum):
     FAHRZEUGINTERN_18 = 166
     FAHRZEUGINTERN_19 = 167
     FAHRZEUGINTERN_20 = 168
-    # XXX STATUS_LM_FUER_ZUSIPISPLAY = 169
+    STATUS_LM_FUER_ZUSIPISPLAY = 169
     AUSSENHELLIGKEIT = 170
-    # XXX STATUS_ZUGFAHRDATEN = 171
+    STATUS_ZUGFAHRDATEN = 171
     FUEHRERSTAND_DEAKTIVIERT = 172
     SOLLDRUCK_HL = 173
     STW_MOTORDREHZAHL_2 = 174
@@ -626,7 +626,7 @@ class INDUSI_ZUSATZINFO_MELDERBILD(Enum):
     RESTREKTIV_1000HZ = 3
     RESTREKTIV_500HZ = 4
     PRUEFABLAUF = 5
-STATUS_INDUSI_BETRIEBSDATEN = namedtuple("STATUS_INDUSI_BETRIEBSDATEN", ['zustand', 'zwangsbremsung', 'zwangsbremsung_grund', 'm_1000hz', 'm_u', 'm_m', 'm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'm_1000hz', 'm_500hz', 'm_befehl_an', 'lm_o', 'lm_m', 'lm_u', 'lm_500hz', 'lm_befehl', 'zusatzinfo_melderbild', 'lm_zugart_links', 'lm_zugart_65', 'lm_zugart_rechts', 'status_lm_zugart_rechts', 'status_lm_zugart_65', 'status_lm_zugart_links', ], defaults=([None] * 26))
+STATUS_INDUSI_BETRIEBSDATEN = namedtuple("STATUS_INDUSI_BETRIEBSDATEN", ['zustand', 'zwangsbremsung', 'zwangsbremsung_grund', 'm_1000hz', 'm_u', 'm_m', 'm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'lm_1000hz', 'm_500hz', 'm_befehl_an', 'lm_o', 'lm_m', 'lm_u', 'lm_500hz', 'lm_befehl', 'zusatzinfo_melderbild', 'lm_zugart_links', 'lm_zugart_65', 'lm_zugart_rechts', 'status_lm_zugart_rechts', 'status_lm_zugart_65', 'status_lm_zugart_links', ], defaults=([None] * 26))
 llps[STATUS_INDUSI_BETRIEBSDATEN] = (
     # Indusi Analogsysteme und Basisdaten
     LLP(PID(2), None, BasicNode),
@@ -644,7 +644,7 @@ llps[STATUS_INDUSI_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65, 3, 0x2c), 'beeinflussung_1000hz', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x2d), 'beeinflussung_500hz', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x2e), 'beeinflussung_2000hz',  ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2f), 'm_1000hz', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2f), 'lm_1000hz', ContentType.BYTE, LMZUSTAND),
     # Indusi I60R/I80/PZB90
     LLP(PID(2, 0x0a, 0x65, 3, 0x0A), 'm_500hz', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x0B), 'm_befehl_an', ContentType.BYTE),
