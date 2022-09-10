@@ -20,9 +20,9 @@ msgidx = message_index
 
 # Lampenstatus
 class LMZUSTAND(Enum):
-    LM_AUS = 0
-    LM_AN = 1
-    LM_BLINKEN = 2
+    AUS = 0
+    AN = 1
+    BLINKEN = 2
 
 #
 # HELLO
