@@ -487,7 +487,7 @@ msgidx[PID(2, 0x0a, 0x22)] = STATUS_NOTBREMSSYSTEM
 
 #
 # STATUS_SIFA
-# Zusi <-> Client (Submessage)
+# Zusi -> Client (Submessage)
 #
 class STATUS_SIFA_HUPE(Enum):
     HUPE_AUS = 0
@@ -523,7 +523,7 @@ msgidx[PID(2, 0x0a, 0x65, 1)] = STATUS_ZUGBEEINFLUSSUNG_GRUND
 
 #
 # STATUS_INDUSI_EINSTELLUNGEN
-# Zusi <-> Client (Submessage) 
+# Zusi -> Client (Submessage) 
 #
 class INDUSI_ZUGART(Enum):
     NICHT_BESTIMMT = 1
