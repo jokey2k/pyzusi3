@@ -23,6 +23,16 @@ class LMZUSTAND(Enum):
     AUS = 0
     AN = 1
     BLINKEN = 2
+class LMZUSTAND_MIT_INVERS(Enum):
+    AUS = 0
+    AN = 1
+    BLINKEND = 2
+    BLINKEND_INVERS = 3
+# Steuerschalter / Lufthahn
+class SCHALTER(Enum):
+    UNBEKANNT = 0
+    EIN = 1
+    AUS = 2
 
 #
 # HELLO
@@ -163,9 +173,9 @@ class FAHRPULT_ANZEIGEN(Enum):
     KILOMETRIEUNG = 97
     MOTORSTROM = 98
     MOTORSPANNUNG = 99
-    # XXX STATUS_ZUGBEEINFLUSSUNG = 101
     # XXX STATUS_TUEREN = 102
     STATUS_SIFA = 100
+    STATUS_ZUGBEEINFLUSSUNG = 101
     FAHRPULTINTERN_21 = 103
     FAHRPULTINTERN_22 = 104
     FAHRPULTINTERN_23 = 105
@@ -483,9 +493,6 @@ class STATUS_SIFA_HUPE(Enum):
     HUPE_AUS = 0
     HUPE_WARNUNG = 1
     HUPE_ZWANGSBREMSUNG = 2
-class SIFA_SCHALTER(Enum):
-    SCHALTER_EIN = 1
-    SCHALTER_AUS = 2
 STATUS_SIFA = namedtuple("STATUS_SIFA", ['bauart', 'lm', 'hupe', 'hauptschalter', 'stoerschalter', 'lufthahn', 'weg'], defaults=[None, None, None, None, None, None, None])
 llps[STATUS_SIFA] = (
     LLP(PID(2), None, BasicNode),
@@ -494,36 +501,93 @@ llps[STATUS_SIFA] = (
     LLP(PID(2, 0x0a, 0x64, 1), 'bauart', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x64, 2), 'lm', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x64, 3), 'hupe', ContentType.BYTE, STATUS_SIFA_HUPE),
-    LLP(PID(2, 0x0a, 0x64, 4), 'hauptschalter', ContentType.BYTE, SIFA_SCHALTER),
-    LLP(PID(2, 0x0a, 0x64, 5), 'stoerschalter', ContentType.BYTE, SIFA_SCHALTER),
-    LLP(PID(2, 0x0a, 0x64, 6), 'lufthahn', ContentType.BYTE, SIFA_SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 4), 'hauptschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 5), 'stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 6), 'lufthahn', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x0a, 0x64, 7), 'weg', ContentType.SINGLE)
 )
 msgidx[PID(2, 0x0a, 0x64)] = STATUS_SIFA
 
-#Staus Zugbeeinflussung
-#Grundblock
-ZUGB_GRUND = namedtuple("ZUGB_GRUND", ['bauart'], defaults=[None])
-llps[ZUGB_GRUND] = (
+#
+# STATUS_ZUGBEEINFLUSSUNG (Grundblock)
+# Zusi -> Client (Submessage)
+#
+STATUS_ZUGBEEINFLUSSUNG_GRUND = namedtuple("STATUS_ZUGBEEINFLUSSUNG", ['bauart'], defaults=[None])
+llps[STATUS_ZUGBEEINFLUSSUNG_GRUND] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 1), 'bauart', ContentType.STRING)
 )
-msgidx[PID(2, 0x0a, 0x65)] = ZUGB_GRUND
-#Indusi Analogsysteme und Basisdaten
-class ZUGART(Enum):
+msgidx[PID(2, 0x0a, 0x65, 1)] = STATUS_ZUGBEEINFLUSSUNG_GRUND
+
+#
+# STATUS_INDUSI_EINSTELLUNGEN
+# Zusi <-> Client (Submessage) 
+#
+class INDUSI_ZUGART(Enum):
     NICHT_BESTIMMT = 1
     U = 2
     M = 3
     O = 4
     S_BAHN = 5
-class SYSTEMSTATUS(Enum):
+class INDUSI_SYSTEMSTATUS(Enum):
     AUSGESCHALTET = 0
     ABGESCHALTET = 1
     UNTERDRUECKT = 2
     AKTIV = 3
-class ZUSTAND(Enum):
+class INDUSI_MODUS(Enum):
+    UNDEFINIERT = 0
+    ERSATZZUGDATEN = 5
+    NORMALBETRIEB = 6
+class INDUSI_KLARTEXTMELDUNGEN(Enum):
+    KEINE_MOEGLICH = 0
+    MOEGLICH_ABER_NICHT_AKTIV = 1
+    AKTIV = 2
+    NUR_KLARTEXTMELDUNGEN = 3
+class INDUSI_FUNKTIONSPRUEFUNG_STARTEN(Enum):
+    ZUSI_SOLL_STARTEN = 1
+    WURDE_QUITTIERT = 2
+    WURDE_NICHT_QUITTIERT = 3
+class INDUSI_STOERSCHALTERBAURT(Enum):
+    LEUCHTDRUCKTASTER = 0
+    DREHSCHALTER = 1
+STATUS_INDUSI_EINSTELLUNGEN = namedtuple("STATUS_INDUSI_EINSTELLUNGEN", ['zugart', 'hauptschalter', 'stoerschalter', 'luftabsperhan', 'systemstatus', 'bauart', 'tfnr', 'zugnummer', 'e_brh', 'e_bra', 'e_zugart', 'a_brh', 'a_bra', 'a_zugart', 'a_modus', 'klartextmeldungen', 'funktionspruefung_starten', 'stoerschalterbaurt'], defaults=([None] * 18))
+llps[STATUS_INDUSI_EINSTELLUNGEN] = (
+    # Indusi Analogsysteme und Basisdaten
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 1), 'zugart', ContentType.BYTE, INDUSI_ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 7), 'hauptschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 2, 8), 'stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0a), 'luftabsperhan', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0d), 'systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0e), 'bauart', ContentType.STRING),
+    # Indusi I60R/I80/PZB90
+    LLP(PID(2, 0x0a, 0x65, 2, 0x02), 'tfnr', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x03), 'zugnummer', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x01), 'e_brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x02), 'e_bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x05), 'e_zugart', ContentType.BYTE, INDUSI_ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x01), 'a_brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x02), 'a_bra', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x05), 'a_zugart', ContentType.BYTE, INDUSI_ZUGART),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x06), 'a_modus', ContentType.BYTE, INDUSI_MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0B), 'klartextmeldungen', ContentType.BYTE, INDUSI_KLARTEXTMELDUNGEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0C), 'funktionspruefung_starten', ContentType.BYTE, INDUSI_FUNKTIONSPRUEFUNG_STARTEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0F), 'stoerschalterbaurt', ContentType.BYTE, INDUSI_STOERSCHALTERBAURT),
+)
+msgidx[PID(2, 0x0a, 0x65, 2)] = STATUS_INDUSI_EINSTELLUNGEN
+
+#
+# STATUS_INDUSI_BETRIEBSDATEN
+# Zusi -> Client (Submessage) 
+#
+class INDUSI_ZUSTAND(Enum):
     AUSGESCHALTET = 1
     ABGESCHALTET_GESTOERT = 2
     HL_DRUCK_NIDRIG = 3
@@ -531,11 +595,11 @@ class ZUSTAND(Enum):
     NORMALBETRIEB = 5
     FUNKTIONSPRUEFUNG = 6
     FUNKTIONSPRUEFUNG_QUTIERUNG_FEHLT = 7
-class ZWANGSBREMSUNG(Enum):
+class INDUSI_ZWANGSBREMSUNG(Enum):
     KEINE_ZWANGSBREMSUNG = 0
     WACHSAM = 1
     TAUSEND_HZ = 2
-    FUENFHUNDERHZ = 3
+    FUENFHUNDERT_HZ = 3
     ZWEITAUSEND_HZ = 4
     KEIN_HALT_NACH_BEFREIUNG = 5
     FZ_VMAX = 6
@@ -551,147 +615,55 @@ class ZWANGSBREMSUNG(Enum):
     LZB_UEBERSCHREITUNG_200M_NACH_BEFEHL = 26
     ALLGEMEINE_STOERUNG = 27
     STROMVERSORGUNG = 28
-class HUPE(Enum):
+class INDUSI_HUPE(Enum):
     AUS = 0
     HUPE = 1
     ZWANGSBREMSUNG = 2
-class SCHALTER(Enum):
-    SCHALTER_AN = 1
-    SCHALTER_AUS = 2
-INDUSI_ANALOG = namedtuple("INDUSI_ANALOG", ['zugart', 'hauptschalter', 'stoerschalter', 'luftabsperhan', 'systemstatus', 'bauart', 'zustand', 'zwangsbremsung','zwangsbremsung_grund', 'lm_100HZ', 'lm_u', 'lm_m', 'lm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'status_lm_1000hz'], defaults=[None, None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
-llps[INDUSI_ANALOG] = (
-    LLP(PID(2), None, BasicNode),
-    LLP(PID(2, 0x0a), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 1), 'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 7), 'hauptschalter', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x0a, 0x65, 2, 8), 'stoerschalter', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0a), 'luftabsperhan', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0d), 'systemstatus', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0e), 'bauart', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3, 2), 'zustand', ContentType.WORD, ZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 3, 3), 'zwangsbremsung', ContentType.WORD, ZWANGSBREMSUNG),
-    LLP(PID(2, 0x0a, 0x65, 3, 4), 'zwangsbremsung_grund', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x65, 3, 5), 'lm_100HZ',ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 6), 'lm_u', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 7), 'lm_m', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 8), 'lm_o', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 9), 'hupe', ContentType.BYTE, HUPE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2c), 'beeinflussung_1000hz', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2d), 'beeinflussung_500hz', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2e), 'beeinflussung_2000hz',  ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2f), 'status_lm_1000hz', ContentType.BYTE, LMZUSTAND)
-)
-msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI_ANALOG
-#indusi I60R/I80/PZB90
-
-
-class ZUGART(Enum):
-    MUSS_NOCH_BESTIMMT_WERDEN = 1
-    U = 2
-    M = 3
-    O = 4
-    S_BAHN = 5
-class MODUS(Enum):
-    UNDEFINIERT = 0
-    ERSATZZUGDATEN = 5
-    NORMALBETRIEB = 6
-class KLARTEXTMELDUNGEN(Enum):
-    KEINE_MOEGLICH = 0
-    MOEGLICH_ABER_NICHT_AKTIV = 1
-    AKTIV = 2
-    NUR_KLARTEXTMELDUNGEN = 3
-class FUNKTIONSPRUEFUNG_STARTEN(Enum):
-    ZUSI_SOLL_STARTEN = 1
-    WURDE_QUITTIER = 2
-    WURDE_NICHT_QUITTIERT = 3
-class STOERSCHALTERBAURT(Enum):
-    LEUCHTDRUCKTASTER = 0
-    DREHSCHALTER = 1
-class LM_BLINKEN_INVERS(Enum):
-    AUS = 0
-    AN = 1
-    BLINKEND = 2
-    BLINKEND_INVERS = 3
-
-
-INDUSI = namedtuple("INDUSI", ['tf_nr','zn', 'brh','bra','zugart','modus','klartextmeldungen','funktionspruefung_starten','stoerschalterbaurt','m_500hz','m_befehl_an','lm_o','lm_m','lm_u','lm_500hz','lm_befehl'],defaults=[None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None])
-llps[INDUSI] = (
-    LLP(PID(2), None, BasicNode),
-    LLP(PID(2, 0x0a), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x02), 'tf_nr', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x03), 'zn', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x05), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x01), 'brh', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x02), 'bra', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x05), 'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x05,0x06), 'modus', ContentType.BYTE, MODUS),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x06), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x01), 'brh', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x02), 'bra', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x05), 'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 0x06), 'modus', ContentType.BYTE, MODUS),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0B),'klartextmeldungen',ContentType.BYTE, KLARTEXTMELDUNGEN),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0C),'funktionspruefung_starten',ContentType.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0F), 'stoerschalterbaurt',ContentType.BYTE, STOERSCHALTERBAURT),
-    LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0A),'m_500hz',ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0B),'m_befehl_an',ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x30),'lm_o',ContentType.BYTE, LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x31),'lm_m',ContentType.BYTE, LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x32),'lm_u',ContentType.BYTE, LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x33),'lm_500hz',ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x34),'lm_befehl',ContentType.BYTE, LMZUSTAND)
-)
-msgidx[PID(2, 0x0a, 0x65, 2)] = INDUSI
-
-
-
-
-#PZB90
-class ZUSATZINFO_MELDERBILD(Enum):
+class INDUSI_ZUSATZINFO_MELDERBILD(Enum):
     NORMALZUSTAND = 0
     _1000HZ_NACH_700M = 1
     RESTREKTIV = 2
     RESTREKTIV_1000HZ = 3
     RESTREKTIV_500HZ = 4
     PRUEFABLAUF = 5
-PZB90 = namedtuple("PZB90", ['zusatzinfo_melderbild'],defaults=[None])
-llps[PZB90] = (
+STATUS_INDUSI_BETRIEBSDATEN = namedtuple("STATUS_INDUSI_BETRIEBSDATEN", ['zustand', 'zwangsbremsung', 'zwangsbremsung_grund', 'm_1000hz', 'm_u', 'm_m', 'm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'm_1000hz', 'm_500hz', 'm_befehl_an', 'lm_o', 'lm_m', 'lm_u', 'lm_500hz', 'lm_befehl', 'zusatzinfo_melderbild', 'lm_zugart_links', 'lm_zugart_65', 'lm_zugart_rechts', 'status_lm_zugart_rechts', 'status_lm_zugart_65', 'status_lm_zugart_links', ], defaults=([None] * 26))
+llps[STATUS_INDUSI_BETRIEBSDATEN] = (
+    # Indusi Analogsysteme und Basisdaten
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x0C),'zusatzinfo_melderbild', ContentType.BYTE, ZUSATZINFO_MELDERBILD)
+    LLP(PID(2, 0x0a, 0x65, 3, 2), 'zustand', ContentType.WORD, INDUSI_ZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 3), 'zwangsbremsung', ContentType.WORD, INDUSI_ZWANGSBREMSUNG),
+    LLP(PID(2, 0x0a, 0x65, 3, 4), 'zwangsbremsung_grund', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 3, 5), 'm_1000hz',ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 6), 'm_u', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 7), 'm_m', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 8), 'm_o', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 9), 'hupe', ContentType.BYTE, INDUSI_HUPE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2c), 'beeinflussung_1000hz', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2d), 'beeinflussung_500hz', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2e), 'beeinflussung_2000hz',  ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2f), 'm_1000hz', ContentType.BYTE, LMZUSTAND),
+    # Indusi I60R/I80/PZB90
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0A), 'm_500hz', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0B), 'm_befehl_an', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x30), 'lm_o', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x31), 'lm_m', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x32), 'lm_u', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x33), 'lm_500hz', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x34), 'lm_befehl', ContentType.BYTE, LMZUSTAND),
+    # PZB90
+    LLP(PID(2, 0x0a, 0x65, 3, 0x0C), 'zusatzinfo_melderbild', ContentType.BYTE, INDUSI_ZUSATZINFO_MELDERBILD),
+    # PZB90 S-Bahn
+    LLP(PID(2, 0x0a, 0x65, 3, 0x29), 'lm_zugart_links', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2a), 'lm_zugart_65', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2b), 'lm_zugart_rechts', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x35), 'status_lm_zugart_rechts', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x36), 'status_lm_zugart_65', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x37), 'status_lm_zugart_links', ContentType.BYTE, LMZUSTAND_MIT_INVERS)
 )
-msgidx[PID(2, 0x0a, 0x65, 3)] = PZB90
-
-
-#PZB90 S-Bahn
-class LM_BLINKEN_INVERS(Enum):
-    AUS = 0
-    AN = 1
-    BLINKEND = 2
-    BLINKEND_INVERS = 3
-
-PZB90_S_BAHN = namedtuple("PZB90_S_BAHN", ['lm_zugart_links', 'lm_zugart_65', 'lm_zugart_rechts', 'status_lm_zugart_rechts', 'status_lm_zugart_65', 'status_lm_zugart_links'],defaults=[None,None,None,None,None,None])
-llps[PZB90] = (
-    LLP(PID(2), None, BasicNode),
-    LLP(PID(2, 0x0a), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x29),'lm_zugart_links',ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2a),'lm_zugart_65',ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2b),'lm_zugart_rechts',ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x35),'status_lm_zugart_rechts',ContentType.BYTE,LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x36),'status_lm_zugart_65',ContentType.BYTE,LM_BLINKEN_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x37),'status_lm_zugart_links',ContentType.BYTE,LM_BLINKEN_INVERS)
-)
-msgidx[PID(2, 0x0a, 0x65, 3)] = PZB90_S_BAHN
+msgidx[PID(2, 0x0a, 0x65, 3)] = STATUS_INDUSI_BETRIEBSDATEN
 
 #LZB
 class ZUGART(Enum):
@@ -699,7 +671,7 @@ class ZUGART(Enum):
     U = 2
     M = 3
     O = 4
-class MODUS(Enum):
+class LZB_MODUS(Enum):
     UNDEFINIERT = 1
     U = 2
     M = 3
@@ -712,10 +684,6 @@ class LZB_KLARTEXTMELDUNG(Enum):
     MOEGLICH_ABER_NICHT_AKTIV = 1
     AKTIV = 2
     NUR_MOEGLICH = 3
-class FUNKTIONSPRUEFUNG_STARTEN(Enum):
-    ZUSI_SOLL_STARTEN = 1
-    WURDE_QUITTIER = 2
-    WURDE_NICHT_QUITTIERT =3
 class STOERSCHALTERBAURT(Enum):
     LEUCHTDRUCKTASTER = 0
     DREHSCHALTER = 1
@@ -779,24 +747,24 @@ llps[LZB] = (
     LLP(PID(2, 0x0a, 0x65, 2, 0x04, 3),  'zl', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x04, 4),  'vmz', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x04, 5),  'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 6), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x04, 6), 'modus', ContentType.BYTE, INDUSI_MODUS),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05, 1), 'brh', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05, 2), 'bra', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05, 3), 'zl', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05, 4), 'vmz', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x05, 5), 'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 6), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x05, 6), 'modus', ContentType.BYTE, INDUSI_MODUS),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 1), 'brh', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 2), 'bra', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 3), 'zl', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 4), 'vmz', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 0x06, 5), 'zugart', ContentType.BYTE, ZUGART),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 6), 'modus', ContentType.BYTE, MODUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x06, 6), 'modus', ContentType.BYTE, INDUSI_MODUS),
     LLP(PID(2, 0x0a, 0x65, 2, 0x09), 'stoerschalter', ContentType.BYTE, STOERSCHALTER),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0b), 'lzb_klartextmeldung', ContentType.BYTE, LZB_KLARTEXTMELDUNG),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0c), 'funktionspruefung_starten', ContentType.BYTE, FUNKTIONSPRUEFUNG_STARTEN),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0c), 'funktionspruefung_starten', ContentType.BYTE, INDUSI_FUNKTIONSPRUEFUNG_STARTEN),
     LLP(PID(2, 0x0a, 0x65, 2, 0x10), 'stoerschalterbaurt', ContentType.BYTE, STOERSCHALTERBAURT),
     LLP(PID(2, 0x0a, 0x65, 2, 0x11), 'systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     LLP(PID(2, 0x0a, 0x65, 3),None, BasicNode),

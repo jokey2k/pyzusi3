@@ -39,7 +39,10 @@ async def zusitalk(ip, port):
         return
 
     log.info("Request train speed and emer brake status")
-    need_msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT, messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM, messages.FAHRPULT_ANZEIGEN.STATUS_SIFA])
+    need_msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT,
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM,
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG])
     writer.write(encode_obj(need_msg).encode())
     basemessage, submessages = await decode_bytes(reader)
     log.debug(basemessage)
@@ -56,6 +59,13 @@ async def zusitalk(ip, port):
                     log.warning("New state for emer brakes: %s" % str(submessage))
                 if isinstance(submessage, messages.STATUS_SIFA):
                     log.warning("New state for Sifa: %s" % str(submessage))
+                if isinstance(submessage, messages.STATUS_ZUGBEEINFLUSSUNG_GRUND):
+                    log.warning("New state for ZB basic: %s" % str(submessage))
+                if isinstance(submessage, messages.STATUS_INDUSI_EINSTELLUNGEN):
+                    log.warning("New state for ZB settings: %s" % str(submessage))
+                if isinstance(submessage, messages.STATUS_INDUSI_BETRIEBSDATEN):
+                    log.warning("New state for ZB state: %s" % str(submessage))
+
             await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         pass
