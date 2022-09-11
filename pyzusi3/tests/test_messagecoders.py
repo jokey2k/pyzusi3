@@ -96,6 +96,10 @@ class TestMessageDecoder(unittest.TestCase):
             startdatum = 41390.5
         )
     
-        result = encode_obj(ack_message).encode()
+        encoded_obj = encode_obj(ack_message)
+        result = encoded_obj.encode()
         self.assertEqual(result, bytes_written)
     
+    def test_encode_complex_msg(self):
+        msg = messages.STATUS_INDUSI_EINSTELLUNGEN(stoerschalter=messages.SCHALTER.EIN)
+        msg_bytes = encode_obj(msg).encode()

@@ -125,6 +125,18 @@ class MessageDecoder:
             child_pid = current_pid._replace(**params)
             self.map_parameters(child_node, child_pid, current_level + 1)
 
+def level_for_parameterid(parameterid):
+    for i in range(6, 0, -1):
+        if getattr(parameterid, "id" + str(i), None) is not None:
+            return i
+    return 0
+
+def strip_level_from_parameterid(level, parameterid):
+    new_paramid = parameterid
+    for i in range(6, level-1, -1):
+        nulled_id = {'id' + str(i): None}
+        new_paramid = new_paramid._replace(**nulled_id)
+    return new_paramid
 
 def encode_obj(obj):
     if type(obj) not in lowlevel_parameters:
@@ -132,31 +144,28 @@ def encode_obj(obj):
 
     parametertree = lowlevel_parameters[type(obj)]
     
-    encoded_ids = {}
     root_node = None
     current_node = None
     current_level = 1
-    current_parameterid = None
+    seen_treenodes = {}
     for parameter in parametertree:
+        # find parent node to attach to
+        parent_node = None
+        for i in range(level_for_parameterid(parameter.parameterid), 0, -1):
+            parent_paramid = strip_level_from_parameterid(i, parameter.parameterid)
+            if parent_paramid in seen_treenodes:
+                parent_node = seen_treenodes[parent_paramid]
+                current_level = i
+                break
+
         if parameter.contenttype is BasicNode:
-            current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=current_node)
+            current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=parent_node)
             if current_node.parent_node is None:
                 root_node = current_node
             else:
                 current_node.parent_node.children.append(current_node)
-            current_parameterid = parameter.parameterid
-            current_level += 1
+            seen_treenodes[parameter.parameterid] = current_node
             continue
-        for i in range(1, current_level + 1):
-            param_id = getattr(current_parameterid, "id" + str(i))
-            node_id = getattr(parameter.parameterid, "id" + str(i))
-            if param_id != None and param_id != node_id:
-                current_node = current_node.parent_node
-                current_level -= 1
-            if current_level == 1:
-                break
-        if current_level == 1:
-            break
         parameter_value = getattr(obj, parameter.parametername, None)
         if parameter_value is None:
             continue
