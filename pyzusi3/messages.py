@@ -214,7 +214,7 @@ class FAHRPULT_ANZEIGEN(Enum):
     STW_MOTORSPANNUNG_1 = 138
     GESCHWINDIGKEIT_ABSOLUT_MIT_SCHLEUDERN = 139
     BATTERIEHAUPTSCHALTER_AUS = 140
-    # XXX STATUS_FZ = 141
+    STATUS_FAHRZEUG = 141
     # XXX STATUS_ZUGVERBAND = 142
     BREMSPROBEFUNKTION = 143
     ZUG_UND_BREMSKRAFT_NORMIERT = 144
@@ -983,8 +983,10 @@ llps[STATUS_TUEREN] = (
 )
 msgidx[PID(2, 0x0a, 0x66)] = STATUS_TUEREN
 
-
-#Satus Fahrzeug
+#
+# STATUS_FAHRZEUG
+# Zusi -> Client
+#
 class GRUND_NULLSTELLUNGSZWANG(Enum):
     NICHTS = 0
     NIEDRIGER_HLL_DRUCK = 1
@@ -996,27 +998,27 @@ class GRUND_TRAKTIONSSPERRE(Enum):
     TUERSYSTEM = 2
     BREMSPROBE_LAUFT = 3
     SIFA_ASUGESCHALTET = 4
-class STATUS_SCHALTER(Enum):
+class GRUND_SCHALTERSTATUS(Enum):
+    UNBEKANNT = 0
     DEAKTIVIERT = 1
     NORMALZUSTAND = 2
-class SANDERZUSTAND(Enum):
-    SANDET_NICHT = 1
-    SANDET = 2
-class BREMSPROBEZUSTAND(Enum):
+class GRUND_SANDER(Enum):
+    INAKTIV = 1
+    AKTIV = 2
+class GRUND_BREMSPROBEZUSTAND(Enum):
     NORMALBETRIEB = 0
     AKTIV = 1
-
-STATUS_FAHRZEUG = namedtuple("STATUS_FAHRZEUG", ['grund_nullstellungszwang', 'grund_traktionssperre', 'status_fahrschalter', 'status_dynamische_bremse', 'sanderzustand', 'bremsprobezustand', 'stellung_richtungsschalter'],defaults=[None, None, None, None, None, None, None])
+STATUS_FAHRZEUG = namedtuple("STATUS_FAHRZEUG", ['grund_nullstellungszwang', 'grund_traktionssperre', 'status_fahrschalter', 'status_dynamische_bremse', 'sanderzustand', 'bremsprobezustand', 'stellung_richtungsschalter'],defaults=[None] * 7)
 llps[STATUS_FAHRZEUG] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x8d), None, BasicNode),
     LLP(PID(2, 0x0a, 0x8d,0x01), 'grund_nullstellungszwang', ContentType.WORD, GRUND_NULLSTELLUNGSZWANG),
     LLP(PID(2, 0x0a, 0x8d,0x02), 'grund_traktionssperre', ContentType.WORD, GRUND_TRAKTIONSSPERRE),
-    LLP(PID(2, 0x0a, 0x8d,0x03), 'status_fahrschalter', ContentType.BYTE, STATUS_SCHALTER),
-    LLP(PID(2, 0x0a, 0x8d,0x04), 'status_dynamische_bremse', ContentType.BYTE, STATUS_SCHALTER),
-    LLP(PID(2, 0x0a, 0x8d,0x06), 'sanderzustand', ContentType.BYTE, SANDERZUSTAND),
-    LLP(PID(2, 0x0a, 0x8d,0x07), 'bremsprobezustand', ContentType.WORD, BREMSPROBEZUSTAND),
+    LLP(PID(2, 0x0a, 0x8d,0x03), 'status_fahrschalter', ContentType.BYTE, GRUND_SCHALTERSTATUS),
+    LLP(PID(2, 0x0a, 0x8d,0x04), 'status_dynamische_bremse', ContentType.BYTE, GRUND_SCHALTERSTATUS),
+    LLP(PID(2, 0x0a, 0x8d,0x06), 'sanderzustand', ContentType.BYTE, GRUND_SANDER),
+    LLP(PID(2, 0x0a, 0x8d,0x07), 'bremsprobezustand', ContentType.WORD, GRUND_BREMSPROBEZUSTAND),
     LLP(PID(2, 0x0a, 0x8d,0x08), 'stellung_richtungsschalter', ContentType.WORD)
 )
 msgidx[PID(2, 0x0a, 0x8d)] = STATUS_FAHRZEUG

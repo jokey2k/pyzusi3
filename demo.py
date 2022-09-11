@@ -43,7 +43,8 @@ async def zusitalk(ip, port):
                                     messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM,
                                     messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
                                     messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG,
-                                    messages.FAHRPULT_ANZEIGEN.STATUS_TUEREN
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_TUEREN,
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG
                                     ])
     writer.write(encode_obj(need_msg).encode())
     basemessage, submessages = await decode_bytes(reader)
@@ -86,6 +87,9 @@ async def zusitalk(ip, port):
                 # messages.FAHRPULT_ANZEIGEN.STATUS_TUEREN
                 elif isinstance(submessage, messages.STATUS_TUEREN):
                     log.warning("New state for doors: %s" % str(submessage))
+                # messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG
+                elif isinstance(submessage, messages.STATUS_FAHRZEUG):
+                    log.warning("New state for vehicle: %s" % str(submessage))
             await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         pass
