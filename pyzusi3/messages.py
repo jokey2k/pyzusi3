@@ -863,8 +863,36 @@ llps[STATUS_ZUB_BETRIEBSDATEN] = (
 )
 msgidx[PID(2, 0x0a, 0x65, 7)] = STATUS_ZUB_BETRIEBSDATEN
 
+#
+# STATUS_ZBS_EINSTELLUNGEN
+# Zusi -> Client (Submessage) 
+#
+# FIXME Platzhalter, muss noch vollständig umgesetzt werden
+STATUS_ZBS_EINSTELLUNGEN = namedtuple("STATUS_ZBS_EINSTELLUNGEN", ['index'], defaults=[None])
+llps[STATUS_ZBS_EINSTELLUNGEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 8), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 8, 1), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 8, 1, 1), 'zustand', ContentType.WORD)
+)
+msgidx[PID(2, 0x0a, 0x65, 8)] = STATUS_ZBS_EINSTELLUNGEN
 
-#ZBS
+#
+# STATUS_ZBS_BETRIEBSDATEN
+# Zusi -> Client (Submessage) 
+#
+# FIXME Platzhalter, muss noch vollständig umgesetzt werden
+STATUS_ZBS_BETRIEBSDATEN = namedtuple("STATUS_ZBS_BETRIEBSDATEN", ['betriebszustand'], defaults=[None])
+llps[STATUS_ZBS_BETRIEBSDATEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 9), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 9, 1), 'betriebszustand', ContentType.WORD)
+)
+msgidx[PID(2, 0x0a, 0x65, 9)] = STATUS_ZBS_BETRIEBSDATEN
 
 
 #Fahrsperre
