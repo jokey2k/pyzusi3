@@ -787,7 +787,36 @@ llps[STATUS_INDUSI_BETRIEBSDATEN] = (
 )
 msgidx[PID(2, 0x0a, 0x65, 3)] = STATUS_INDUSI_BETRIEBSDATEN
 
-#ETCS
+#
+# STATUS_ETCS_EINSTELLUNGEN
+# Zusi -> Client (Submessage) 
+#
+# FIXME Platzhalter, muss noch vollständig umgesetzt werden
+STATUS_ETCS_EINSTELLUNGEN = namedtuple("STATUS_ETCS_EINSTELLUNGEN", ['zustand'], defaults=[None])
+llps[STATUS_ETCS_EINSTELLUNGEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 4), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 4, 1), 'zustand', ContentType.BYTE)
+)
+msgidx[PID(2, 0x0a, 0x65, 4)] = STATUS_ETCS_EINSTELLUNGEN
+
+#
+# STATUS_ETCS_BETRIEBSDATEN
+# Zusi -> Client (Submessage) 
+#
+# FIXME Platzhalter, muss noch vollständig umgesetzt werden
+STATUS_ETCS_BETRIEBSDATEN = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['aktiver_level'], defaults=[None])
+llps[STATUS_ETCS_BETRIEBSDATEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 1), 'aktiver_level', ContentType.WORD)
+)
+msgidx[PID(2, 0x0a, 0x65, 5)] = STATUS_ETCS_BETRIEBSDATEN
+
 
 #ZUB
 class STATUS(Enum):
