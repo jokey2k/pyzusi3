@@ -818,36 +818,54 @@ llps[STATUS_ETCS_BETRIEBSDATEN] = (
 msgidx[PID(2, 0x0a, 0x65, 5)] = STATUS_ETCS_BETRIEBSDATEN
 
 
-#ZUB
-class STATUS(Enum):
+#
+# STATUS_ZUB_EINSTELLUNGEN
+# Zusi -> Client (Submessage) 
+#
+# FIXME Platzhalter, muss noch vollständig umgesetzt werden
+class ZUB_SYSTEMSTATUS(Enum):
     AUSGESCHALTET = 0
     ABGESCHALTET = 1
     UNTERDRUECKT = 2
     AKTIV = 3
-ZUB = namedtuple("ZUB", ['brh','zuglaenge', 'vmz', 'status', 'bauart', 'lm_gnt', 'melder_gnt_ue', 'melder_gnt_g', 'melder_gnt_s', 'melder_gnt_gst', 'melder_gnt_gst_stoer', 'status_melder_ue', 'status_melder_gnt_'],defaults=[None, None, None, None, None])
-llps[ZUB] = (
+STATUS_ZUB_EINSTELLUNGEN = namedtuple("STATUS_ZUB_EINSTELLUNGEN", ['brh','zuglaenge', 'vmz', 'status', 'bauart'], defaults=([None] * 5))
+llps[STATUS_ZUB_EINSTELLUNGEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 6, 1),'', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 6, 2),'', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 6, 3),'', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0x65, 6, 4),'', ContentType.BYTE, STATUS),
-    LLP(PID(2, 0x0a, 0x65, 6, 5),'', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x65, 7), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 7, 1), '', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 2), '', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 3), '', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 4), '', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 5), '', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 6), '', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 7), '', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 7, 8), '', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 7, 9), '', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 7, 0x0a), '', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 0x0b), '', ContentType.BYTE)
+    LLP(PID(2, 0x0a, 0x65, 6), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 6, 1), 'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 6, 2), 'zuglaenge', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 6, 3), 'vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 6, 4), 'status', ContentType.BYTE, ZUB_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 6, 5), 'bauart', ContentType.STRING)
 )
-msgidx[PID(2, 0x0a, 0x65)] = ZUB
+msgidx[PID(2, 0x0a, 0x65, 6)] = STATUS_ZUB_EINSTELLUNGEN
+
+#
+# STATUS_ZUB_BETRIEBSDATEN
+# Zusi -> Client (Submessage) 
+#
+# FIXME Platzhalter, muss noch vollständig umgesetzt werden
+STATUS_ZUB_BETRIEBSDATEN = namedtuple("STATUS_ZUB_BETRIEBSDATEN", ['aktiver_level'], defaults=[None])
+llps[STATUS_ZUB_BETRIEBSDATEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 7), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 7, 1), 'm_gnt', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 2), 'm_gnt_ue', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 3), 'm_gnt_g', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 4), 'm_gnt_s', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 5), 'm_gnt_gst', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 6), 'm_gnt_gst_stoer', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 7, 7), 'lm_gnt_ue', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 7, 8), 'lm_gnt_g', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 7, 9), 'lm_gnt_s', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 7, 0x0a), 'zwangsbremsung', ContentType.WORD, INDUSI_ZWANGSBREMSUNG),
+    LLP(PID(2, 0x0a, 0x65, 7, 0x0b), 'zwangsbremsung_aktiv', ContentType.BYTE)
+)
+msgidx[PID(2, 0x0a, 0x65, 7)] = STATUS_ZUB_BETRIEBSDATEN
 
 
 #ZBS
