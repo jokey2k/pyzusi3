@@ -605,26 +605,26 @@ class INDUSI_ZWANGSBREMSUNG(Enum):
     FZ_VMAX = 6
     FUNKTIONSPRUEFUNG = 7
     FUENFHUNDERT_HZ_NACH_BEFREIUNG = 8
-    LZB_HALT = 9
+    LZB_HALT_UEBERFAHREN = 9
     LZB_RECHNERAUSFALL = 10
-    LZB_NOTHALT = 11
+    LZB_NOTHALT_UEBERFAHREN = 11
     LZB_UEBERTRAGUNGSAUSFALL = 12
-    V_UEBERSCHREITUNG_LZB_AUSFALL = 13
+    V_UEBERSCHREITUNG_NACH_LZB_AUSFALL = 13
     RICHTUNGSSCHALTER_VERLEGT = 14
     LZB_RUECKROLLUEBERWACHUNG = 25
-    LZB_UEBERSCHREITUNG_200M_NACH_BEFEHL = 26
+    LZB_UEBERSCHREITUNG_200M_NACH_BEFEHL40_BLINKT = 26
     ALLGEMEINE_STOERUNG = 27
-    STROMVERSORGUNG = 28
+    STROMVERSORGUNG_FEHLT = 28
 class INDUSI_HUPE(Enum):
     AUS = 0
     HUPE = 1
     ZWANGSBREMSUNG = 2
 class INDUSI_ZUSATZINFO_MELDERBILD(Enum):
     NORMALZUSTAND = 0
-    _1000HZ_NACH_700M = 1
-    RESTREKTIV = 2
-    RESTREKTIV_1000HZ = 3
-    RESTREKTIV_500HZ = 4
+    TAUSEND_HZ_NACH_700M = 1
+    RESTRIKTIV = 2
+    RESTRIKTIV_1000HZ = 3
+    RESTRIKTIV_500HZ = 4
     PRUEFABLAUF = 5
 STATUS_INDUSI_BETRIEBSDATEN = namedtuple("STATUS_INDUSI_BETRIEBSDATEN", ['zustand', 'zwangsbremsung', 'zwangsbremsung_grund', 'm_1000hz', 'm_u', 'm_m', 'm_o', 'hupe', 'beeinflussung_1000hz', 'beeinflussung_500hz', 'beeinflussung_2000hz', 'lm_1000hz', 'm_500hz', 'm_befehl_an', 'lm_o', 'lm_m', 'lm_u', 'lm_500hz', 'lm_befehl', 'zusatzinfo_melderbild', 'lm_zugart_links', 'lm_zugart_65', 'lm_zugart_rechts', 'status_lm_zugart_rechts', 'status_lm_zugart_65', 'status_lm_zugart_links', ], defaults=([None] * 26))
 llps[STATUS_INDUSI_BETRIEBSDATEN] = (
