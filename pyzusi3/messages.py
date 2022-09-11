@@ -894,8 +894,41 @@ llps[STATUS_ZBS_BETRIEBSDATEN] = (
 )
 msgidx[PID(2, 0x0a, 0x65, 9)] = STATUS_ZBS_BETRIEBSDATEN
 
+#
+# STATUS_FAHRSPERRE_EINSTELLUNGEN
+# Zusi -> Client (Submessage) 
+#
+STATUS_FAHRSPERRE_EINSTELLUNGEN = namedtuple("STATUS_FAHRSPERRE_EINSTELLUNGEN", ['stoerschalter', 'hauptschalter', 'systemstatus', 'bauart', 'zugneustart'], defaults=[None] * 5)
+llps[STATUS_FAHRSPERRE_EINSTELLUNGEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 0x0a, 1), 'stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 0x0a, 2), 'hauptschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 0x0a, 3), 'systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 0x0a, 4), 'bauart', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 0x0a, 8), 'zugneustart', ContentType.STRING)
+)
+msgidx[PID(2, 0x0a, 0x65, 0x0a)] = STATUS_FAHRSPERRE_EINSTELLUNGEN
 
-#Fahrsperre
+#
+# STATUS_FAHRSPERRE_BETRIEBSDATEN
+# Zusi -> Client (Submessage) 
+#
+STATUS_FAHRSPERRE_BETRIEBSDATEN = namedtuple("STATUS_FAHRSPERRE_BETRIEBSDATEN", ['melder', 'zwangsbremsung', 'zaehler_gewollte_vorbeifahrt', 'zaehler_ungewollte_vorbeifahrt'], defaults=[None] * 4)
+llps[STATUS_FAHRSPERRE_BETRIEBSDATEN] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 0x0b), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'melder', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'zwangsbremsung', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'zaehler_gewollte_vorbeifahrt', ContentType.CARDINAL),
+    LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'zaehler_ungewollte_vorbeifahrt', ContentType.CARDINAL)
+)
+msgidx[PID(2, 0x0a, 0x65, 0x0b)] = STATUS_FAHRSPERRE_BETRIEBSDATEN
+
 
 #Status Türen
 #Grundblock
