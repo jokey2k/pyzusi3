@@ -470,18 +470,18 @@ class STATUS_NB_UEBERBRUECKUNG(Enum):
 class STATUS_NB_TEST(Enum):
     NORMAL = 0
     TEST_AKTIV = 1
-STATUS_NOTBREMSSYSTEM = namedtuple("STATUS_NOTBREMSSYSTEM", ['bauart', 'status', 'system_bereit', 'notbremsung', 'modus', 'LM_system_bereit', 'LM_notbremsung'], defaults=[None, None, None, None, None, None, None])
+STATUS_NOTBREMSSYSTEM = namedtuple("STATUS_NOTBREMSSYSTEM", ['bauart', 'status', 'm_system_bereit', 'm_notbremsung', 'modus', 'lm_system_bereit', 'lm_notbremsung'], defaults=[None, None, None, None, None, None, None])
 llps[STATUS_NOTBREMSSYSTEM] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x22), None, BasicNode),
     LLP(PID(2, 0x0a, 0x22, 1), 'bauart', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x22, 2), 'status', ContentType.BYTE, STATUS_NB_UEBERBRUECKUNG),
-    LLP(PID(2, 0x0a, 0x22, 3), 'system_bereit', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x22, 4), 'notbremsung', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x22, 3), 'm_system_bereit', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x22, 4), 'm_notbremsung', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x22, 5), 'modus', ContentType.BYTE, STATUS_NB_TEST),
-    LLP(PID(2, 0x0a, 0x22, 6), 'LM_system_bereit', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x22, 7), 'LM_notbremsung', ContentType.BYTE, LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x22, 6), 'lm_system_bereit', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x22, 7), 'lm_notbremsung', ContentType.BYTE, LMZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x22)] = STATUS_NOTBREMSSYSTEM
 
