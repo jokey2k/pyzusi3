@@ -173,9 +173,9 @@ class FAHRPULT_ANZEIGEN(Enum):
     KILOMETRIEUNG = 97
     MOTORSTROM = 98
     MOTORSPANNUNG = 99
-    # XXX STATUS_TUEREN = 102
     STATUS_SIFA = 100
     STATUS_ZUGBEEINFLUSSUNG = 101
+    STATUS_TUEREN = 102
     FAHRPULTINTERN_21 = 103
     FAHRPULTINTERN_22 = 104
     FAHRPULTINTERN_23 = 105
@@ -930,60 +930,59 @@ llps[STATUS_FAHRSPERRE_BETRIEBSDATEN] = (
 msgidx[PID(2, 0x0a, 0x65, 0x0b)] = STATUS_FAHRSPERRE_BETRIEBSDATEN
 
 
-#Status Türen
-#Grundblock
-
-class STATUS_TUEREN(Enum):
+#
+# STATUS_TUEREN
+# Zusi -> Client
+#
+class TUEREN_SEITE(Enum):
     ZU = 0
     OEFFNEND = 1
-    OFEN = 2
+    OFFEN = 2
     FAHRGASTWECHSEL_ABGESCHLOSSEN = 3
     SCHLIESSEND = 4
     GESTOERT = 5
     BLOCKIERT = 6
-class TUERZUSTAND(Enum):
+class TUEREN_ZUSTAND(Enum):
     ALLE_ZU = 0
     MIN_EINE_OFFEN = 1
-TUEREN_GRUNDBLOCK = namedtuple("TUEREN_GRUNDBLOCK", ['bezeichnung','linke_seite', 'rechte_seite', 'traktionssperre', 'zustand'],defaults=[None, None, None, None, None])
-llps[TUEREN_GRUNDBLOCK] = (
-    LLP(PID(2), None, BasicNode),
-    LLP(PID(2, 0x0a), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x66), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x66, 1),'bezeichnung', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x66, 2),'linke_seite', ContentType.BYTE, STATUS_TUEREN),
-    LLP(PID(2, 0x0a, 0x66, 3),'rechte_seite', ContentType.BYTE, STATUS_TUEREN),
-    LLP(PID(2, 0x0a, 0x66, 4),'traktionssperre', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66, 14),'zustand', ContentType.BYTE, TUERZUSTAND)
-)
-msgidx[PID(2, 0x0a, 0x66)] = TUEREN_GRUNDBLOCK
-
-#Seitenselktive Systeme
-class FREIGABE_STATUS(Enum):
+class TUEREN_SEITENWAHL(Enum):
     ZU = 0
     LINKS = 1
     RECHTS = 2
     BEIDE = 3
-TUEREN_SEITENSELEKTIV = namedtuple("TUEREN_SEITENSELEKTIV", ['freigabe', 'lm_links', 'lm_rechts', 'status_lm_links', 'status_lm_rechts', 'lm_zwnagsschliessen', 'status_lm_zwangsschliessen', 'lm_rechts_links', 'status_lm_rechts_links', 'zentrales_oeffnen_links', 'zentrales_oeffnen_rechts', 'status_lm_zentrales_oeffnen_links', 'status_lm_zentrales_oeffnen_rechts', 'lm_gruenschleife'],defaults=[None, None, None, None, None, None, None, None, None, None, None, None, None, None])
-llps[TUEREN_SEITENSELEKTIV] = (
+STATUS_TUEREN = namedtuple("STATUS_TUEREN", [
+    'bauart','links', 'rechts', 'traktionssperre', 'zustand',
+    'seitenwahl', 'm_links', 'm_rechts', 'lm_links', 'lm_rechts', 'm_zwnagsschliessen', 'lm_zwangsschliessen', 'm_rechts_links', 'lm_rechts_links', 'm_zentrales_oeffnen_links', 'm_zentrales_oeffnen_rechts', 'lm_zentrales_oeffnen_links', 'lm_zentrales_oeffnen_rechts', 'm_gruenschleife'
+    ],defaults=[None] * 5)
+llps[STATUS_TUEREN] = (
+    # Grunddaten
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x66), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x66,0x05), 'freigabe', ContentType.BYTE, FREIGABE_STATUS),
-    LLP(PID(2, 0x0a, 0x66,0x06), 'lm_links', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66,0x07), 'lm_rechts', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66,0x08), 'status_lm_links', ContentType.BYTE,LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66,0x09), 'status_lm_rechts', ContentType.BYTE,LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66,0x0a), 'lm_zwnagsschliessen', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66,0x0b), 'status_lm_zwangsschliessen', ContentType.BYTE,LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66,0x0c), 'lm_rechts_links', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66,0x0d), 'status_lm_rechts_links', ContentType.BYTE,LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66,0x0e), 'zentrales_oeffnen_links', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66,0x0f), 'zentrales_oeffnen_rechts', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66,0x10), 'status_lm_zentrales_oeffnen_links', ContentType.BYTE,LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66,0x11), 'status_lm_zentrales_oeffnen_rechts', ContentType.BYTE,LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66,0x12), 'lm_gruenschleife', ContentType.BYTE,LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x66, 0x01),'bauart', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x66, 0x02),'links', ContentType.BYTE, TUEREN_SEITE),
+    LLP(PID(2, 0x0a, 0x66, 0x03),'rechts', ContentType.BYTE, TUEREN_SEITE),
+    LLP(PID(2, 0x0a, 0x66, 0x04),'traktionssperre', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x14),'zustand', ContentType.BYTE, TUEREN_ZUSTAND),
+    # Seitenselektive Systeme (SAT, TB0, TAV, SST und S-Bahn)
+    LLP(PID(2, 0x0a, 0x66, 0x05), 'seitenwahl', ContentType.BYTE, TUEREN_SEITENWAHL),
+    LLP(PID(2, 0x0a, 0x66, 0x06), 'm_links', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x07), 'm_rechts', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x08), 'lm_links', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x09), 'lm_rechts', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x0a), 'm_zwnagsschliessen', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x0b), 'lm_zwangsschliessen', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x0c), 'm_rechts_links', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x0d), 'lm_rechts_links', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x0e), 'm_zentrales_oeffnen_links', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x0f), 'm_zentrales_oeffnen_rechts', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x10), 'lm_zentrales_oeffnen_links', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x11), 'lm_zentrales_oeffnen_rechts', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x12), 'm_gruenschleife', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x66, 0x13), 'lm_gruenschleife', ContentType.BYTE, LMZUSTAND),
 )
-msgidx[PID(2, 0x0a, 0x66)] = TUEREN_SEITENSELEKTIV
+msgidx[PID(2, 0x0a, 0x66)] = STATUS_TUEREN
+
 
 #Satus Fahrzeug
 class GRUND_NULLSTELLUNGSZWANG(Enum):
