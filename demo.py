@@ -40,11 +40,12 @@ async def zusitalk(ip, port):
 
     log.info("Request train speed and emer brake status")
     need_msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT,
-                                    messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM,
-                                    messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
-                                    messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG,
-                                    messages.FAHRPULT_ANZEIGEN.STATUS_TUEREN,
-                                    messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG
+                                    #messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM,
+                                    #messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
+                                    #messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG,
+                                    #messages.FAHRPULT_ANZEIGEN.STATUS_TUEREN,
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG,
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_ZUGVERBAND
                                     ])
     writer.write(encode_obj(need_msg).encode())
     basemessage, submessages = await decode_bytes(reader)
@@ -90,6 +91,9 @@ async def zusitalk(ip, port):
                 # messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG
                 elif isinstance(submessage, messages.STATUS_FAHRZEUG):
                     log.warning("New state for vehicle: %s" % str(submessage))
+                # messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG
+                elif isinstance(submessage, messages.STATUS_ZUGVERBAND):
+                    log.warning("New state for train: %s" % str(submessage))
             await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         pass
