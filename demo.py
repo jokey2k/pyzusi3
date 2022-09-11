@@ -42,7 +42,9 @@ async def zusitalk(ip, port):
     need_msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT,
                                     messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM,
                                     messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
-                                    messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG])
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG,
+                                    messages.FAHRPULT_ANZEIGEN.STATUS_TUEREN
+                                    ])
     writer.write(encode_obj(need_msg).encode())
     basemessage, submessages = await decode_bytes(reader)
     log.debug(basemessage)
@@ -52,20 +54,38 @@ async def zusitalk(ip, port):
     try:
         while True:
             basemessage, submessages = await decode_bytes(reader)
+            # normal messages.FAHRPULT_ANZEIGEN
             if isinstance(basemessage, messages.DATA_FTD) and basemessage.geschwindigkeit_absolut is not None:
                 log.warning("Got new speed info: %s" % str(basemessage.geschwindigkeit_absolut))
             for submessage in submessages:
+                # messages.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM
                 if isinstance(submessage, messages.STATUS_NOTBREMSSYSTEM):
                     log.warning("New state for emer brakes: %s" % str(submessage))
-                if isinstance(submessage, messages.STATUS_SIFA):
+                # messages.FAHRPULT_ANZEIGEN.STATUS_SIFA
+                elif isinstance(submessage, messages.STATUS_SIFA):
                     log.warning("New state for Sifa: %s" % str(submessage))
-                if isinstance(submessage, messages.STATUS_ZUGBEEINFLUSSUNG_GRUND):
+                # messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG
+                elif isinstance(submessage, messages.STATUS_ZUGBEEINFLUSSUNG_GRUND):
                     log.warning("New state for ZB basic: %s" % str(submessage))
-                if isinstance(submessage, messages.STATUS_INDUSI_EINSTELLUNGEN):
+                elif isinstance(submessage, messages.STATUS_INDUSI_EINSTELLUNGEN):
                     log.warning("New state for ZB settings: %s" % str(submessage))
-                if isinstance(submessage, messages.STATUS_INDUSI_BETRIEBSDATEN):
+                elif isinstance(submessage, messages.STATUS_INDUSI_BETRIEBSDATEN):
                     log.warning("New state for ZB state: %s" % str(submessage))
-
+                elif isinstance(submessage, messages.STATUS_ETCS_EINSTELLUNGEN):
+                    log.warning("New state for ETCS settings: %s" % str(submessage))
+                elif isinstance(submessage, messages.STATUS_ETCS_BETRIEBSDATEN):
+                    log.warning("New state for ETCS state: %s" % str(submessage))
+                elif isinstance(submessage, messages.STATUS_ZUB_EINSTELLUNGEN):
+                    log.warning("New state for ZUB settings: %s" % str(submessage))
+                elif isinstance(submessage, messages.STATUS_ZUB_BETRIEBSDATEN):
+                    log.warning("New state for ZUB state: %s" % str(submessage))
+                elif isinstance(submessage, messages.STATUS_ZBS_EINSTELLUNGEN):
+                    log.warning("New state for ZBS settings: %s" % str(submessage))
+                elif isinstance(submessage, messages.STATUS_ZBS_BETRIEBSDATEN):
+                    log.warning("New state for ZBS state: %s" % str(submessage))
+                # messages.FAHRPULT_ANZEIGEN.STATUS_TUEREN
+                elif isinstance(submessage, messages.STATUS_TUEREN):
+                    log.warning("New state for doors: %s" % str(submessage))
             await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         pass
