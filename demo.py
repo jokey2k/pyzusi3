@@ -91,7 +91,7 @@ async def zusitalk(ip, port):
                 # messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG
                 elif isinstance(submessage, messages.STATUS_FAHRZEUG):
                     log.warning("New state for vehicle: %s" % str(submessage))
-                # messages.FAHRPULT_ANZEIGEN.STATUS_FAHRZEUG
+                # messages.FAHRPULT_ANZEIGEN.STATUS_ZUGVERBAND
                 elif isinstance(submessage, messages.STATUS_ZUGVERBAND):
                     log.warning("New state for train: %s" % str(submessage))
             await asyncio.sleep(0.1)
