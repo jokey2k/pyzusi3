@@ -557,7 +557,7 @@ STATUS_INDUSI_EINSTELLUNGEN = namedtuple("STATUS_INDUSI_EINSTELLUNGEN", [
     'zugart', 'hauptschalter', 'indusi_stoerschalter', 'luftabsperhan', 'systemstatus', 'bauart',
     'tfnr', 'zugnummer', 'e_brh', 'e_bra', 'e_zugart', 'a_brh', 'a_bra', 'a_zugart', 'a_modus', 'klartextmeldungen', 'funktionspruefung_starten', 'indusi_stoerschalterbauart',
     'g_brh', 'g_bra', 'g_zl', 'g_vmz', 'g_zugart', 'e_zl', 'e_vmz', 'a_zl', 'a_vmz', 'lzb_stoerschalter', 'lzb_stoerschalterbaurt', 'lzb_systemstatus',
-    ], defaults=([None] * 29))
+    ], defaults=([None] * 30))
 llps[STATUS_INDUSI_EINSTELLUNGEN] = (
     # Indusi Analogsysteme und Basisdaten
     LLP(PID(2), None, BasicNode),
