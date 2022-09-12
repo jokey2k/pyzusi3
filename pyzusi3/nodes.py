@@ -127,7 +127,7 @@ class BasicNode:
     def encode(self):
         result = b''
 
-        if self.children:
+        if self.children or (not self.children and self.content is None):
             result = (0).to_bytes(4, byteorder='little') # Node start
 
         if self.content is not None:
@@ -139,7 +139,7 @@ class BasicNode:
         if self.content is not None:
             result += bytecontent
 
-        if self.children:
+        if self.children or (not self.children and self.content is None):
             for child in self.children:
                 result += child.encode()
             result += (0xffffffff).to_bytes(4, byteorder='little') # Node end
@@ -158,6 +158,7 @@ class DecoderState(Enum):
 class StreamDecoder:
     def __init__(self) -> None:
         self.log = logging.getLogger("pyzusi3.node")
+        self.logstream = logging.getLogger("pyzusi3.streamdata")
 
     def reset(self):
         self.log.info("Resetting state")
@@ -170,13 +171,16 @@ class StreamDecoder:
     def decode(self, bytecontent):
         if not isinstance(bytecontent, bytes):
             raise ValueError("Need bytes to decode, not %s" % type(bytecontent))
-        self.log.info("Start decoding")
-        self.reset()
         self.bytecontent = iter(bytecontent)
-        self._decode_loop()
-        self.log.debug("Decoding result:")
-        self.log.debug(repr(self.root_node))
-        return self.root_node
+        self.log.info("Start decoding")
+        while True:
+            self.reset()
+            self._decode_loop()
+            self.log.debug("Decoding result:")
+            self.log.debug(repr(self.root_node))
+            if self.root_node is None:
+                break
+            yield self.root_node
 
     def _next_content_length(self):
         if self.state == DecoderState.RESET:
@@ -203,7 +207,13 @@ class StreamDecoder:
 
     def _decode_loop(self):
         while self.level > 0:
-            incoming_bytes = self._get_bytes()
+            try:
+                incoming_bytes = self._get_bytes()
+            except MissingBytesDecodeError as e:
+                if self.level == 1:
+                    break
+                else:
+                    raise MissingBytesDecodeError(str(e))
             self._decode_single_pass(incoming_bytes)
             if self.state == DecoderState.CONTRENTLENGTH and self.level == 1:
                 # finished decoding
@@ -265,19 +275,28 @@ class AsyncStreamDecoder(StreamDecoder):
 
     async def _get_bytes(self):
         data = await self.bytecontent.readexactly(self._next_content_length())
-        self.log.debug("Got data: %s" % data)
+        self.logstream.debug("Got data: %s" % data)
         return data
 
     async def decode(self, stream):
         if not isinstance(stream, asyncio.StreamReader):
             raise ValueError("Need stream to decode, not %s" % type(stream))
-        self.log.info("Start decoding")
-        self.reset()
         self.bytecontent = stream
-        await self._decode_loop()
-        self.log.debug("Decoding result:")
-        self.log.debug(repr(self.root_node))
-        return self.root_node
+        self.log.info("Start decoding")
+        while True:
+            self.reset()
+            try:
+                await self._decode_loop()
+            except asyncio.exceptions.IncompleteReadError as e:
+                if self.level == 1:
+                    break
+                else:
+                    raise asyncio.exceptions.IncompleteReadError(str(e))                
+            self.log.debug("Decoding result:")
+            self.log.debug(repr(self.root_node))
+            if self.root_node is None:
+                break
+            yield self.root_node
 
     async def _decode_loop(self):
         while self.level > 0:

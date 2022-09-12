@@ -16,15 +16,17 @@ logging.basicConfig(level=logging.WARNING)
 
 async def decode_bytes(stream_bytes):
     decoder = AsyncStreamDecoder()
-    decoded_tree = await decoder.decode(stream_bytes)
-    messagedecoder = MessageDecoder()
-    decoded_messages = messagedecoder.parse(decoded_tree)  
-    return decoded_messages
+    decoded_tree = decoder.decode(stream_bytes)
+    nodes = []
+    async for node in decoded_tree:
+        messagedecoder = MessageDecoder()
+        yield messagedecoder.parse(node)      
 
 async def zusitalk(ip, port):
     log.info("Connecting to Zusi3")
     reader, writer = await asyncio.open_connection(
         ip, port)
+    msg_reader = decode_bytes(reader)
 
     log.info("Sending HELLO message")
     hello_msg = messages.HELLO(2, messages.ClientTyp.FAHRPULT, "Schlumpfpult", "1.0")
@@ -32,7 +34,7 @@ async def zusitalk(ip, port):
     writer.write(encode_obj(hello_msg).encode())
 
     log.info("Waiting for response")
-    basemessage, submessages = await decode_bytes(reader)
+    basemessage, submessages = await msg_reader.__anext__()
     log.debug(basemessage)
     if not (isinstance(basemessage, messages.ACK_HELLO) and basemessage.status == 0):
         log.error("Zusi did not report success for HELLO")
@@ -51,14 +53,14 @@ async def zusitalk(ip, port):
                                     messages.FAHRPULT_ANZEIGEN.STATUS_ZUGFAHRDATEN
                                     ])
     writer.write(encode_obj(need_msg).encode())
-    basemessage, submessages = await decode_bytes(reader)
+    basemessage, submessages = await msg_reader.__anext__()
     log.debug(basemessage)
     if not (isinstance(basemessage, messages.ACK_NEEDED_DATA) and basemessage.status == 0):
         log.error("Zusi did not report success for HELLO")
 
     try:
         while True:
-            basemessage, submessages = await decode_bytes(reader)
+            basemessage, submessages = await msg_reader.__anext__()
             # normal messages.FAHRPULT_ANZEIGEN
             if isinstance(basemessage, messages.DATA_FTD) and basemessage.geschwindigkeit_absolut is not None:
                 log.warning("Got new speed info: %s" % str(basemessage.geschwindigkeit_absolut))

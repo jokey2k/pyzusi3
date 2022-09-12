@@ -36,9 +36,10 @@ class TestManualExample1(unittest.TestCase):
 
     def test_msg_decoding(self):
         decoder = StreamDecoder()
-        result = decoder.decode(self.bytes_written)
-        self.assertEqual(result.encode(), self.bytes_written)
-
+        result = b''
+        for decoded_tree in decoder.decode(self.bytes_written):
+            result += decoded_tree.encode()
+        self.assertEqual(self.bytes_written, result)
 
 class TestManualExample2(unittest.TestCase):
     def setUp(self):
@@ -75,5 +76,104 @@ class TestManualExample2(unittest.TestCase):
 
     def test_msg_decoding(self):
         decoder = StreamDecoder()
-        result = decoder.decode(self.bytes_written)
-        self.assertEqual(result.encode(), self.bytes_written)
+        result = b''
+        for decoded_tree in decoder.decode(self.bytes_written):
+            result += decoded_tree.encode()
+        self.assertEqual(self.bytes_written, result)
+
+
+class TestRealWorldStreamdata(unittest.TestCase):
+    def test_zusilm_message(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x08\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'ZD_MTD' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x02' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\xe8\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'\xa9\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\n\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'ZD_EBuLa' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x02' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\xaa\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'v\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x0c\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'ZD_Zugfunk' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x02' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\xc9\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'h\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+        decoder = StreamDecoder()
+        result = b''
+        for decoded_tree in decoder.decode(bytes_written):
+            result += decoded_tree.encode()
+        self.assertEqual(bytes_written, result)
+
+    def test_zusilm2_msg(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+        decoder = StreamDecoder()
+        result = b''
+        for decoded_tree in decoder.decode(bytes_written):
+            result += decoded_tree.encode()
+        self.assertEqual(bytes_written, result)
