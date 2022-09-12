@@ -242,7 +242,7 @@ class FAHRPULT_ANZEIGEN(Enum):
     FAHRZEUGINTERN_18 = 166
     FAHRZEUGINTERN_19 = 167
     FAHRZEUGINTERN_20 = 168
-    # XXX STATUS_LM_FUER_ZUSIPISPLAY = 169
+    STATUS_LM_ZUSIPISPLAY = 169
     AUSSENHELLIGKEIT = 170
     # XXX STATUS_ZUGFAHRDATEN = 171
     FUEHRERSTAND_DEAKTIVIERT = 172
@@ -1225,27 +1225,26 @@ llps[STATUS_WEICHEN] = (
 )
 msgidx[PID(2, 0x0a, 0x92,0x01)] = STATUS_WEICHEN
 
-
-
-#Status LM Zusidisplay
-class RAHMEN_MODUS(Enum):
+#
+# STATUS_LM_ZUSIDISPLAY
+# Zusi -> Client
+#
+class ZUSIDISPLAY_RAHMEN_MODUS(Enum):
     GRAFIK_OHNE_RAHMEN = 0
     GRAFIK_MIT_RAHMEN = 1
-    GRAFIKMIT_TASTEN = 2
-
-LM_ZUSIDISPLAY = namedtuple("LM_ZUSIDISPLAY", ['name', 'modus', 'breite', 'hoehe'], defaults=[None, None, None, None])
-llps[LM_ZUSIDISPLAY] = (
+    GRAFIK_MIT_TASTEN = 2
+STATUS_LM_ZUSIDISPLAY = namedtuple("STATUS_LM_ZUSIDISPLAY", ['name', 'modus', 'breite', 'hoehe'], defaults=[None] * 4)
+llps[STATUS_LM_ZUSIDISPLAY] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0xa9), None, BasicNode),
     LLP(PID(2, 0x0a, 0xa9, 0x01), None, BasicNode),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x01), 'name', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x02), 'modus', ContentType.BYTE, RAHMEN_MODUS),
+    LLP(PID(2, 0x0a, 0xa9, 0x01, 0x02), 'modus', ContentType.BYTE, ZUSIDISPLAY_RAHMEN_MODUS),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x03), 'breite', ContentType.WORD),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x04), 'hoehe', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0xa9, 0x01), None, BasicNode)
 )
-msgidx[PID(2, 0x0a, 0xa9,0x01)] = LM_ZUSIDISPLAY
+msgidx[PID(2, 0x0a, 0xa9)] = STATUS_LM_ZUSIDISPLAY
 
 #Status Zug Fahrdaten
 class ABSPERHAEHNE_HLL(Enum):
