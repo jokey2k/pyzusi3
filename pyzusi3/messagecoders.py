@@ -112,7 +112,13 @@ class MessageDecoder:
                 elif not len(mapping_parameter):
                     raise NotImplementedError("Parameter %s is unknown for %s, programming error!" % (current_pid, submessage_class))
                 mapping_parameter = mapping_parameter[0]
-                self.mapped_parameters[prefix_name + mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+                try:
+                    self.mapped_parameters[prefix_name + mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+                except NotImplementedError as e:
+                    # whitelist bug in FTD message
+                    # https://forum.zusi.de/viewtopic.php?f=55&t=18246
+                    if current_pid != ParameterId(2, 10, 169):
+                        raise NotImplementedError(str(e))
                 return
 
             if len(mapping_parameter) > 1:

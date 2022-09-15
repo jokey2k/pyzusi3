@@ -109,6 +109,29 @@ class TestMessageDecoder(unittest.TestCase):
         msg = messages.STATUS_INDUSI_EINSTELLUNGEN(indusi_stoerschalter=messages.SCHALTER.EIN)
         msg_bytes = encode_obj(msg).encode()
 
+    def test_ftd169bug(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 2)
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[1])        
+
 class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
     async def testDecodeAckHello(self):
         bytes_written = b'' + \
