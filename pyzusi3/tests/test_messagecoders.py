@@ -132,6 +132,85 @@ class TestMessageDecoder(unittest.TestCase):
         messagedecoder = MessageDecoder()
         basemessage, submessages = messagedecoder.parse(nodes[1])        
 
+    def test_msg_nonunique_nodes(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xab\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\xb4\xcc\x0c@' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\xa0@' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x05\x00' + \
+            b'\xff.!G' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x06\x00' + \
+            b'\x00\xa0\x8cF' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x07\x00' + \
+            b'\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\xb4\xcc\x0c@' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\xa0@' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x05\x00' + \
+            b'\xff.!G' + \
+            b'\x06\x00\x00\x00' + \
+            b'\x06\x00' + \
+            b'\x00\xa0\x8cF' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x07\x00' + \
+            b'\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\n\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])
+        self.assertTrue(isinstance(basemessage, messages.DATA_FTD))
+        self.assertEqual(len(submessages), 1)
+        self.assertTrue(isinstance(submessages[0], messages.STATUS_ZUGFAHRDATEN))
+        submessage = submessages[0]
+        self.assertEqual(len(submessage.fahrzeuge), 2)
+        for fzg in submessage.fahrzeuge:
+            self.assertTrue(isinstance(fzg, messages.STATUS_ZUGFAHRDATEN_FAHRZEUG))
+
+
 class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
     async def testDecodeAckHello(self):
         bytes_written = b'' + \

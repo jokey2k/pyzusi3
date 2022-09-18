@@ -4,7 +4,7 @@ from enum import Enum
 from pyzusi3.nodes import ContentType, BasicNode
 
 ParameterId = namedtuple("ParameterId", ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'], defaults=[None, None, None, None, None, None])
-LowlevelParameter = namedtuple("LowlevelParameter", ['parameterid', 'parametername', 'contenttype', 'enumtype'], defaults=[None])
+LowlevelParameter = namedtuple("LowlevelParameter", ['parameterid', 'parametername', 'contenttype', 'enumtype', 'multipletimes'], defaults=[None, None])
 lowlevel_parameters = {}
 message_index = {}
 
@@ -1256,12 +1256,13 @@ class ZUGFAHRDATEN_ABSPERHAEHNE_HLL(Enum):
     HAN_HINTEN_OFFEN = 2
     BEIDE_HAEHNE_OFFEN = 3
     BEIDE_HAEHNE_ZU = 4
-STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
+STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'])
+STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
 llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0xab), None, BasicNode),
-    LLP(PID(2, 0x0a, 0xab, 0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xab, 0x01), 'fahrzeuge', BasicNode, multipletimes=STATUS_ZUGFAHRDATEN_FAHRZEUG),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x01),'bremszylinderdruck', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x02),'hll_druck',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x03),'zugkraft',ContentType.SINGLE),
@@ -1271,4 +1272,5 @@ llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x07),'absperhaehne_hll',ContentType.BYTE, ZUGFAHRDATEN_ABSPERHAEHNE_HLL),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a),'motordrehzahl_2',ContentType.SINGLE),
 )
+llps[STATUS_ZUGFAHRDATEN_FAHRZEUG] = llps[STATUS_ZUGFAHRDATEN]
 msgidx[PID(2, 0x0a, 0xab)] = STATUS_ZUGFAHRDATEN

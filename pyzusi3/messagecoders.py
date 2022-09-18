@@ -1,3 +1,4 @@
+from collections import defaultdict
 import logging
 from enum import Enum
 import struct
@@ -45,10 +46,12 @@ class MessageDecoder:
     def reset(self):
         self.message_class = None
         self.submessage_prefixes = {}
+        self.multimessages = defaultdict(list)
+        self.current_multimessage = {}
+        self.mapped_parameters = {}
     
     def parse(self, root_node):
         self.message_class, self.message_pid = self.find_messageclass(root_node)
-        self.mapped_parameters = {}
         self.lowlevel_parameter = lowlevel_parameters[self.message_class]
         self.map_parameters(root_node, ParameterId(root_node.id), 1)
 
@@ -58,10 +61,18 @@ class MessageDecoder:
         used_prefixes = {prefix: msgclass for prefix, msgclass in self.submessage_prefixes.values()}
         submessages = []
         for prefix, msgclass in used_prefixes.items():
-            msgclass_params = {key[key.find("::")+2:]: value for key, value in self.mapped_parameters.items() if key.startswith(prefix)}
-            submessages.append(msgclass(**msgclass_params))
+            msgclass_params = {key[key.find("::")+2:]: value for key, value in self.mapped_parameters.items() if key.startswith(prefix)}            
+            multimsg_params = {key[key.find("::")+2:]: value for key, value in self.multimessages.items() if key.startswith(prefix)}
+            msgclass_params.update(multimsg_params)
+            submessage = msgclass(**msgclass_params)
+            submessages.append(submessage)
+
             for msgkey in msgclass_params.keys():
-                del self.mapped_parameters[prefix + msgkey]
+                prefixed_key = prefix + msgkey
+                if prefixed_key in self.multimessages:
+                    del self.multimessages[prefixed_key]
+                if prefixed_key in self.mapped_parameters:
+                    del self.mapped_parameters[prefixed_key]
 
         basemessage = self.message_class(**self.mapped_parameters)
         return (basemessage, submessages)
@@ -87,49 +98,87 @@ class MessageDecoder:
         
         return message_index[current_pid], current_pid
 
+    def finalize_multimessage(self):
+        cls = self.current_multimessage['class']
+        kwargs = self.current_multimessage['mapped_parameters']
+        prefix_name = self.current_multimessage['prefix_name']
+        paramname = self.current_multimessage['parent_parametername']
+
+        message = cls(**kwargs)
+        self.multimessages[prefix_name + paramname].append(message)
+
+        self.current_multimessage['mapped_parameters'] = {}
+
     def map_parameters(self, current_node, current_pid, current_level):
-        if current_node.content is not None:
-            mapping_parameter = [param for param in self.lowlevel_parameter if param.parameterid == current_pid]
-            if not len(mapping_parameter):
-                self.log.debug("Parameter %s is not known for %s, checking for submessage" % (current_pid, self.message_class))
-                submessage_class = None
-                for i in range(len(current_pid), 1, -1):
-                    check_param_index = ParameterId(*current_pid[:i])
-                    if check_param_index in message_index:
-                        submessage_class = message_index[check_param_index]
-                        self.log.debug("Found submessage of type %s" % submessage_class)
-                        break
-                if submessage_class is None:
-                    self.log.debug("Parameter %s is not known for %s and no submessage, discarding" % (current_pid, self.message_class))
-                    return
+        if current_pid == ParameterId(2, 10, 169) and current_node.content:
+            # whitelist bug in FTD message
+            # https://forum.zusi.de/viewtopic.php?f=55&t=18246
+            return
 
-                prefix_name = "%s::" % submessage_class
-                self.submessage_prefixes[check_param_index] = (prefix_name, submessage_class)
+        submessage_class = None
+        mapping_parameter = [param for param in self.lowlevel_parameter if param.parameterid == current_pid]
+        if len(mapping_parameter) > 1:
+            raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, self.message_class))
 
-                mapping_parameter = [param for param in lowlevel_parameters[submessage_class] if param.parameterid == current_pid]
-                if len(mapping_parameter) > 1:
-                    raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, submessage_class))
-                elif not len(mapping_parameter):
-                    raise NotImplementedError("Parameter %s is unknown for %s, programming error!" % (current_pid, submessage_class))
-                mapping_parameter = mapping_parameter[0]
-                try:
-                    self.mapped_parameters[prefix_name + mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
-                except NotImplementedError as e:
-                    # whitelist bug in FTD message
-                    # https://forum.zusi.de/viewtopic.php?f=55&t=18246
-                    if current_pid != ParameterId(2, 10, 169):
-                        raise NotImplementedError(str(e))
+        if not len(mapping_parameter):
+            self.log.debug("Parameter %s is not known for %s, checking for submessage" % (current_pid, self.message_class))
+            for i in range(len(current_pid), 1, -1):
+                check_param_index = ParameterId(*current_pid[:i])
+                if check_param_index in message_index:
+                    submessage_class = message_index[check_param_index]
+                    self.log.debug("Found submessage of type %s" % submessage_class)
+                    break
+            if submessage_class is None:
+                self.log.warning("Parameter %s is not known for %s and no submessage, discarding" % (current_pid, self.message_class))
                 return
 
+        if submessage_class is not None:
+            prefix_name = "%s::" % submessage_class
+            self.submessage_prefixes[check_param_index] = (prefix_name, submessage_class)
+
+            mapping_parameter = [param for param in lowlevel_parameters[submessage_class] if param.parameterid == current_pid]
             if len(mapping_parameter) > 1:
-                raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, self.message_class))
+                raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, submessage_class))
+            elif not len(mapping_parameter):
+                raise NotImplementedError("Parameter %s is unknown for %s, programming error!" % (current_pid, submessage_class))
             mapping_parameter = mapping_parameter[0]
 
+            if mapping_parameter.multipletimes is not None and mapping_parameter.contenttype is BasicNode:
+                if self.current_multimessage:
+                    self.finalize_multimessage()
+                self.current_multimessage = {
+                    'class': mapping_parameter.multipletimes,
+                    'parent_pid': mapping_parameter.parameterid,
+                    'parent_parametername': mapping_parameter.parametername,
+                    'prefix_name': prefix_name,
+                    'mapped_parameters': {}
+                }
+
+            if mapping_parameter.contenttype is BasicNode:
+                if self.current_multimessage:
+                    if not is_subparameter(self.current_multimessage['parent_pid'], mapping_parameter.parameterid):
+                        self.finalize_multimessage()
+                        self.current_multimessage = {}
+            else:
+                decoded_data = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+                if self.current_multimessage:
+                    if mapping_parameter.parametername in self.current_multimessage['mapped_parameters']:
+                        self.finalize_multimessage()
+                    self.current_multimessage['mapped_parameters'][mapping_parameter.parametername] = decoded_data
+                else:
+                    mapping_parameter_name = prefix_name + mapping_parameter.parametername
+                    self.mapped_parameters[mapping_parameter_name] = decoded_data
+                return
+        elif current_node.content:
+            mapping_parameter = mapping_parameter[0]
             self.mapped_parameters[mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
         for child_node in current_node.children:
             params = {'id' + str(current_level + 1): child_node.id}
             child_pid = current_pid._replace(**params)
             self.map_parameters(child_node, child_pid, current_level + 1)
+        if self.current_multimessage and current_pid == self.current_multimessage['parent_pid']:
+            self.finalize_multimessage()
+            self.current_multimessage = {}
 
 def level_for_parameterid(parameterid):
     for i in range(6, 0, -1):
@@ -143,6 +192,11 @@ def strip_level_from_parameterid(level, parameterid):
         nulled_id = {'id' + str(i): None}
         new_paramid = new_paramid._replace(**nulled_id)
     return new_paramid
+
+def is_subparameter(parentparameterid, subparameterid):
+    parent_level = level_for_parameterid(parentparameterid)
+    stripped_subparameterid = strip_level_from_parameterid(parent_level + 1, subparameterid)
+    return parentparameterid == stripped_subparameterid
 
 def encode_obj(obj):
     if type(obj) not in lowlevel_parameters:
