@@ -220,13 +220,39 @@ def encode_obj(obj):
                 break
 
         if parameter.contenttype is BasicNode:
-            current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=parent_node)
-            if current_node.parent_node is None:
-                root_node = current_node
-            else:
-                current_node.parent_node.children.append(current_node)
-            seen_treenodes[parameter.parameterid] = current_node
+            if parameter.multipletimes is None or \
+                (parameter.multipletimes is not None and parameter.multipletimes == type(obj)):
+                current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=parent_node)
+                if current_node.parent_node is None:
+                    root_node = current_node
+                else:
+                    current_node.parent_node.children.append(current_node)
+                seen_treenodes[parameter.parameterid] = current_node
+                continue
+
+            parent_tree_pid = parameter.parameterid
+            for item in getattr(obj, parameter.parametername, []):
+                encoded_item = encode_obj(item)
+                def locate_subtree(tree, built_parameterid):
+                    tree_level = level_for_parameterid(built_parameterid)
+                    new_pidindex = {'id' + str(tree_level + 1): tree.id}
+                    new_parameterid = built_parameterid._replace(**new_pidindex)
+                    if new_parameterid == parent_tree_pid:
+                        return tree
+                    found_subtree = None
+                    for child_tree in tree.children:
+                        found_subtree = found_subtree or locate_subtree(child_tree, new_parameterid)
+                        if found_subtree is not None:
+                            break
+                    return found_subtree
+
+                subtree = locate_subtree(encoded_item, ParameterId())
+                if subtree is None:
+                    raise ValueError("Tree for parameter %s inconsistent, did not find common root" % str(item))
+                subtree.parent_node = current_node
+                current_node.children.append(subtree)
             continue
+
         parameter_value = getattr(obj, parameter.parametername, None)
         if parameter_value is None:
             continue
@@ -236,8 +262,7 @@ def encode_obj(obj):
             node_contenttype = ContentType.RAW
         else:
             node_contenttype = parameter.contenttype
-        if isinstance(node_content, list):
-           # So far only used in needed_data
+        if isinstance(node_content, list) and parameter.contenttype is not BasicNode and parameter.multipletimes is True:
            for entry in node_content:
                if isinstance(entry, Enum):
                    entry_content = entry.value

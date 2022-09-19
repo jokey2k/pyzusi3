@@ -131,6 +131,7 @@ class TestMessageDecoder(unittest.TestCase):
         self.assertEqual(len(nodes), 2)
         messagedecoder = MessageDecoder()
         basemessage, submessages = messagedecoder.parse(nodes[1])        
+        # should not raise any issue
 
     def test_msg_nonunique_nodes(self):
         bytes_written = b'\x00\x00\x00\x00' + \
@@ -210,6 +211,9 @@ class TestMessageDecoder(unittest.TestCase):
         for fzg in submessage.fahrzeuge:
             self.assertTrue(isinstance(fzg, messages.STATUS_ZUGFAHRDATEN_FAHRZEUG))
 
+        encoded_obj = encode_obj(submessage)
+        result = encoded_obj.encode()
+        self.assertEqual(result, bytes_written)
 
 class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
     async def testDecodeAckHello(self):
