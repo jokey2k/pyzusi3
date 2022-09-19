@@ -44,49 +44,49 @@ class BasicNode:
         if self.contenttype == ContentType.BYTE:
             try:
                 if not 0 <= self.content <= 255:
-                    raise EncodingValueError("Content %s exceeds limits of 0-255 for a byte")
+                    raise EncodingValueError("Content %s exceeds limits of 0-255 for a byte" % str(self.content))
             except TypeError:
                 raise EncodingValueError("Content %s cannot be compared for range 0-255" % str(self.content))
             result += self.content.to_bytes(1, byteorder='little')
         elif self.contenttype == ContentType.SHORTINT:
             try:
                 if not -128 <= self.content <= 127:
-                    raise EncodingValueError("Content %s exceeds limits of -128 to 127 for a short int")
+                    raise EncodingValueError("Content %s exceeds limits of -128 to 127 for a short int" % str(self.content))
             except TypeError:
                 raise EncodingValueError("Content %s cannot be compared for range -128 to 127" % str(self.content))
             result += self.content.to_bytes(1, byteorder='little')
         elif self.contenttype == ContentType.WORD:
             try:
                 if not 0 <= self.content <= 65535:
-                    raise EncodingValueError("Content %s exceeds limits of 0-65535 for a word")
+                    raise EncodingValueError("Content %s exceeds limits of 0-65535 for a word" % str(self.content))
             except TypeError:
                 raise EncodingValueError("Content %s cannot be compared for range 0-65535" % str(self.content))
             result += self.content.to_bytes(2, byteorder='little')
         elif self.contenttype == ContentType.SMALLINT:
             try:
                 if not -32768 <= self.content <= 32767:
-                    raise EncodingValueError("Content %s exceeds limits of -32768 to 32767 for a small int")
+                    raise EncodingValueError("Content %s exceeds limits of -32768 to 32767 for a small int" % str(self.content))
             except TypeError:
                 raise EncodingValueError("Content %s cannot be compared for range -32768 to 32767" % str(self.content))
             result += self.content.to_bytes(2, byteorder='little')
         elif self.contenttype == ContentType.INTEGER:
             try:
                 if not -2147483648 <= self.content <= 2147483647:
-                    raise EncodingValueError("Content %s exceeds limits of -2147483648 to 2147483647 for an int")
+                    raise EncodingValueError("Content %s exceeds limits of -2147483648 to 2147483647 for an int" % str(self.content))
             except TypeError:
                 raise EncodingValueError("Content %s cannot be compared for range -2147483648 to 2147483647" % str(self.content))
             result += self.content.to_bytes(4, byteorder='little')
         elif self.contenttype == ContentType.CARDINAL:
             try:
                 if not 0 <= self.content <= 4294967295:
-                    raise EncodingValueError("Content %s exceeds limits of 0 to 4294967295 for a cardinal")
+                    raise EncodingValueError("Content %s exceeds limits of 0 to 4294967295 for a cardinal" % str(self.content))
             except TypeError:
                 raise EncodingValueError("Content %s cannot be compared for range 0 to 4294967295" % str(self.content))
             result += self.content.to_bytes(4, byteorder='little')
         elif self.contenttype == ContentType.INTEGER64BIT:
             try:
                 if not -9223372036854775808 <= self.content <= 9223372036854775807:
-                    raise EncodingValueError("Content %s exceeds limits of -9223372036854775808 to 9223372036854775807 for an int64")
+                    raise EncodingValueError("Content %s exceeds limits of -9223372036854775808 to 9223372036854775807 for an int64" % str(self.content))
             except TypeError:
                 raise EncodingValueError("Content %s cannot be compared for range -9223372036854775808 to 9223372036854775807" % str(self.content))
             result += self.content.to_bytes(8, byteorder='little')
