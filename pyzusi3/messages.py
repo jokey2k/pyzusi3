@@ -526,6 +526,7 @@ msgidx[PID(2, 0x0a, 0x65)] = STATUS_ZUGBEEINFLUSSUNG_GRUND
 # Zusi -> Client (Submessage) 
 #
 class INDUSI_ZUGART(Enum):
+    UNBEKANNT = 0
     NICHT_BESTIMMT = 1
     U = 2
     M = 3
@@ -607,6 +608,7 @@ msgidx[PID(2, 0x0a, 0x65, 2)] = STATUS_INDUSI_EINSTELLUNGEN
 # Zusi -> Client (Submessage) 
 #
 class INDUSI_ZUSTAND(Enum):
+    UNBEKANNT = 0
     AUSGESCHALTET = 1
     ABGESCHALTET_GESTOERT = 2
     HL_DRUCK_NIDRIG = 3
