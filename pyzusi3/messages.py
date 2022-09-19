@@ -1233,17 +1233,19 @@ class ZUSIDISPLAY_RAHMEN_MODUS(Enum):
     GRAFIK_OHNE_RAHMEN = 0
     GRAFIK_MIT_RAHMEN = 1
     GRAFIK_MIT_TASTEN = 2
-STATUS_LM_ZUSIDISPLAY = namedtuple("STATUS_LM_ZUSIDISPLAY", ['name', 'modus', 'breite', 'hoehe'], defaults=[None] * 4)
+STATUS_LM_ZUSIDISPLAY = namedtuple("STATUS_LM_ZUSIDISPLAY", ['displays'], defaults=[None])
+STATUS_LM_ZUSIDISPLAY_DISPLAY = namedtuple("STATUS_LM_ZUSIDISPLAY_DISPLAY", ['name', 'modus', 'breite', 'hoehe'], defaults=[None] * 4)
 llps[STATUS_LM_ZUSIDISPLAY] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0xa9), None, BasicNode),
-    LLP(PID(2, 0x0a, 0xa9, 0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xa9, 0x01), 'displays', BasicNode, multipletimes=STATUS_LM_ZUSIDISPLAY_DISPLAY),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x01), 'name', ContentType.STRING),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x02), 'modus', ContentType.BYTE, ZUSIDISPLAY_RAHMEN_MODUS),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x03), 'breite', ContentType.WORD),
     LLP(PID(2, 0x0a, 0xa9, 0x01, 0x04), 'hoehe', ContentType.WORD),
 )
+llps[STATUS_LM_ZUSIDISPLAY_DISPLAY] = llps[STATUS_LM_ZUSIDISPLAY]
 msgidx[PID(2, 0x0a, 0xa9)] = STATUS_LM_ZUSIDISPLAY
 
 #
