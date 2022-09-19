@@ -2,6 +2,7 @@ from collections import defaultdict
 import logging
 from enum import Enum
 import struct
+from pyzusi3.exceptions import MissingLowLevelParameterError
 
 from pyzusi3.messages import ParameterId, message_index, lowlevel_parameters, ContentType
 from pyzusi3.nodes import BasicNode
