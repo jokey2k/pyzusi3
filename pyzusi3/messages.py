@@ -1210,12 +1210,13 @@ class WEICHEN_UMLAUFMODUS_STUMPFBEFAHRUNG(Enum):
     UNDEFINIERT = 0
     WEICHE_LAUEFT_AUTOMATISCH_UM = 1
     WEICHE_MUSS_GESTELLT_WERDEN = 2
-STATUS_WEICHEN = namedtuple("STATUS_WEICHEN", ['bezeichnung', 'bauart', 'typ', 'aktuelle_lage', 'fahrtrichtung', 'umlaufmodus'], defaults=[None] * 6)
+STATUS_WEICHEN = namedtuple("STATUS_WEICHEN", ['weichen'], defaults=[None])
+STATUS_WEICHEN_WEICHE = namedtuple("STATUS_WEICHEN_WEICHE", ['bezeichnung', 'bauart', 'typ', 'aktuelle_lage', 'fahrtrichtung', 'umlaufmodus'], defaults=[None] * 6)
 llps[STATUS_WEICHEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x92), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x92, 0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x92, 0x01), 'weichen', BasicNode, multipletimes=STATUS_WEICHEN_WEICHE),
     LLP(PID(2, 0x0a, 0x92, 0x01, 0x01), 'bezeichnung', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x92, 0x01, 0x02), 'bauart', ContentType.INTEGER, WEICHEN_BAUART),
     LLP(PID(2, 0x0a, 0x92, 0x01, 0x03), 'typ', ContentType.INTEGER, WEICHEN_TYP),
@@ -1223,6 +1224,7 @@ llps[STATUS_WEICHEN] = (
     LLP(PID(2, 0x0a, 0x92, 0x01, 0x05), 'fahrtrichtung', ContentType.BYTE, WEICHEN_FAHRTRICHTUNG),
     LLP(PID(2, 0x0a, 0x92, 0x01, 0x06), 'umlaufmodus', ContentType.BYTE, WEICHEN_UMLAUFMODUS_STUMPFBEFAHRUNG),
 )
+llps[STATUS_WEICHEN_WEICHE] = llps[STATUS_WEICHEN]
 msgidx[PID(2, 0x0a, 0x92,0x01)] = STATUS_WEICHEN
 
 #
