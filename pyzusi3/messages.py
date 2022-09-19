@@ -781,7 +781,7 @@ llps[STATUS_INDUSI_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65, 3, 0x3c), 'lm_ue', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x3d), 'lm_el', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x3e), 'lm_v40', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x3d), 'lm_s', ContentType.BYTE, LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x65, 3, 0x3f), 'lm_s', ContentType.BYTE, LMZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x65, 3)] = STATUS_INDUSI_BETRIEBSDATEN
 
