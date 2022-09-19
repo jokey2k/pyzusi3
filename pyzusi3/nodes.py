@@ -92,20 +92,20 @@ class BasicNode:
             result += self.content.to_bytes(8, byteorder='little')
         elif self.contenttype == ContentType.SINGLE:
             try:
-                if not 1.5E-45 <= self.content <= 3.4E38:
-                    raise EncodingValueError("Content %s exceeds limits of 1.5E-45 to 3.4E38 for a single")
+                if not -3.4E38 <= self.content <= 3.4E38:
+                    raise EncodingValueError("Content %s exceeds limits of -3.4E38 to 3.4E38 for a single" % str(self.content))
             except TypeError:
-                raise EncodingValueError("Content %s cannot be compared for range 1.5E-45 to 3.4E38" % str(self.content))
+                raise EncodingValueError("Content %s cannot be compared for range -3.4E38 to 3.4E38" % str(self.content))
             try:
                 result += struct.pack("<f", self.content)
             except OverflowError as e:
                 raise EncodingValueError("Content %s cannot be encoded: %s" % str(e))
         elif self.contenttype == ContentType.DOUBLE:
             try:
-                if not 5.0E-324 <= self.content <= 1.7E308:
-                    raise EncodingValueError("Content %s exceeds limits of 5.0E-324 to 1.7E308 for a double")
+                if not -1.7E308 <= self.content <= 1.7E308:
+                    raise EncodingValueError("Content %s exceeds limits of -1.7E308 to 1.7E308 for a double" % str(self.content))
             except TypeError:
-                raise EncodingValueError("Content %s cannot be compared for range 5.0E-324 to 1.7E308" % str(self.content))
+                raise EncodingValueError("Content %s cannot be compared for range -1.7E308 to 1.7E308" % str(self.content))
             try:
                 result += struct.pack("<d", self.content)
             except OverflowError as e:
