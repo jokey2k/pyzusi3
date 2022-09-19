@@ -141,7 +141,13 @@ class MessageDecoder:
             if len(mapping_parameter) > 1:
                 raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, submessage_class))
             elif not len(mapping_parameter):
-                raise NotImplementedError("Parameter %s is unknown for %s, programming error!" % (current_pid, submessage_class))
+                if current_node.content is not None:
+                    self.log.info("Parameter %s is unknown for %s, bytecontent: %s, ignoring!" % (current_pid, submessage_class, current_node.content))
+                elif current_node.children:
+                    self.log.info("Parameter %s with subnodes is unknown for %s, ignoring!" % (current_pid, submessage_class))
+                else:
+                    self.log.info("Parameter %s is unknown for %s, ignoring!" % (current_pid, submessage_class))
+                return
             mapping_parameter = mapping_parameter[0]
 
             if mapping_parameter.multipletimes is not None and mapping_parameter.contenttype is BasicNode:
