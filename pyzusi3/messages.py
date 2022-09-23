@@ -1707,7 +1707,7 @@ msgidx[PID(2, 0x0b)] = DATA_OPERATION
 # DATA_PROG
 # Zusi -> Client
 #
-DATA_PROG = namedtuple("DATA_PROG", [], defaults=[None])
+DATA_PROG = namedtuple("DATA_PROG", ['zugdateiname', 'zugnummer', 'ladepause', 'buchfahrplanxml', 'zuggeladen', 'buchfahrplantiff', 'buchfahrplanpdf', 'bremszettelpdf', 'wagenlistepdf', 'lapdf', 'streckenbuchpdf', 'ersatzfahrplanpdf'], defaults=[None] * 12)
 llps[DATA_PROG] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0c), None, BasicNode),
