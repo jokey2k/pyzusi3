@@ -1261,6 +1261,7 @@ class ZUGFAHRDATEN_ABSPERHAEHNE_HLL(Enum):
     HAN_HINTEN_OFFEN = 2
     BEIDE_HAEHNE_OFFEN = 3
     BEIDE_HAEHNE_ZU = 4
+    STANDARD_WIEDERHERSTELLEN = 5
 STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'])
 STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
 llps[STATUS_ZUGFAHRDATEN] = (
@@ -1724,3 +1725,144 @@ llps[DATA_PROG] = (
     LLP(PID(2, 0x0c, 0x0c), 'ersatzfahrplanpdf', ContentType.FILE),
 )
 msgidx[PID(2, 0x0c)] = DATA_PROG
+
+#
+# INPUT
+# Client -> Zusi
+#
+INPUT = namedtuple("INPUT", [
+    'tastatur_zuordnung', 'tastatur_kommando', 'tastatur_aktion', 'tastatur_schalterposition', 'tastatur_sonderfunktion',
+    'indusi_zugart', 'indusi_hauptschalter', 'indusi_stoerschalter', 'indusi_luftabsperhan', 'indusi_systemstatus', 'indusi_bauart', 'indusi_tfnr', 'indusi_zugnummer', 'indusi_e_brh', 'indusi_e_bra', 'indusi_e_zugart', 'indusi_a_brh', 'indusi_a_bra', 'indusi_a_zugart', 'indusi_a_modus', 'indusi_klartextmeldungen', 'indusi_funktionspruefung_starten', 'indusi_stoerschalterbauart',
+    'lzb_g_brh', 'lzb_g_bra', 'lzb_g_zl', 'lzb_g_vmz', 'lzb_g_zugart', 'lzb_e_zl', 'lzb_e_vmz', 'lzb_a_zl', 'lzb_a_vmz', 'lzb_stoerschalter', 'lzb_stoerschalterbaurt', 'lzb_systemstatus',
+    'fahrsp_stoerschalter', 'fahrsp_hauptschalter', 'fahrsp_systemstatus', 'fahrsp_bauart', 'fahrsp_zugneustart',
+    'zugfunk_notruf',
+    'sifa_hauptschalter', 'sifa_stoerschalter', 'sifa_lufthahn', 'sifa_weglaengenmesser_aktivieren',
+    'bremsprobe',
+    'bremse_fernsteuerung_aktivieren', 'bremse_druck_hll', 'bremse_druck_bremszylinder',
+    'weiche_statusabfrage', 'weiche_bezeichnung', 'weiche_stellung',
+    'tempomat_sollwert',
+    'stromabnehmer_fahrzeugnr', 'stromabnehmer_bitmuster', 'stromabnehmer_absperrhaehne',
+    'bremsstellung_fahrzeugnr', 'bremsstellung_stellung', 'bremsstellung_indirektebremse', 'bremsstellung_absperrhahn',
+    'pdf_bremszettel', 'pdf_wagenliste', 'pdf_la', 'pdf_streckenbuch', 'pdf_ersatzfahrplan',
+    'tueren_status',
+    'antrieb_deaktivieren', 'antrieb_aktivieren',
+    'dyn_bremse_deaktivieren', 'dyn_bremse_aktivieren',
+    'zbs_deaktivieren', 'zbs_aktivieren'
+], defaults=[None] * 72)
+llps[INPUT] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a01), None, BasicNode),
+    # Tastatureingaben
+    LLP(PID(2, 0x0a01, 1), None, BasicNode),
+    LLP(PID(2, 0x0a01, 1, 1), 'tastatur_zuordnung', ContentType.WORD, DATAOPS_TASTATURZUORDNUNG),
+    LLP(PID(2, 0x0a01, 1, 2), 'tastatur_kommando', ContentType.WORD, DATAOPS_TASTATURKOMMANDO),
+    LLP(PID(2, 0x0a01, 1, 3), 'tastatur_aktion', ContentType.WORD, DATAOPS_TASTATURAKTION),
+    LLP(PID(2, 0x0a01, 1, 4), 'tastatur_schalterposition', ContentType.SMALLINT),
+    LLP(PID(2, 0x0a01, 1, 5), 'tastatur_sonderfunktion', ContentType.SINGLE),
+    # Indusi Analogsysteme und Basisdaten
+    LLP(PID(2, 0x0a01, 2), None, BasicNode),
+    LLP(PID(2, 0x0a01, 2, 2), None, BasicNode),
+    LLP(PID(2, 0x0a01, 2, 2, 1), 'indusi_zugart', ContentType.BYTE, INDUSI_ZUGART),
+    LLP(PID(2, 0x0a01, 2, 2, 7), 'indusi_hauptschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 2, 2, 8), 'indusi_stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 2, 2, 0x0a), 'indusi_luftabsperhan', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 2, 2, 0x0d), 'indusi_systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a01, 2, 2, 0x0e), 'indusi_bauart', ContentType.STRING),
+    # Indusi I60R/I80/PZB90
+    LLP(PID(2, 0x0a01, 2, 2, 2), 'indusi_tfnr', ContentType.STRING),
+    LLP(PID(2, 0x0a01, 2, 2, 3), 'indusi_zugnummer', ContentType.STRING),
+    LLP(PID(2, 0x0a01, 2, 2, 5), None, BasicNode),
+    LLP(PID(2, 0x0a01, 2, 2, 5, 1), 'indusi_e_brh', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 5, 2), 'indusi_e_bra', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 5, 5), 'indusi_e_zugart', ContentType.BYTE, INDUSI_ZUGART),
+    LLP(PID(2, 0x0a01, 2, 2, 6), None, BasicNode),
+    LLP(PID(2, 0x0a01, 2, 2, 6, 1), 'indusi_a_brh', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 6, 2), 'indusi_a_bra', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 6, 5), 'indusi_a_zugart', ContentType.BYTE, INDUSI_ZUGART),
+    LLP(PID(2, 0x0a01, 2, 2, 6, 6), 'indusi_a_modus', ContentType.BYTE, INDUSI_MODUS),
+    LLP(PID(2, 0x0a01, 2, 2, 0x0b), 'indusi_klartextmeldungen', ContentType.BYTE, INDUSI_KLARTEXTMELDUNGEN),
+    LLP(PID(2, 0x0a01, 2, 2, 0x0c), 'indusi_funktionspruefung_starten', ContentType.BYTE, INDUSI_FUNKTIONSPRUEFUNG_STARTEN),
+    LLP(PID(2, 0x0a01, 2, 2, 0x0f), 'indusi_stoerschalterbauart', ContentType.BYTE, INDUSI_STOERSCHALTERBAURT),
+    # LZB
+    LLP(PID(2, 0x0a01, 2, 2, 4), None, BasicNode),
+    LLP(PID(2, 0x0a01, 2, 2, 4, 1), 'lzb_g_brh', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 4, 2), 'lzb_g_bra', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 4, 3), 'lzb_g_zl', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 4, 4), 'lzb_g_vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 4, 5), 'lzb_g_zugart', ContentType.BYTE, INDUSI_ZUGART),
+    LLP(PID(2, 0x0a01, 2, 2, 5, 3), 'lzb_e_zl', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 5, 4), 'lzb_e_vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 6, 3), 'lzb_a_zl', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 6, 4), 'lzb_a_vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 2, 2, 9), 'lzb_stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 2, 2, 0x10), 'lzb_stoerschalterbaurt', ContentType.BYTE, INDUSI_STOERSCHALTERBAURT),
+    LLP(PID(2, 0x0a01, 2, 2, 0x11), 'lzb_systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    # ETCS
+    # FIXME Platzhalter
+    # ZBS
+    # FIXME Platzhalter
+    # Fahrsperre
+    LLP(PID(2, 0x0a01, 2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a01, 2, 0x0a, 1), 'fahrsp_stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 2, 0x0a, 2), 'fahrsp_hauptschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 2, 0x0a, 3), 'fahrsp_systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a01, 2, 0x0a, 4), 'fahrsp_bauart', ContentType.STRING),
+    LLP(PID(2, 0x0a01, 2, 0x0a, 8), 'fahrsp_zugneustart', ContentType.STRING),
+    # Zugfunk
+    LLP(PID(2, 0x0a01, 3), None, BasicNode),
+    LLP(PID(2, 0x0a01, 3, 1), 'zugfunk_notruf', ContentType.BYTE),
+    # Sifa
+    LLP(PID(2, 0x0a01, 4), None, BasicNode),
+    LLP(PID(2, 0x0a01, 4, 1), 'sifa_hauptschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 4, 2), 'sifa_stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 4, 3), 'sifa_lufthahn', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a01, 4, 4), 'sifa_weglaengenmesser_aktivieren', ContentType.BYTE),
+    # Bremsprobe
+    LLP(PID(2, 0x0a01, 7), None, BasicNode),
+    LLP(PID(2, 0x0a01, 7, 1), 'bremsprobe', ContentType.BYTE),
+    # Bremse steuern
+    LLP(PID(2, 0x0a01, 8), None, BasicNode),
+    LLP(PID(2, 0x0a01, 8, 1), 'bremse_fernsteuerung_aktivieren', ContentType.BYTE),
+    LLP(PID(2, 0x0a01, 8, 1), 'bremse_druck_hll', ContentType.SINGLE),
+    LLP(PID(2, 0x0a01, 8, 1), 'bremse_druck_bremszylinder', ContentType.SINGLE),
+    # Weiche stellen
+    LLP(PID(2, 0x0a01, 9), None, BasicNode),
+    LLP(PID(2, 0x0a01, 9, 1), None, BasicNode),
+    LLP(PID(2, 0x0a01, 9, 1, 1), 'weiche_statusabfrage', ContentType.BYTE),
+    LLP(PID(2, 0x0a01, 9, 2), None, BasicNode),
+    LLP(PID(2, 0x0a01, 9, 2, 1), 'weiche_bezeichnung', ContentType.STRING),
+    LLP(PID(2, 0x0a01, 9, 2, 1), 'weiche_stellung', ContentType.BYTE),
+    # Tempomat
+    LLP(PID(2, 0x0a01, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a01, 0x0a, 1), 'tempomat_sollwert', ContentType.SINGLE),
+    # Stromabnehmer
+    LLP(PID(2, 0x0a01, 0x0b), None, BasicNode),
+    LLP(PID(2, 0x0a01, 0x0b, 1), 'stromabnehmer_fahrzeugnr', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 0x0b, 2), 'stromabnehmer_bitmuster', ContentType.BYTE),
+    LLP(PID(2, 0x0a01, 0x0b, 3), 'stromabnehmer_absperrhaehne', ContentType.BYTE),
+    # Bremse einstellen
+    LLP(PID(2, 0x0a01, 0x0c), None, BasicNode),
+    LLP(PID(2, 0x0a01, 0x0c, 1), 'bremsstellung_fahrzeugnr', ContentType.WORD),
+    LLP(PID(2, 0x0a01, 0x0c, 2), 'bremsstellung_stellung', ContentType.BYTE),
+    LLP(PID(2, 0x0a01, 0x0c, 3), 'bremsstellung_indirektebremse', ContentType.BYTE),
+    LLP(PID(2, 0x0a01, 0x0c, 4), 'bremsstellung_absperrhahn', ContentType.BYTE, ZUGFAHRDATEN_ABSPERHAEHNE_HLL),
+    # PDFs
+    LLP(PID(2, 0x0a01, 0x0d), 'pdf_bremszettel', ContentType.FILE),
+    LLP(PID(2, 0x0a01, 0x0e), 'pdf_wagenliste', ContentType.FILE),
+    LLP(PID(2, 0x0a01, 0x0f), 'pdf_la', ContentType.FILE),
+    LLP(PID(2, 0x0a01, 0x10), 'pdf_streckenbuch', ContentType.FILE),
+    LLP(PID(2, 0x0a01, 0x11), 'pdf_ersatzfahrplan', ContentType.FILE),
+    # Türsystem
+    LLP(PID(2, 0x0a01, 0x12), 'tueren_status', ContentType.SMALLINT, multipletimes=True),
+    # Antriebe
+    LLP(PID(2, 0x0a01, 0x13), 'antrieb_deaktivieren', ContentType.BYTE, multipletimes=True),
+    LLP(PID(2, 0x0a01, 0x14), 'antrieb_aktivieren', ContentType.BYTE, multipletimes=True),
+    # Dynamische Bremse
+    LLP(PID(2, 0x0a01, 0x15), 'dyn_bremse_deaktivieren', ContentType.BYTE, multipletimes=True),
+    LLP(PID(2, 0x0a01, 0x16), 'dyn_bremse_aktivieren', ContentType.BYTE, multipletimes=True),
+    # ZBS
+    LLP(PID(2, 0x0a01, 0x17), 'zbs_deaktivieren', ContentType.BYTE, multipletimes=True),
+    LLP(PID(2, 0x0a01, 0x18), 'zbs_aktivieren', ContentType.BYTE, multipletimes=True)
+)
+msgidx[PID(2, 0x0a01)] = INPUT
+
