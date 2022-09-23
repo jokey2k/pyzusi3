@@ -1702,3 +1702,26 @@ llps[DATA_OPERATION_KOMBISCHALTER] = llps[DATA_OPERATION]
 llps[DATA_OPERATION_SCHALTERFUNKTION] = llps[DATA_OPERATION]
 llps[DATA_OPERATION_MAUSKLICK] = llps[DATA_OPERATION]
 msgidx[PID(2, 0x0b)] = DATA_OPERATION
+
+#
+# DATA_PROG
+# Zusi -> Client
+#
+DATA_PROG = namedtuple("DATA_PROG", [], defaults=[None])
+llps[DATA_PROG] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0c), None, BasicNode),
+    LLP(PID(2, 0x0c, 1), 'zugdateiname', ContentType.STRING),
+    LLP(PID(2, 0x0c, 2), 'zugnummer', ContentType.STRING),
+    LLP(PID(2, 0x0c, 3), 'ladepause', ContentType.BYTE),
+    LLP(PID(2, 0x0c, 4), 'buchfahrplanxml', ContentType.FILE),
+    LLP(PID(2, 0x0c, 5), 'zuggeladen', ContentType.BYTE),
+    LLP(PID(2, 0x0c, 6), 'buchfahrplantiff', ContentType.FILE),
+    LLP(PID(2, 0x0c, 7), 'buchfahrplanpdf', ContentType.FILE),
+    LLP(PID(2, 0x0c, 8), 'bremszettelpdf', ContentType.FILE),
+    LLP(PID(2, 0x0c, 9), 'wagenlistepdf', ContentType.FILE),
+    LLP(PID(2, 0x0c, 0x0a), 'lapdf', ContentType.FILE),
+    LLP(PID(2, 0x0c, 0x0b), 'streckenbuchpdf', ContentType.FILE),
+    LLP(PID(2, 0x0c, 0x0c), 'ersatzfahrplanpdf', ContentType.FILE),
+)
+msgidx[PID(2, 0x0c)] = DATA_PROG
