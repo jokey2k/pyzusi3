@@ -4,7 +4,7 @@ from enum import Enum, auto
 from pyzusi3.nodes import ContentType, BasicNode
 
 ParameterId = namedtuple("ParameterId", ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'], defaults=[None, None, None, None, None, None])
-LowlevelParameter = namedtuple("LowlevelParameter", ['parameterid', 'parametername', 'contenttype', 'enumtype', 'multipletimes'], defaults=[None, None])
+LowlevelParameter = namedtuple("LowlevelParameter", ['parameterid', 'parametername', 'contenttype', 'enumtype', 'multipletimes', 'nodeasbool'], defaults=[None, None, False])
 lowlevel_parameters = {}
 message_index = {}
 
@@ -1866,3 +1866,39 @@ llps[INPUT] = (
 )
 msgidx[PID(2, 0x0a01)] = INPUT
 
+#
+# CONTROL
+# Client -> Zusi
+#
+class CONTROL_STATE(Enum):
+    UMSCHALTEN = -1
+    AUS = 0
+    EIN = 1
+class CONTROL_SEITE(Enum):
+    LINKS = 0
+    RECHTS = 1
+CONTROL = namedtuple("CONTROL", [], defaults=[None])
+llps[CONTROL] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0b01), None, BasicNode),
+    LLP(PID(2, 0x0b01, 1), None, BasicNode),
+    LLP(PID(2, 0x0b01, 1, 1), 'pause', ContentType.SHORTINT),
+    LLP(PID(2, 0x0b01, 2), None, BasicNode),
+    LLP(PID(2, 0x0b01, 2, 1), 'neustart_zugnummer', ContentType.STRING),
+    LLP(PID(2, 0x0b01, 3), None, BasicNode),
+    LLP(PID(2, 0x0b01, 3, 1), 'start_dateiname', ContentType.STRING),
+    LLP(PID(2, 0x0b01, 3, 2), 'start_zugnummer', ContentType.STRING),
+    LLP(PID(2, 0x0b01, 4), 'simulationsende', BasicNode, nodeasbool=True),
+    LLP(PID(2, 0x0b01, 5), 'fahrplan_neustart', BasicNode, nodeasbool=True),
+    LLP(PID(2, 0x0b01, 6), None, BasicNode),
+    LLP(PID(2, 0x0b01, 6, 1), 'zugwahl_nach_neustart', ContentType.STRING),
+    LLP(PID(2, 0x0b01, 7), None, BasicNode),
+    LLP(PID(2, 0x0b01, 7, 1), 'zeitsprung', ContentType.SHORTINT),
+    LLP(PID(2, 0x0b01, 8), None, BasicNode),
+    LLP(PID(2, 0x0b01, 8, 1), 'zeitraffer', ContentType.SHORTINT),
+    LLP(PID(2, 0x0b01, 0x0d), 'blickpunkt_standard', BasicNode),
+    LLP(PID(2, 0x0b01, 0x0e), None, BasicNode),
+    LLP(PID(2, 0x0b01, 0x0e, 1), 'fahrzeugbild_hoehe', ContentType.WORD),
+    LLP(PID(2, 0x0b01, 0x0e, 2), 'fahrzeugbild_seite', ContentType.WORD, CONTROL_SEITE),
+)
+msgidx[PID(2, 0x0b01)] = CONTROL
