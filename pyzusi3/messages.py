@@ -1679,7 +1679,7 @@ llps[DATA_OPERATION] = (
     LLP(PID(2, 0x0b, 1), 'betaetigungen', BasicNode, multipletimes=DATA_OPERATION_BETAETIGUNG),
     LLP(PID(2, 0x0b, 1, 1), 'zuordnung', ContentType.WORD, DATAOPS_TASTATURZUORDNUNG),
     LLP(PID(2, 0x0b, 1, 2), 'kommando', ContentType.WORD, DATAOPS_TASTATURKOMMANDO),
-    LLP(PID(2, 0x0b, 1, 3), 'aktion', ContentType.WORD, DATAOPS_TASTATURKOMMANDO),
+    LLP(PID(2, 0x0b, 1, 3), 'aktion', ContentType.WORD, DATAOPS_TASTATURAKTION),
     LLP(PID(2, 0x0b, 1, 4), 'schalterposition', ContentType.SMALLINT),
     LLP(PID(2, 0x0b, 1, 4), 'sonderfunktion', ContentType.SINGLE),
     LLP(PID(2, 0x0b, 2), 'kombischalter', BasicNode, multipletimes=DATA_OPERATION_KOMBISCHALTER),
