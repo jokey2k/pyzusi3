@@ -1853,7 +1853,8 @@ llps[INPUT] = (
     LLP(PID(2, 0x0a01, 0x10), 'pdf_streckenbuch', ContentType.FILE),
     LLP(PID(2, 0x0a01, 0x11), 'pdf_ersatzfahrplan', ContentType.FILE),
     # Türsystem
-    LLP(PID(2, 0x0a01, 0x12), 'tueren_status', ContentType.SMALLINT, multipletimes=True),
+    # FIXME Enum might be wrong, cannot be tested right now
+    LLP(PID(2, 0x0a01, 0x12), 'tueren_status', ContentType.SMALLINT, TUEREN_SEITE, multipletimes=True),
     # Antriebe
     LLP(PID(2, 0x0a01, 0x13), 'antrieb_deaktivieren', ContentType.BYTE, multipletimes=True),
     LLP(PID(2, 0x0a01, 0x14), 'antrieb_aktivieren', ContentType.BYTE, multipletimes=True),
