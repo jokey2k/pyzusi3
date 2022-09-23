@@ -1028,7 +1028,6 @@ msgidx[PID(2, 0x0a, 0x8d)] = STATUS_FAHRZEUG
 #
 # STATUS_ZUGVERBAND
 # Zusi -> Client
-# FIXME Teile werden mehrfach gesendet aber bisher nur einfach verwendet. Braucht Änderungen im Decoder...
 class ZV_BREMSART(Enum):
     KEINE = 0
     G = 1
