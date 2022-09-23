@@ -1112,7 +1112,7 @@ class ZV_LASTABHAENIGE_BREMSE(Enum):
 class ZV_ZUGTYP(Enum):
     GUETERZUG = 0
     REISEZUG = 1
-STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBAND",['fz_dateiname', 'beschreibung', 'vorgabe_bremsstellung', 'bauart_zugbeeinflussungssystem', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbauart', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellung', 'zugehoerige_bremsmasse', 'bremsstellung_wirksam', 'bezeichnung_bremsbaurt', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkenzeichen', 'bauart_tuersystem', 'bauart_tuerwachlschalter', 'antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv', 'bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'lastabhaehnige_bremse', 'zugtyp'],defaults=[None] * 46)
+STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBAND",['fz_dateiname', 'beschreibung', 'vorgabe_bremsstellung', 'bauart_zugbeeinflussungssystem', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbauart', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellung', 'zugehoerige_bremsmasse', 'bremsstellung_wirksam', 'bezeichnung_bremsbauart', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkenzeichen', 'bauart_tuersystem', 'bauart_tuerwachlschalter', 'antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv', 'bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'lastabhaehnige_bremse', 'zugtyp'],defaults=[None] * 46)
 llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -1149,7 +1149,7 @@ llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b, 0x01), 'bremsstellung', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b, 0x02), 'zugehoerige_bremsmasse', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b, 0x03), 'bremsstellung_wirksam', ContentType.BYTE, ZV_BREMSSTELLUNG),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1c), 'bezeichnung_bremsbaurt', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1c), 'bezeichnung_bremsbauart', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1d), 'grafik_seitenansicht', ContentType.FILE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1e), 'hbl', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1f), 'fz_verbund', ContentType.BYTE, ZV_FAHRZEUG_VERBUND),
