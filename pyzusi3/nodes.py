@@ -21,7 +21,7 @@ class ContentType(Enum):
 
 
 class BasicNode:
-    def __init__(self, id=None, content=None, contenttype=None, children=None, parent_node=None) -> None:
+    def __init__(self, id=None, content=None, contenttype=None, children=None, parent_node=None, nodeasbool=False) -> None:
         self.id = id
         self.content = content
         self.contenttype = contenttype
@@ -30,15 +30,16 @@ class BasicNode:
         else:
             self.children = []
         self.parent_node = parent_node
+        self.nodeasbool = nodeasbool
 
     def __lt__(self, other):
         return self.id < other.id
 
     def __eq__(self, other):
-        return other is not None and self.id == other.id and self.content == other.content and self.contenttype == other.contenttype and self.children == other.children
+        return other is not None and self.id == other.id and self.content == other.content and self.contenttype == other.contenttype and self.children == other.children and self.nodeasbool == other.nodeasbool
 
     def __repr__(self):
-        return "<%s id=%s content=%s contenttype=%s parent_node=%s children=%s>" % (self.__class__.__name__, self.id, self.content, self.contenttype, self.parent_node, self.children)
+        return "<%s id=%s content=%s contenttype=%s parent_node=%s children=%s, nodeasbool=%s>" % (self.__class__.__name__, self.id, self.content, self.contenttype, self.parent_node, self.children, self.nodeasbool)
 
     def _encodecontent(self):
         result = b''
@@ -130,7 +131,7 @@ class BasicNode:
     def encode(self):
         result = b''
 
-        if self.children or (not self.children and self.content is None):
+        if self.children or (not self.children and self.content is None) or self.nodeasbool:
             result = (0).to_bytes(4, byteorder='little') # Node start
 
         if self.content is not None:
@@ -142,7 +143,7 @@ class BasicNode:
         if self.content is not None:
             result += bytecontent
 
-        if self.children or (not self.children and self.content is None):
+        if self.children or (not self.children and self.content is None) or self.nodeasbool:
             for child in self.children:
                 result += child.encode()
             result += (0xffffffff).to_bytes(4, byteorder='little') # Node end
@@ -246,6 +247,8 @@ class StreamDecoder:
             if incoming_bytes == (0xffffffff).to_bytes(4, byteorder='little'):
                 # marks end of nodetree
                 self.log.debug("Finished current node")
+                if not self.current_node.children and self.current_node.content is None:
+                    self.current_node.nodeasbool = True
                 self.current_node = self.current_node.parent_node
                 self.state = DecoderState.CONTRENTLENGTH
                 self.level -= 1

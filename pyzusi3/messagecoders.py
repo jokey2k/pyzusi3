@@ -189,6 +189,9 @@ class MessageDecoder:
         elif current_node.content:
             mapping_parameter = mapping_parameter[0]
             self.mapped_parameters[mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+        elif current_node.nodeasbool:
+            mapping_parameter = mapping_parameter[0]
+            self.mapped_parameters[mapping_parameter.parametername] = True
         for child_node in current_node.children:
             params = {'id' + str(current_level + 1): child_node.id}
             child_pid = current_pid._replace(**params)
@@ -240,7 +243,7 @@ def encode_obj(obj):
         if parameter.contenttype is BasicNode:
             if parameter.multipletimes is None or \
                 (parameter.multipletimes is not None and parameter.multipletimes == type(obj)):
-                current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=parent_node)
+                current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=parent_node, nodeasbool=parameter.nodeasbool)
                 if current_node.parent_node is None:
                     root_node = current_node
                 else:
@@ -306,7 +309,7 @@ def encode_obj(obj):
         for child in node.children:
             if child.children:
                 tree_has_changed = optimize_tree(child) or tree_has_changed
-            if child.children or child.content is not None:
+            if child.children or child.content is not None or child.nodeasbool:
                new_children.append(child)
 
         tree_has_changed = tree_has_changed or len(node.children) != len(new_children)
