@@ -294,7 +294,7 @@ llps[NEEDED_DATA] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 3), None, BasicNode),
     LLP(PID(2, 3, 0x0a), None, BasicNode),
-    LLP(PID(2, 3, 0x0a, 1), 'anzeigen', ContentType.WORD, multipletimes=True),
+    LLP(PID(2, 3, 0x0a, 1), 'anzeigen', ContentType.WORD, FAHRPULT_ANZEIGEN, multipletimes=True),
     LLP(PID(2, 3, 0x0b), 'bedienung', BasicNode, nodeasbool=True),
     LLP(PID(2, 3, 0x0c), None, BasicNode),
     LLP(PID(2, 3, 0x0c, 1), 'programmdaten', ContentType.WORD, PROGRAMMDATEN, multipletimes=True),
