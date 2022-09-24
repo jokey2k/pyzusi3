@@ -7,6 +7,12 @@ from pyzusi3.exceptions import MissingLowLevelParameterError
 from pyzusi3.messages import ParameterId, message_index, lowlevel_parameters, ContentType
 from pyzusi3.nodes import BasicNode
 
+def print_nodetree(node, level=0):
+    print("%s%s:%s" % (" " * level, node.id, node.content))
+    for child in node.children:
+        print_nodetree(child, level + 1)
+
+
 def decode_data(data, contenttype, enumtype):
     if data is None:
         return
