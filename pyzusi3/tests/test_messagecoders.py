@@ -147,6 +147,63 @@ class TestMessageDecoderEdgeCases(unittest.TestCase):
 
 
 class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
+    def test_bool_nodes(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x0a\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x01\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x0b\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x0c\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x01\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x02\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x03\x00' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x04\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])
+        self.assertEqual(submessages, [])
+
+        expected_basemessage = messages.NEEDED_DATA(
+            anzeigen=[messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT],
+            bedienung=True,
+            programmdaten=[
+                messages.PROGRAMMDATEN.ZUGDATEI,
+                messages.PROGRAMMDATEN.ZUGNUMMER,
+                messages.PROGRAMMDATEN.LADEPAUSE,
+                messages.PROGRAMMDATEN.BUCHFAHRPLAN_XML
+            ]
+        )
+        self.assertEqual(basemessage, expected_basemessage)
+
+        encoded_obj = encode_obj(expected_basemessage)
+        result = encoded_obj.encode()
+        self.assertEqual(result, bytes_written)        
+
     def test_msg_nonunique_nodes(self):
         bytes_written = b'\x00\x00\x00\x00' + \
             b'\x02\x00' + \
