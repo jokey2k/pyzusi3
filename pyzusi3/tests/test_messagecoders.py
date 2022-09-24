@@ -5,7 +5,7 @@ from pyzusi3.messagecoders import MessageDecoder, encode_obj
 from pyzusi3 import messages
 from pyzusi3.nodes import StreamDecoder, AsyncStreamDecoder
 
-class TestMessageDecoder(unittest.TestCase):
+class TestMessageDecoderSimple(unittest.TestCase):
     def testDecodeHello(self):
         bytes_written = b'' + \
             b'\x00\x00\x00\x00' + \
@@ -30,14 +30,18 @@ class TestMessageDecoder(unittest.TestCase):
         decoded_tree = decoder.decode(bytes_written)
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
+
         messagedecoder = MessageDecoder()
         basemessage, submessages = messagedecoder.parse(nodes[0])        
-        self.assertEqual(type(basemessage), messages.HELLO)
         self.assertEqual(submessages, [])
-        self.assertEqual(basemessage.protokollversion, 2)
-        self.assertEqual(basemessage.clienttyp, messages.ClientTyp.FAHRPULT)
-        self.assertEqual(basemessage.clientname, "Fahrpult")
-        self.assertEqual(basemessage.clientversion, "2.0")
+
+        expected_message = messages.HELLO(
+            protokollversion=2,
+            clienttyp=messages.ClientTyp.FAHRPULT,
+            clientname="Fahrpult",
+            clientversion="2.0"
+        )
+        self.assertEqual(basemessage, expected_message)
 
     def testDecodeAckHello(self):
         bytes_written = b'' + \
@@ -63,16 +67,22 @@ class TestMessageDecoder(unittest.TestCase):
         decoded_tree = decoder.decode(bytes_written)
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
+
         messagedecoder = MessageDecoder()
         basemessage, submessages = messagedecoder.parse(nodes[0])        
-        self.assertTrue(isinstance(basemessage, messages.ACK_HELLO))
         self.assertEqual(submessages, [])
-        self.assertEqual(basemessage.zusiversion, "3.0.1.0")
-        self.assertEqual(basemessage.verbindungsinfo, "0")
-        self.assertEqual(basemessage.status, 0)
-        self.assertEqual(basemessage.startdatum, 41390.5)
-        self.assertEqual(basemessage.protokollversion, None)
 
+        expected_message = messages.ACK_HELLO(
+            zusiversion = "3.0.1.0",
+            verbindungsinfo = "0",
+            status = 0,
+            startdatum = 41390.5,
+            protokollversion = None
+        )
+        self.assertEqual(basemessage, expected_message)
+
+
+class TestMessageEncoderSimple(unittest.TestCase):
     def test_encodeObj(self):
         bytes_written = b'' + \
             b'\x00\x00\x00\x00' + \
@@ -109,6 +119,8 @@ class TestMessageDecoder(unittest.TestCase):
         msg = messages.STATUS_INDUSI_EINSTELLUNGEN(indusi_stoerschalter=messages.SCHALTER.EIN)
         msg_bytes = encode_obj(msg).encode()
 
+
+class TestMessageDecoderEdgeCases(unittest.TestCase):
     def test_ftd169bug(self):
         bytes_written = b'\x00\x00\x00\x00' + \
             b'\x02\x00' + \
@@ -133,6 +145,8 @@ class TestMessageDecoder(unittest.TestCase):
         basemessage, submessages = messagedecoder.parse(nodes[1])        
         # should not raise any issue
 
+
+class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
     def test_msg_nonunique_nodes(self):
         bytes_written = b'\x00\x00\x00\x00' + \
             b'\x02\x00' + \
@@ -201,19 +215,40 @@ class TestMessageDecoder(unittest.TestCase):
         decoded_tree = decoder.decode(bytes_written)
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
+
         messagedecoder = MessageDecoder()
         basemessage, submessages = messagedecoder.parse(nodes[0])
-        self.assertTrue(isinstance(basemessage, messages.DATA_FTD))
-        self.assertEqual(len(submessages), 1)
-        self.assertTrue(isinstance(submessages[0], messages.STATUS_ZUGFAHRDATEN))
-        submessage = submessages[0]
-        self.assertEqual(len(submessage.fahrzeuge), 2)
-        for fzg in submessage.fahrzeuge:
-            self.assertTrue(isinstance(fzg, messages.STATUS_ZUGFAHRDATEN_FAHRZEUG))
+
+        expected_basemessage = messages.DATA_FTD()
+        expected_submessage = messages.STATUS_ZUGFAHRDATEN(
+            fahrzeuge = [
+                messages.STATUS_ZUGFAHRDATEN_FAHRZEUG(
+                    absperrhaehne_hll = messages.ZUGFAHRDATEN_ABSPERRHAEHNE_HLL.STANDARD,
+                    bremszylinderdruck=2.1999940872192383,
+                    hll_druck=5.0,
+                    maximal_moegliche_zugkraft=41262.99609375,
+                    maximale_dynamische_bremskraft=18000.0,
+                    motordrehzahl_1=0.0,
+                    motordrehzahl_2=0.0,
+                    zugkraft=0.0),
+                messages.STATUS_ZUGFAHRDATEN_FAHRZEUG(
+                    absperrhaehne_hll = messages.ZUGFAHRDATEN_ABSPERRHAEHNE_HLL.STANDARD,
+                    bremszylinderdruck=2.1999940872192383,
+                    hll_druck=5.0,
+                    maximal_moegliche_zugkraft=41262.99609375,
+                    maximale_dynamische_bremskraft=18000.0,
+                    motordrehzahl_1=0.0,
+                    motordrehzahl_2=0.0,
+                    zugkraft=0.0),
+            ]
+        )
+        self.assertEqual(basemessage, expected_basemessage)
+        self.assertEqual(submessages[0], expected_submessage)
 
         encoded_obj = encode_obj(submessage)
         result = encoded_obj.encode()
         self.assertEqual(result, bytes_written)
+
 
 class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
     async def testDecodeAckHello(self):
@@ -236,21 +271,27 @@ class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
             b'\x00\x00\x00\x00\xD0\x35\xE4\x40' + \
             b'\xFF\xFF\xFF\xFF' + \
             b'\xFF\xFF\xFF\xFF'
+
         reader = asyncio.StreamReader()
         reader.feed_data(bytes_written)
         reader.feed_eof()
+
         decoder = AsyncStreamDecoder()
         decoded_tree = decoder.decode(reader)
         nodes = []
         async for node in decoded_tree:
             nodes.append(node)
+
         self.assertEqual(len(nodes), 1)
         messagedecoder = MessageDecoder()
         basemessage, submessages = messagedecoder.parse(nodes[0])        
-        self.assertTrue(isinstance(basemessage, messages.ACK_HELLO))
         self.assertEqual(submessages, [])
-        self.assertEqual(basemessage.zusiversion, "3.0.1.0")
-        self.assertEqual(basemessage.verbindungsinfo, "0")
-        self.assertEqual(basemessage.status, 0)
-        self.assertEqual(basemessage.startdatum, 41390.5)
-        self.assertEqual(basemessage.protokollversion, None)
+
+        expected_message = messages.ACK_HELLO(
+            zusiversion = "3.0.1.0",
+            verbindungsinfo = "0",
+            status = 0,
+            startdatum = 41390.5,
+            protokollversion = None
+        )
+        self.assertEqual(basemessage, expected_message)
