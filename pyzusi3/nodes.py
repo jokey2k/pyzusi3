@@ -31,6 +31,9 @@ class BasicNode:
             self.children = []
         self.parent_node = parent_node
 
+    def __lt__(self, other):
+        return self.id < other.id
+
     def __eq__(self, other):
         return other is not None and self.id == other.id and self.content == other.content and self.contenttype == other.contenttype and self.children == other.children
 
