@@ -1255,7 +1255,7 @@ msgidx[PID(2, 0x0a, 0xa9)] = STATUS_LM_ZUSIDISPLAY
 # STATUS_ZUGFAHRDATEN
 # Zusi -> Client
 #
-class ZUGFAHRDATEN_ABSPERHAEHNE_HLL(Enum):
+class ZUGFAHRDATEN_ABSPERRHAEHNE_HLL(Enum):
     STANDARD = 0
     HAN_VORNE_OFFEN = 1
     HAN_HINTEN_OFFEN = 2
@@ -1263,7 +1263,7 @@ class ZUGFAHRDATEN_ABSPERHAEHNE_HLL(Enum):
     BEIDE_HAEHNE_ZU = 4
     STANDARD_WIEDERHERSTELLEN = 5
 STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'], defaults=[None])
-STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
+STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
 llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -1275,7 +1275,7 @@ llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x04),'motordrehzahl_1',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x05),'maximal_moegliche_zugkraft',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x06),'maximale_dynamische_bremskraft',ContentType.SINGLE),
-    LLP(PID(2, 0x0a, 0xab, 0x01, 0x07),'absperhaehne_hll',ContentType.BYTE, ZUGFAHRDATEN_ABSPERHAEHNE_HLL),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x07),'absperrhaehne_hll',ContentType.BYTE, ZUGFAHRDATEN_ABSPERRHAEHNE_HLL),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a),'motordrehzahl_2',ContentType.SINGLE),
 )
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG] = llps[STATUS_ZUGFAHRDATEN]
@@ -1845,7 +1845,7 @@ llps[INPUT] = (
     LLP(PID(2, 0x0a01, 0x0c, 1), 'bremsstellung_fahrzeugnr', ContentType.WORD),
     LLP(PID(2, 0x0a01, 0x0c, 2), 'bremsstellung_stellung', ContentType.BYTE),
     LLP(PID(2, 0x0a01, 0x0c, 3), 'bremsstellung_indirektebremse', ContentType.BYTE),
-    LLP(PID(2, 0x0a01, 0x0c, 4), 'bremsstellung_absperrhahn', ContentType.BYTE, ZUGFAHRDATEN_ABSPERHAEHNE_HLL),
+    LLP(PID(2, 0x0a01, 0x0c, 4), 'bremsstellung_absperrhahn', ContentType.BYTE, ZUGFAHRDATEN_ABSPERRHAEHNE_HLL),
     # PDFs
     LLP(PID(2, 0x0a01, 0x0d), 'pdf_bremszettel', ContentType.FILE),
     LLP(PID(2, 0x0a01, 0x0e), 'pdf_wagenliste', ContentType.FILE),
