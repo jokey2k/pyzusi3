@@ -8,6 +8,9 @@ from pyzusi3.messages import ParameterId, message_index, lowlevel_parameters, Co
 from pyzusi3.nodes import BasicNode
 
 def decode_data(data, contenttype, enumtype):
+    if data is None:
+        return
+
     if contenttype == ContentType.BYTE:
         result = int.from_bytes(data, byteorder='little')
     elif contenttype == ContentType.SHORTINT:
