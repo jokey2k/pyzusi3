@@ -253,6 +253,53 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         result = encoded_obj.encode()
         self.assertEqual(result, bytes_written)
 
+    def test_lzb_off(self):
+        bytes_written = b"\x00\x00\x00\x00" + \
+            b"\x02\x00" + \
+            b"\x00\x00\x00\x00" + \
+            b"\x0a\x01" + \
+            b"\x00\x00\x00\x00" + \
+            b"\x02\x00" + \
+            b"\x00\x00\x00\x00" + \
+            b"\x02\x00" + \
+            b"\x03\x00\x00\x00" + \
+            b"\x07\x00" + \
+            b"\x00" + \
+            b"\x03\x00\x00\x00" + \
+            b"\x08\x00" + \
+            b"\x00" + \
+            b"\x03\x00\x00\x00" + \
+            b"\x09\x00" + \
+            b"\x01" + \
+            b"\x03\x00\x00\x00" + \
+            b"\x0a\x00" + \
+            b"\x00" + \
+            b"\xFF\xFF\xFF\xFF" + \
+            b"\xFF\xFF\xFF\xFF" + \
+            b"\xFF\xFF\xFF\xFF" + \
+            b"\xFF\xFF\xFF\xFF"
+
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)        
+
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])
+        self.assertEqual(submessages, [])
+
+        expected_basemessage = messages.INPUT(
+            indusi_hauptschalter=messages.SCHALTER.UNBEKANNT,
+            indusi_stoerschalter=messages.SCHALTER.UNBEKANNT,
+            indusi_luftabsperrhahn=messages.SCHALTER.UNBEKANNT,
+            lzb_stoerschalter=messages.SCHALTER.AUS,
+        )
+        self.assertEqual(basemessage, expected_basemessage)
+
+        encoded_obj = encode_obj(expected_basemessage)
+        result = encoded_obj.encode()
+        self.assertEqual(result, bytes_written)
+
 
 class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
     async def testDecodeAckHello(self):
