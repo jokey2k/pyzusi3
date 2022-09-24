@@ -955,7 +955,7 @@ class TUEREN_SEITENWAHL(Enum):
 STATUS_TUEREN = namedtuple("STATUS_TUEREN", [
     'bauart','links', 'rechts', 'traktionssperre', 'zustand',
     'seitenwahl', 'm_links', 'm_rechts', 'lm_links', 'lm_rechts', 'm_zwnagsschliessen', 'lm_zwangsschliessen', 'm_rechts_links', 'lm_rechts_links', 'm_zentrales_oeffnen_links', 'm_zentrales_oeffnen_rechts', 'lm_zentrales_oeffnen_links', 'lm_zentrales_oeffnen_rechts', 'm_gruenschleife'
-    ],defaults=[None] * 5)
+    ],defaults=[None] * 19)
 llps[STATUS_TUEREN] = (
     # Grunddaten
     LLP(PID(2), None, BasicNode),
@@ -1262,7 +1262,7 @@ class ZUGFAHRDATEN_ABSPERHAEHNE_HLL(Enum):
     BEIDE_HAEHNE_OFFEN = 3
     BEIDE_HAEHNE_ZU = 4
     STANDARD_WIEDERHERSTELLEN = 5
-STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'])
+STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'], defaults=[None])
 STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
 llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2), None, BasicNode),
