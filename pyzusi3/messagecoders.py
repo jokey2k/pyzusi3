@@ -1,6 +1,7 @@
 from collections import defaultdict
 import logging
 from enum import Enum
+from operator import attrgetter
 import struct
 from pyzusi3.exceptions import MissingLowLevelParameterError
 
@@ -126,7 +127,7 @@ class MessageDecoder:
             return
 
         submessage_class = None
-        mapping_parameter = [param for param in self.lowlevel_parameter if param.parameterid == current_pid]
+        mapping_parameter = sorted([param for param in self.lowlevel_parameter if param.parameterid == current_pid])
         if len(mapping_parameter) > 1:
             raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, self.message_class))
 
@@ -146,7 +147,7 @@ class MessageDecoder:
             prefix_name = "%s::" % submessage_class
             self.submessage_prefixes[check_param_index] = (prefix_name, submessage_class)
 
-            mapping_parameter = [param for param in lowlevel_parameters[submessage_class] if param.parameterid == current_pid]
+            mapping_parameter = sorted([param for param in lowlevel_parameters[submessage_class] if param.parameterid == current_pid])
             if len(mapping_parameter) > 1:
                 raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, submessage_class))
             elif not len(mapping_parameter):
@@ -219,7 +220,9 @@ def encode_obj(obj):
         raise MissingLowLevelParameterError("No known %s in low level parameter encoding list" % type(obj))
 
     parametertree = lowlevel_parameters[type(obj)]
-    
+    if parametertree is not None:
+        parametertree = sorted(parametertree, key=attrgetter('parameterid'))
+
     root_node = None
     current_node = None
     current_level = 1
