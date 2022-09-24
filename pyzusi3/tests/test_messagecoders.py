@@ -245,7 +245,11 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         self.assertEqual(basemessage, expected_basemessage)
         self.assertEqual(submessages[0], expected_submessage)
 
-        encoded_obj = encode_obj(submessage)
+        encoded_obj = encode_obj(submessages[0])
+        result = encoded_obj.encode()
+        self.assertEqual(result, bytes_written)
+
+        encoded_obj = encode_obj(expected_submessage)
         result = encoded_obj.encode()
         self.assertEqual(result, bytes_written)
 
