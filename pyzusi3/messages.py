@@ -31,8 +31,8 @@ class LMZUSTAND_MIT_INVERS(Enum):
 # Steuerschalter / Lufthahn
 class SCHALTER(Enum):
     UNBEKANNT = 0
-    EIN = 1
-    AUS = 2
+    AUS = 1
+    EIN = 2
 
 #
 # HELLO
