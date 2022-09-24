@@ -1878,7 +1878,7 @@ class CONTROL_STATE(Enum):
 class CONTROL_SEITE(Enum):
     LINKS = 0
     RECHTS = 1
-CONTROL = namedtuple("CONTROL", [], defaults=[None])
+CONTROL = namedtuple("CONTROL", ['pause', 'neustart_zugnummer', 'start_dateiname', 'start_zugnummer', 'simulationsende', 'fahrplan_neustart', 'zugwahl_nach_neustart', 'zeitsprung', 'zeitraffer', 'blickpunkt_standard', 'fahrzeugbild_hoehe', 'fahrzeugbild_seite'], defaults=[None] * 12)
 llps[CONTROL] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0b01), None, BasicNode),
