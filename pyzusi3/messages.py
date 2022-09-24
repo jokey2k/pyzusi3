@@ -4,6 +4,31 @@ from enum import Enum, auto
 from pyzusi3.nodes import ContentType, BasicNode
 
 ParameterId = namedtuple("ParameterId", ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'], defaults=[None] * 6)
+def param_lt(self, other):
+    prev_eq = False
+    for paramname in ('id1', 'id2', 'id3', 'id4', 'id5', 'id6'):
+        left = getattr(self, paramname) or 0
+        right = getattr(other, paramname) or 0
+        if left < right:
+            return prev_eq
+
+        prev_eq = left == right
+
+    return False
+def param_gt(self, other):
+    prev_eq = False
+    for paramname in ('id1', 'id2', 'id3', 'id4', 'id5', 'id6'):
+        left = getattr(self, paramname) or 0
+        right = getattr(other, paramname) or 0
+        if left > right:
+            return prev_eq
+
+        prev_eq = left == right
+
+    return False
+ParameterId.__lt__ = param_lt
+ParameterId.__gt__ = param_gt
+
 LowlevelParameter = namedtuple("LowlevelParameter", ['parameterid', 'parametername', 'contenttype', 'enumtype', 'multipletimes', 'nodeasbool'], defaults=[None, None, False])
 lowlevel_parameters = {}
 message_index = {}
