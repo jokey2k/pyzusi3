@@ -188,7 +188,13 @@ class MessageDecoder:
                 return
         elif current_node.content:
             mapping_parameter = mapping_parameter[0]
-            self.mapped_parameters[mapping_parameter.parametername] = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+            decoded_content = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+            if mapping_parameter.multipletimes == True:
+                if mapping_parameter.parametername not in self.mapped_parameters:
+                    self.mapped_parameters[mapping_parameter.parametername] = []
+                self.mapped_parameters[mapping_parameter.parametername].append(decoded_content)
+            else:
+                self.mapped_parameters[mapping_parameter.parametername] = decoded_content
         elif current_node.nodeasbool:
             mapping_parameter = mapping_parameter[0]
             self.mapped_parameters[mapping_parameter.parametername] = True
