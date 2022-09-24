@@ -289,9 +289,10 @@ def encode_obj(obj):
         else:
             if isinstance(node_content, Enum):
                 node_content = node_content.value
-            new_node = BasicNode(id=node_id, content=node_content, contenttype=node_contenttype, parent_node=current_node)
+            selected_parentnode = seen_treenodes[parent_paramid]                
+            new_node = BasicNode(id=node_id, content=node_content, contenttype=node_contenttype, parent_node=selected_parentnode)
             if new_node.content is not None:
-                current_node.children.append(new_node)
+                selected_parentnode.children.append(new_node)
 
     def optimize_tree(node):
         """Removes all empty child nodes"""
