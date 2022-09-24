@@ -276,6 +276,19 @@ class FAHRPULT_ANZEIGEN(Enum):
     STW_MOTORDREHMOMENT_2 = 175
     STW_MOTORSTROM_2 = 176
     STW_MOTORSPANNUNG_2_ = 177
+class PROGRAMMDATEN(Enum):
+    ZUGDATEI = 1
+    ZUGNUMMER = 2
+    LADEPAUSE = 3
+    BUCHFAHRPLAN_XML = 4
+    NEU_UEBERNOMMEN = 5
+    BUCHFAHRPLAN_TIFF = 6
+    BUCHFAHRPLAN_PDF = 7
+    BREMSZETTEL_PDF = 8
+    WAGENLISTE_PDF = 9
+    LA_PDF = 10
+    STRECKENBUCH_PDF = 11
+    ERSATZFAHRPLAN_PDF = 12
 NEEDED_DATA = namedtuple("NEEDED_DATA", ['anzeigen', 'bedienung', 'programmdaten'], defaults=[None] * 3)
 llps[NEEDED_DATA] = (
     LLP(PID(2), None, BasicNode),
@@ -285,7 +298,7 @@ llps[NEEDED_DATA] = (
     LLP(PID(2, 3, 0x0b), None, BasicNode),
     LLP(PID(2, 3, 0x0b, 1), 'bedienung', ContentType.WORD),
     LLP(PID(2, 3, 0x0c), None, BasicNode),
-    LLP(PID(2, 3, 0x0c, 1), 'programmdaten', ContentType.WORD),
+    LLP(PID(2, 3, 0x0c, 1), 'programmdaten', ContentType.WORD, PROGRAMMDATEN, multipletimes=True),
 )
 msgidx[PID(2, 3)] = NEEDED_DATA
 
