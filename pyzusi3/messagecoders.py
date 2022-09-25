@@ -197,7 +197,8 @@ class MessageDecoder:
                 self.mapped_parameters[mapping_parameter.parametername] = decoded_content
         elif current_node.nodeasbool:
             mapping_parameter = mapping_parameter[0]
-            self.mapped_parameters[mapping_parameter.parametername] = True
+            if mapping_parameter.nodeasbool == True:
+                self.mapped_parameters[mapping_parameter.parametername] = True
         for child_node in current_node.children:
             params = {'id' + str(current_level + 1): child_node.id}
             child_pid = current_pid._replace(**params)
