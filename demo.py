@@ -249,10 +249,20 @@ async def main(ip, port):
         return
 
     log.info("Request some regular status updates from Zusi")
-    msg = messages.NEEDED_DATA([messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT,
-                                messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
-                                messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG,
-    ])
+    msg = messages.NEEDED_DATA(
+        anzeigen=[
+            messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT,
+            messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
+            messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG
+        ],
+        bedienung=True,
+        #programmdaten=[
+        #    messages.PROGRAMMDATEN.ZUGDATEI,
+        #    messages.PROGRAMMDATEN.ZUGNUMMER,
+        #    messages.PROGRAMMDATEN.LADEPAUSE,
+        #    messages.PROGRAMMDATEN.BUCHFAHRPLAN_PDF
+        #]
+    )
     await to_zusi_queue.put(msg)
 
     log.info("Awaiting status request ok")
