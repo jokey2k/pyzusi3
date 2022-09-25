@@ -39,7 +39,7 @@ class BasicNode:
         return other is not None and self.id == other.id and self.content == other.content and self.contenttype == other.contenttype and self.children == other.children and self.nodeasbool == other.nodeasbool
 
     def __repr__(self):
-        return "<%s id=%s content=%s contenttype=%s parent_node=%s children=%s, nodeasbool=%s>" % (self.__class__.__name__, self.id, self.content, self.contenttype, self.parent_node, self.children, self.nodeasbool)
+        return "<%s id=%s content=%s contenttype=%s parent_node=%s children_len=%s, nodeasbool=%s>" % (self.__class__.__name__, self.id, self.content, self.contenttype, self.parent_node, len(self.children), self.nodeasbool)
 
     def _encodecontent(self):
         result = b''
