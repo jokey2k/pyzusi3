@@ -152,6 +152,13 @@ async def update_local_state(local_state, update_event, from_zusi_queue):
         # messages.FAHRPULT_ANZEIGEN.STATUS_ZUGFAHRDATEN
         elif isinstance(msg, messages.STATUS_ZUGFAHRDATEN):
             log.warning("Updated state for train wagon data: %s" % data)
+        elif isinstance(msg, messages.DATA_PROG):
+            log.warning("Updated simulation data: %s" % data)
+        # messages.bedienung = True
+        elif isinstance(msg, messages.DATA_OPERATION):
+            log.warning("Updated input data: %s" % data)
+        else:
+            log.error("Unsorted message: type: %s content: %s" % (type(msg), data))
 
 
 async def zusi_user_interact(local_state, update_event, to_zusi_queue):
