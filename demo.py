@@ -219,7 +219,12 @@ async def zusi_user_interact(local_state, update_event, to_zusi_queue):
                     known_states[message] = current_state
                     log.info("%s state: %s" % (message.__name__, without_null_keys(current_state)))
                     continue
-                updates = set(current_state.items()) - set(known_states[message].items())
+                try:
+                    updates = set(current_state.items()) - set(known_states[message].items())
+                except TypeError:
+                    # Happens when submessages have lists, assume all changed if one part changed
+                    if known_states[message] != current_state:
+                        updates = current_state
                 if updates:
                     known_states[message] = current_state
                     log.info("%s changes: %s" % (message.__name__, updates))
