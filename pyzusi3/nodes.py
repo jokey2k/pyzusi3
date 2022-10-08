@@ -280,7 +280,18 @@ class StreamDecoder:
 class AsyncStreamDecoder(StreamDecoder):
 
     async def _get_bytes(self):
-        data = await self.bytecontent.readexactly(self._next_content_length())
+        length = self._next_content_length()
+        self.logstream.debug("Next content length: %s" % length)
+        data = b''
+        while len(data) != length:
+            new_data = b''
+            while True:
+                new_data = await self.bytecontent.readexactly(length)
+                break
+            if new_data == b'':
+                # eof
+                break
+            data += new_data
         self.logstream.debug("Got data: %s" % data)
         return data
 
