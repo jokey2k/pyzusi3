@@ -161,8 +161,8 @@ class DecoderState(Enum):
 
 class StreamDecoder:
     def __init__(self) -> None:
-        self.log = logging.getLogger("pyzusi3.node")
-        self.logstream = logging.getLogger("pyzusi3.streamdata")
+        self.log = logging.getLogger("pyzusi3.nodes.StreamDecoder")
+        self.logstream = logging.getLogger("pyzusi3.nodes.StreamDecoder.streamdata")
 
     def reset(self):
         self.log.info("Resetting state")
