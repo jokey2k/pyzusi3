@@ -247,7 +247,7 @@ async def main(ip, port):
 
     log.info("Sending HELLO message")
     msg = messages.HELLO(2, messages.ClientTyp.FAHRPULT, "Schlumpfpult", "1.0")
-    await to_zusi_queue.put(msg)
+    to_zusi_queue.put_nowait(msg)
 
     log.info("Waiting for response")
     msg = await from_zusi_queue.get()
