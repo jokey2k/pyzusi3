@@ -45,7 +45,7 @@ async def zusi_writer(writer, to_zusi_queue):
         if msg == STOPELEMENT:
             break
 
-        log.debug("Sending msg to Zusi: %s" % str(msg))
+        log.debug("Sending msg to Zusi: %s %s" % (msg.__class__.__name__, str(without_null_keys(msg._asdict()))))
         writer.write(encode_obj(msg).encode())
         await asyncio.sleep(0.1)
 
@@ -56,11 +56,11 @@ async def zusi_reader(reader, from_zusi_queue):
     while True:
         basemessage, submessages = await msg_reader.__anext__()
         if basemessage is not None:
-            log.debug("Got basemessage from Zusi: %s" % str(basemessage))
-            await from_zusi_queue.put(basemessage)
+            log.debug("Got basemessage from Zusi: %s %s" % (basemessage.__class__.__name__, str(without_null_keys(basemessage._asdict()))))
+            from_zusi_queue.put_nowait(basemessage)
         for message in submessages:
-            log.debug("Got submessage from Zusi: %s" % str(message))
-            await from_zusi_queue.put(message)
+            log.debug("Got submessage from Zusi: %s %s" % (message.__class__.__name__, str(without_null_keys(message._asdict()))))
+            from_zusi_queue.put_nowait(message)
         await asyncio.sleep(0.1)
 
 
