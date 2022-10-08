@@ -258,7 +258,7 @@ async def main(ip, port):
     log.info("Request some regular status updates from Zusi")
     msg = messages.NEEDED_DATA(
         anzeigen=[
-            messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT_ABSOLUT,
+            messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT,
             messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
             messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG
         ],
