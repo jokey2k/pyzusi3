@@ -127,6 +127,8 @@ class MessageDecoder:
             submsg_decoder.lowlevel_parameter = lowlevel_parameters[submessage_class]
             basemsg, submsgs = submsg_decoder.parse(current_node, current_level)
             self.submessages.append(basemsg)
+            if submsgs:
+                self.submessages.extend(submsgs)
             return
 
         mapping_parameter = mapping_parameter[0]
