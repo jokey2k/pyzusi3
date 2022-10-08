@@ -18,6 +18,8 @@ logging.getLogger("pyzusi3.node").setLevel(logging.WARNING)
 logging.getLogger("pyzusi3.streamdata").setLevel(logging.WARNING)
 logging.getLogger("pyzusi3.messagecoders.MessageDecoder").setLevel(logging.WARNING)
 
+tasks = []
+
 
 def without_null_keys(dictionary):
     cleaned_collection = {}
@@ -26,6 +28,11 @@ def without_null_keys(dictionary):
             cleaned_collection[key] = value
 
     return cleaned_collection
+
+
+def handle_exception(loop, context):
+    msg = context.get("exception", context["message"])
+    log.error(f"Caught exception: {msg}")
 
 
 async def decode_bytes(stream_bytes):
@@ -200,6 +207,7 @@ async def zusi_user_interact(local_state, update_event, to_zusi_queue):
             tastatur_schalterposition=0,
             )
     }
+    simulated_interactions = {}
 
     known_states = {}
     while True:
@@ -230,8 +238,7 @@ async def zusi_user_interact(local_state, update_event, to_zusi_queue):
         if wait_cur > wait_max:
             break
 
-
-async def main(ip, port):
+async def client_demo(ip, port):
     log.info("Connecting to Zusi3")
     tcpreader, tcpwriter = await asyncio.open_connection(
         ip, port)
@@ -241,7 +248,9 @@ async def main(ip, port):
     to_zusi_queue = asyncio.Queue()
     
     reader_task = asyncio.create_task(zusi_reader(tcpreader, from_zusi_queue))
+    tasks.append(reader_task)
     writer_task = asyncio.create_task(zusi_writer(tcpwriter, to_zusi_queue))
+    tasks.append(writer_task)
 
     log.info("Sending HELLO message")
     msg = messages.HELLO(2, messages.ClientTyp.FAHRPULT, "Schlumpfpult", "1.0")
@@ -261,12 +270,11 @@ async def main(ip, port):
             messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG
         ],
         bedienung=True,
-        #programmdaten=[
-        #    messages.PROGRAMMDATEN.ZUGDATEI,
-        #    messages.PROGRAMMDATEN.ZUGNUMMER,
-        #    messages.PROGRAMMDATEN.LADEPAUSE,
-        #    messages.PROGRAMMDATEN.BUCHFAHRPLAN_PDF
-        #]
+        programmdaten=[
+            messages.PROGRAMMDATEN.ZUGDATEI,
+            messages.PROGRAMMDATEN.ZUGNUMMER,
+            messages.PROGRAMMDATEN.LADEPAUSE,
+        ]
     )
     await to_zusi_queue.put(msg)
 
@@ -280,13 +288,14 @@ async def main(ip, port):
     local_state = {}
     update_event = asyncio.Event()
     update_task = asyncio.create_task(update_local_state(local_state, update_event, from_zusi_queue))
-
+    tasks.append(update_task)
     log.info("Creating task to simulate interaction with Zusi")
     interact_task = asyncio.create_task(zusi_user_interact(local_state, update_event, to_zusi_queue))
+    tasks.append(interact_task)
 
     # wait until interact finishes, either getting the stop element or CTRL-C
     try:
-        await asyncio.gather(interact_task, return_exceptions=True)
+        await asyncio.wait([interact_task])
     except KeyboardInterrupt:
         pass
 
@@ -294,10 +303,26 @@ async def main(ip, port):
     reader_task.cancel()
     writer_task.cancel()
     update_task.cancel()
-    await asyncio.gather(reader_task, writer_task, update_task, return_exceptions=True)
     
     tcpwriter.close()
 
     log.info("All done")
 
-asyncio.run(main(ZUSI_IP, ZUSI_PORT))
+async def main(ip, port):
+    main_task = asyncio.create_task(client_demo(ZUSI_IP, ZUSI_PORT))
+    tasks.append(main_task)
+
+    while True:
+        for task in tasks:
+            #print(task)
+            if task.done():
+                exc = task.exception()
+                if exc:
+                    log.exception(exc, exc_info=exc)
+                    pass
+        await asyncio.sleep(1)
+
+run_loop = asyncio.new_event_loop()
+#run_loop.set_exception_handler(handle_exception)
+run_loop.create_task(main(ZUSI_IP, ZUSI_PORT))
+run_loop.run_forever()
