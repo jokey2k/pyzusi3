@@ -12,8 +12,6 @@ ZUSI_IP = "127.0.0.1"
 ZUSI_PORT = "1436"
 LOG_MSG_UPDATES = False
 
-STOPELEMENT = StopIteration
-
 log = logging.getLogger("ZusiDemo")
 logging.basicConfig(level=logging.INFO)
 logging.getLogger("pyzusi3.node").setLevel(logging.WARNING)
@@ -42,9 +40,6 @@ async def decode_bytes(stream_bytes):
 async def zusi_writer(writer, to_zusi_queue):
     while True:
         msg = await to_zusi_queue.get()
-        if msg == STOPELEMENT:
-            break
-
         log.debug("Sending msg to Zusi: %s %s" % (msg.__class__.__name__, str(without_null_keys(msg._asdict()))))
         writer.write(encode_obj(msg).encode())
         await asyncio.sleep(0.1)
@@ -69,8 +64,6 @@ async def update_local_state(local_state, update_event, from_zusi_queue):
     while True:
         msg = await from_zusi_queue.get()
         log.debug("Got new data for %s" % str(type(msg)))
-        if msg is STOPELEMENT:
-            break
         if msg is None:
             continue
 
