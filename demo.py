@@ -213,7 +213,7 @@ async def zusi_user_interact(local_state, update_event, to_zusi_queue):
         # do not wait here, we do that below to have ~5 mins runtime
         if update_event.is_set():
             update_event.clear()
-            for message in [messages.DATA_FTD, messages.STATUS_SIFA, messages.STATUS_INDUSI_BETRIEBSDATEN]:
+            for message in local_state:
                 current_state = local_state[message]._asdict()
                 if message not in known_states:
                     known_states[message] = current_state
