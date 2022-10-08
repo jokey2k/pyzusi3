@@ -211,6 +211,8 @@ def encode_obj(obj):
         if parameter.contenttype is BasicNode:
             if parameter.multipletimes is None or \
                 (parameter.multipletimes is not None and parameter.multipletimes == type(obj)):
+                if parameter.nodeasbool and getattr(obj, parameter.parametername, False) != True:
+                    continue
                 current_node = BasicNode(id=getattr(parameter.parameterid, 'id' + str(current_level)), parent_node=parent_node, nodeasbool=parameter.nodeasbool)
                 if current_node.parent_node is None:
                     root_node = current_node

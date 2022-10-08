@@ -204,6 +204,51 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         result = encoded_obj.encode()
         self.assertEqual(result, bytes_written)        
 
+    def test_single_bool_false_msg_reverse(self):
+        msg = messages.NEEDED_DATA(
+            anzeigen=[
+                messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT,
+                messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
+                messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG
+            ],
+        )
+
+        encoded_obj = encode_obj(msg)
+        encoded_bytes = encoded_obj.encode()
+
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(encoded_bytes)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])
+        self.assertEqual(submessages, [])
+        self.assertEqual(basemessage, msg)
+
+    def test_single_bool_true_msg_reverse(self):
+        msg = messages.NEEDED_DATA(
+            anzeigen=[
+                messages.FAHRPULT_ANZEIGEN.GESCHWINDIGKEIT,
+                messages.FAHRPULT_ANZEIGEN.STATUS_SIFA,
+                messages.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG
+            ],
+            bedienung=True,
+        )
+
+        encoded_obj = encode_obj(msg)
+        encoded_bytes = encoded_obj.encode()
+
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(encoded_bytes)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])
+        self.assertEqual(submessages, [])
+        self.assertEqual(basemessage, msg)
+
     def test_msg_nonunique_nodes(self):
         bytes_written = b'\x00\x00\x00\x00' + \
             b'\x02\x00' + \
@@ -792,3 +837,55 @@ class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
             protokollversion = None
         )
         self.assertEqual(basemessage, expected_message)
+
+    async def test_message_with_empty_strings(self):
+        bytes_written = b'\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x0a\x00\x00\x00\x00\x00' + \
+            b'\x64\x00\x10\x00\x00\x00\x01\x00\x5a\x65\x69\x74\x2d\x5a\x65\x69' + \
+            b'\x74\x2d\x53\x69\x66\x61\x03\x00\x00\x00\x02\x00\x00\x03\x00\x00' + \
+            b'\x00\x03\x00\x00\x03\x00\x00\x00\x04\x00\x02\x03\x00\x00\x00\x05' + \
+            b'\x00\x02\x03\x00\x00\x00\x06\x00\x02\xff\xff\xff\xff\x00\x00\x00' + \
+            b'\x00\x65\x00\x13\x00\x00\x00\x01\x00\x50\x5a\x42\x39\x30\x2f\x49' + \
+            b'\x36\x30\x52\x20\x2d\x20\x56\x32\x2e\x30\xff\xff\xff\xff\x00\x00' + \
+            b'\x00\x00\x65\x00\x00\x00\x00\x00\x02\x00\x03\x00\x00\x00\x01\x00' + \
+            b'\x04\x03\x00\x00\x00\x07\x00\x02\x03\x00\x00\x00\x08\x00\x02\x03' + \
+            b'\x00\x00\x00\x0a\x00\x02\x03\x00\x00\x00\x0d\x00\x03\x13\x00\x00' + \
+            b'\x00\x0e\x00\x50\x5a\x42\x39\x30\x2f\x49\x36\x30\x52\x20\x2d\x20' + \
+            b'\x56\x32\x2e\x30\xff\xff\xff\xff\x00\x00\x00\x00\x03\x00\x04\x00' + \
+            b'\x00\x00\x02\x00\x05\x00\x04\x00\x00\x00\x03\x00\x00\x00\x03\x00' + \
+            b'\x00\x00\x05\x00\x00\x03\x00\x00\x00\x09\x00\x00\x03\x00\x00\x00' + \
+            b'\x2f\x00\x00\xff\xff\xff\xff\xff\xff\xff\xff\x00\x00\x00\x00\x65' + \
+            b'\x00\x00\x00\x00\x00\x02\x00\x02\x00\x00\x00\x02\x00\x02\x00\x00' + \
+            b'\x00\x03\x00\x03\x00\x00\x00\x0b\x00\x00\x03\x00\x00\x00\x0f\x00' + \
+            b'\x00\x00\x00\x00\x00\x05\x00\x04\x00\x00\x00\x01\x00\xa0\x00\x04' + \
+            b'\x00\x00\x00\x02\x00\x09\x00\x03\x00\x00\x00\x05\x00\x04\xff\xff' + \
+            b'\xff\xff\x00\x00\x00\x00\x06\x00\x04\x00\x00\x00\x01\x00\xa2\x00' + \
+            b'\x04\x00\x00\x00\x02\x00\x08\x00\x03\x00\x00\x00\x05\x00\x04\x03' + \
+            b'\x00\x00\x00\x06\x00\x06\xff\xff\xff\xff\xff\xff\xff\xff\x00\x00' + \
+            b'\x00\x00\x03\x00\x03\x00\x00\x00\x06\x00\x00\x03\x00\x00\x00\x07' + \
+            b'\x00\x00\x03\x00\x00\x00\x08\x00\x01\x03\x00\x00\x00\x0a\x00\x00' + \
+            b'\x03\x00\x00\x00\x0b\x00\x00\x03\x00\x00\x00\x30\x00\x02\x03\x00' + \
+            b'\x00\x00\x31\x00\x03\x03\x00\x00\x00\x32\x00\x00\x03\x00\x00\x00' + \
+            b'\x33\x00\x00\x03\x00\x00\x00\x34\x00\x00\xff\xff\xff\xff\xff\xff' + \
+            b'\xff\xff\x00\x00\x00\x00\x65\x00\x00\x00\x00\x00\x03\x00\x03\x00' + \
+            b'\x00\x00\x0c\x00\x02\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff\xff\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x0a' + \
+            b'\x00\x06\x00\x00\x00\x01\x00\x00\x00\x00\x00\xff\xff\xff\xff\xff' + \
+            b'\xff\xff\xff'
+        reader = asyncio.StreamReader()
+        reader.feed_data(bytes_written)
+        reader.feed_eof()
+
+        decoder = AsyncStreamDecoder()
+        decoded_tree = decoder.decode(reader)
+        nodes = []
+        async for node in decoded_tree:
+            nodes.append(node)
+
+        self.assertEqual(len(nodes), 2)
+
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])
+
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[1])
+        
