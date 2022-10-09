@@ -64,7 +64,7 @@ async def zusi_user_interact(client: ZusiClient):
         wait_cur += 1
         if wait_cur in simulated_interactions:
             msg = simulated_interactions[wait_cur]
-            log.info("Sending new action %s: %s" % (msg.__class__.__name__, str(without_null_keys(msg._asdict()))))
+            log.info("Sending new action %s: %s" % (msg.__class__.__name__, str(suppress_none_values(msg._asdict()))))
             client.send_input(msg)
         if wait_cur > WAIT_MAX:
             log.info("Time is up, leaving")
