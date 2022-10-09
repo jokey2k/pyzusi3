@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import threading
 
 from pyzusi3.nodes import AsyncStreamDecoder
 from pyzusi3 import messages
@@ -37,6 +38,8 @@ class ZusiClient:
         
         self.send_messagequeue = asyncio.Queue()
         self.receive_messagequeue = asyncio.Queue()
+        self.send_messagequeue_lock = threading.Lock()
+
         self.local_state = {}
         self.message_update_events = {}
         self.local_state_changed = asyncio.Event()
@@ -189,7 +192,8 @@ class ZusiClient:
         
         if not self.connected:
             raise ConnectionError("Not connected to Zusi")
-        self.send_messagequeue.put_nowait(input)
+        with self.send_messagequeue_lock:
+            self.send_messagequeue.put_nowait(input)
 
     async def connect(self):
         client_log.info("Connecting to Zusi3")
