@@ -43,7 +43,7 @@ if __name__ == "__main__":
 ```
 
 ## Interaction simulation
-see [interactiondemo.py](https://github.com/jokey2k/pyzusi3/blob/main/examples/interactiondemo.py?raw=true)
+see [interactiondemo.py](https://github.com/jokey2k/pyzusi3/blob/main/examples/interactiondemo.py)
 
 ## PySide6 UI
 ![ZusiData](https://github.com/jokey2k/pyzusi3/blob/main/examples/pyzusidisplay/screenshot.png?raw=true)
