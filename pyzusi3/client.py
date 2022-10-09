@@ -234,7 +234,6 @@ class ZusiClient:
         writer_task.cancel()
         update_task.cancel()
 
-        tcpreader.close()    
         tcpwriter.close()
 
         self.connected = False
