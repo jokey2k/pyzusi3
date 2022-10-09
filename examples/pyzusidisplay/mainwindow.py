@@ -17,8 +17,6 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.zusi_ip.setText("192.168.86.46")
-
         self.zusiClient = None
         self.zusiTask = None
         self.zusiLoop = asyncio.new_event_loop()
