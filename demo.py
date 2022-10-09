@@ -15,6 +15,7 @@ WAIT_MAX = 3000 # keep running for 5 minutes
 logging.basicConfig(level=logging.WARNING)
 log = logging.getLogger("ZusiDemo")
 log.setLevel(logging.INFO)
+logging.getLogger("pyzusi3.client").setLevel(logging.INFO)
 
 
 def handle_exception(loop, context):
