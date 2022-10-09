@@ -174,7 +174,7 @@ class ZusiClient:
             else:
                 updater_log.error("Unsorted message: type: %s content: %s" % (type(msg), data))
 
-    async def request_status(self, displays=[], control=False, programdata=[]):
+    def request_status(self, displays=[], control=False, programdata=[]):
         self.requested_status = messages.NEEDED_DATA(
             anzeigen=displays,
             bedienung=control,
@@ -183,7 +183,7 @@ class ZusiClient:
         if self.connected and 'updater' in self.task_registry:
             self.send_messagequeue.put_nowait(self.requested_status)
 
-    async def send_input(self, input):
+    def send_input(self, input):
         if not isinstance(input, messages.INPUT):
             raise ValueError("Input needs to be in message INPUT format")
         
