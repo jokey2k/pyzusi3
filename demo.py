@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.WARNING)
 log = logging.getLogger("ZusiDemo")
 log.setLevel(logging.INFO)
 logging.getLogger("pyzusi3.client").setLevel(logging.INFO)
+logging.getLogger("pyzusi3.messagecoders.MessageDecoder").setLevel(logging.ERROR)
 
 
 def handle_exception(loop, context):
