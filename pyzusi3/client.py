@@ -64,7 +64,6 @@ class ZusiClient:
             msg = await self.send_messagequeue.get()
             writer_log.debug("Sending msg to Zusi: %s %s" % (msg.__class__.__name__, str(suppress_none_values(msg._asdict()))))
             write_stream.write(encode_obj(msg).encode())
-            await asyncio.sleep(0.1)
 
     async def _zusi_reader(self, reader):
         """Queue worker to process received messages from Zusi on given stream"""
@@ -79,7 +78,6 @@ class ZusiClient:
             for message in submessages:
                 reader_log.debug("Got submessage from Zusi: %s %s" % (message.__class__.__name__, str(suppress_none_values(message._asdict()))))
                 self.receive_messagequeue.put_nowait(message)
-            await asyncio.sleep(0.1)
 
     async def _update_local_state(self):
         updater_log.info("Awaiting new states")
