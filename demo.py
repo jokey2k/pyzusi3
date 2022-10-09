@@ -63,6 +63,8 @@ async def zusi_user_interact(client: ZusiClient):
                     # Happens when submessages have lists, assume all changed if one part changed
                     if known_states[message] != current_state:
                         updates = current_state
+                    else:
+                        continue
                 if updates:
                     known_states[message] = current_state
                     log.info("%s changes: %s" % (message.__name__, updates))
