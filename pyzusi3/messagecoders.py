@@ -114,6 +114,9 @@ class MessageDecoder:
                 check_param_index = ParameterId(*current_pid[:i])
                 if check_param_index in message_index:
                     submessage_class = message_index[check_param_index]
+                    if submessage_class == self.message_class:
+                        submessage_class = None
+                        break
                     self.log.debug("Found submessage of type %s" % submessage_class)
                     break
             if submessage_class is None:
