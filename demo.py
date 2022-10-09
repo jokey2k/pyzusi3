@@ -38,7 +38,11 @@ async def zusi_user_interact(client: ZusiClient):
         110: messages.INPUT(zuord.SIFA, komm.Unbestimmt, aktion.Up, tastatur_schalterposition=0),
         150: messages.INPUT(zuord.FAHRSCHALTER, komm.Unbestimmt, aktion.Absolut, tastatur_schalterposition=0),
         160: messages.INPUT(zuord.SIFA, komm.Unbestimmt, aktion.Down, tastatur_schalterposition=0),
-        165: messages.INPUT(zuord.SIFA, komm.Unbestimmt, aktion.Up, tastatur_schalterposition=0)
+        165: messages.INPUT(zuord.SIFA, komm.Unbestimmt, aktion.Up, tastatur_schalterposition=0),
+        170: messages.INPUT(indusi_stoerschalter=messages.SCHALTER.AUS),
+        180: messages.INPUT(lzb_stoerschalter=messages.SCHALTER.AUS),
+        210: messages.INPUT(lzb_stoerschalter=messages.SCHALTER.EIN),
+        220: messages.INPUT(indusi_stoerschalter=messages.SCHALTER.EIN),
     }
 
     known_states = {}
@@ -54,7 +58,7 @@ async def zusi_user_interact(client: ZusiClient):
                     log.info("%s state: %s" % (message.__name__, suppress_none_values(current_state)))
                     continue
                 try:
-                    updates = set(current_state.items()) - set(known_states[message].items())
+                    updates = sorted(set(current_state.items()) - set(known_states[message].items()))
                 except TypeError:
                     # Happens when submessages have lists, assume all changed if one part changed
                     if known_states[message] != current_state:
