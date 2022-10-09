@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyzusi3"
+description = "Zusi3 TCP Client library with async support and no deps"
+readme = "README.md"
+requires-python = ">=3.10.7" # 3.10.6 contains a bug in asyncio we hit here occasionally
+keywords = ["tcp", "async"]
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [] # YeY
+dynamic = ["version"]
