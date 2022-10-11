@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
             self.ui.uhrzeit.setText("%s:%s:%s" % (str(stunde).zfill(2), str(minute).zfill(2), str(sekunde).zfill(2)))
 
             self.ui.geschwindigkeit.setText(str(int(round(state.geschwindigkeit*3.6))))
-            self.ui.sollgeschwindigkeit.setText(str(int(state.streckenvmax*3.6)))
+            # enable cheat: self.ui.sollgeschwindigkeit.setText(str(int(state.streckenvmax*3.6)))
 
         if zusimsg.STATUS_ZUGFAHRDATEN in self.zusiClient.local_state:
             state = self.zusiClient.local_state[zusimsg.STATUS_ZUGFAHRDATEN]
