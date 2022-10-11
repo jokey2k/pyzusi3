@@ -66,7 +66,13 @@ class SCHALTER(Enum):
     UNBEKANNT = 0
     AUS = 1
     EIN = 2
-
+class ABSPERRHAHN(Enum):
+    UNBEKANNT = 0
+    ABGESPERRT = 1
+    OFFEN = 2
+class JA_NEIN(Enum):
+    NEIN = 0
+    JA = 1
 #
 # HELLO
 # Client -> Zusi
@@ -548,7 +554,7 @@ llps[STATUS_SIFA] = (
     LLP(PID(2, 0x0a, 0x64, 3), 'hupe', ContentType.BYTE, STATUS_SIFA_HUPE),
     LLP(PID(2, 0x0a, 0x64, 4), 'hauptschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x0a, 0x64, 5), 'stoerschalter', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x0a, 0x64, 6), 'lufthahn', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x64, 6), 'lufthahn', ContentType.BYTE, ABSPERRHAHN),
     LLP(PID(2, 0x0a, 0x64, 7), 'weg', ContentType.SINGLE)
 )
 msgidx[PID(2, 0x0a, 0x64)] = STATUS_SIFA
@@ -600,7 +606,7 @@ class INDUSI_STOERSCHALTERBAURT(Enum):
     LEUCHTDRUCKTASTER = 0
     DREHSCHALTER = 1
 STATUS_INDUSI_EINSTELLUNGEN = namedtuple("STATUS_INDUSI_EINSTELLUNGEN", [
-    'zugart', 'hauptschalter', 'indusi_stoerschalter', 'luftabsperhan', 'systemstatus', 'bauart',
+    'zugart', 'hauptschalter', 'indusi_stoerschalter', 'luftabsperrhahn', 'systemstatus', 'bauart',
     'tfnr', 'zugnummer', 'e_brh', 'e_bra', 'e_zugart', 'a_brh', 'a_bra', 'a_zugart', 'a_modus', 'klartextmeldungen', 'funktionspruefung_starten', 'indusi_stoerschalterbauart',
     'g_brh', 'g_bra', 'g_zl', 'g_vmz', 'g_zugart', 'e_zl', 'e_vmz', 'a_zl', 'a_vmz', 'lzb_stoerschalter', 'lzb_stoerschalterbaurt', 'lzb_systemstatus',
     ], defaults=([None] * 30))
@@ -613,7 +619,7 @@ llps[STATUS_INDUSI_EINSTELLUNGEN] = (
     LLP(PID(2, 0x0a, 0x65, 2, 1), 'zugart', ContentType.BYTE, INDUSI_ZUGART),
     LLP(PID(2, 0x0a, 0x65, 2, 7), 'hauptschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x0a, 0x65, 2, 8), 'indusi_stoerschalter', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0a), 'luftabsperhan', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0a), 'luftabsperrhahn', ContentType.BYTE, ABSPERRHAHN),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0d), 'systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0e), 'bauart', ContentType.STRING),
     # Indusi I60R/I80/PZB90
@@ -836,14 +842,115 @@ msgidx[PID(2, 0x0a, 0x65, 3)] = STATUS_INDUSI_BETRIEBSDATEN
 # STATUS_ETCS_EINSTELLUNGEN
 # Zusi -> Client (Submessage) 
 #
-# FIXME Platzhalter, muss noch vollständig umgesetzt werden
-STATUS_ETCS_EINSTELLUNGEN = namedtuple("STATUS_ETCS_EINSTELLUNGEN", ['zustand'], defaults=[None])
+class ETCS_ZUGDATEN(Enum):
+    UNDEFINIERT = 0
+    EINGABE_NOETIG = 1
+    EINGABE_ABGESCHLOSSEN = 2
+    START_OF_MISSION = 3
+class ETCS_GSMR_MODUS(Enum):
+    LOKFUEHREREINGABE = 0
+    FAHRZEUGFESTWERT = 1
+class ETCS_REIBWERT(Enum):
+    UNBEKANNT = 0
+    VERMINDERT = 1
+    NICHT_VERMINDERT = 2
+class ETCS_QUITTIERSCHALTER(Enum):
+    UNBEKANNT = 0
+    VERLEGT = 1
+    GRUNDSTELLUNG = 2
+class ETCS_OVERRIDE(Enum):
+    UNBEKANNT = 0
+    ANGEFORDERT = 1
+    GRUNDSTELLUNG = 2
+class ETCS_START(Enum):
+    UNBEKANNT = 0
+    STARTKOMMANDO = 1
+    GRUNDSTELLUNG = 2
+class ETCS_LEVEL(Enum):
+    UNDEFINIERT = 0
+    STM = 1
+    LEVEL_0 = 2
+    LEVEL_1 = 3
+    LEVEL_2 = 4
+    LEVEL_3 = 5
+class ETCS_MODUS(Enum):
+    UNDEFINIERT = 0
+    FS = 1
+    OS = 2
+    SR = 3
+    SH = 4
+    UN = 5
+    SL = 6
+    SB = 7
+    TR = 8
+    PT = 9
+    SF = 10
+    IS = 11
+    NP = 12
+    NL = 13
+    SE = 14
+    SN = 15
+    RV = 16
+    LS = 17
+    PS = 18
+class ETCS_TAF_MODUS(Enum):
+    UNBEKANNT = 0
+    QUITTIERT = 1
+    GRUNDSTELLUNG = 2
+    ABGELEHNT = 3
+class ETCS_FUNKTIONSPRUEFUNG(Enum):
+    UNBEKANNT = 0
+    STARTEN = 1
+    DISPLAY_OK_QUITTIERT = 2
+    DISPLAY_NIO_QUITTIERT = 3
+STATUS_ETCS_EINSTELLUNGEN = namedtuple("STATUS_ETCS_EINSTELLUNGEN", ['zustand', 'stmsysteme', 'brh', 'zugkategorie', 'zuglaenge', 'vmax_kmh', 'achslast_kg', 'zugnummer', 'tfnummer', 'rbc_nummer', 'rbc_telefon', 'rbc_id', 'rbc_land', 'gsmr_netz_id', 'gsmr_status', 'reibwert', 'passivschalter', 'stoerschalter', 'luftabsperrhahn', 'quittierschalter', 'override_anforderung', 'start', 'level_einstellen', 'stmindex_einstellen', 'modus_einstellen', 'taf_modus', 'zugneustart', 'infoton_fordern', 'funktionspruefung', 'evc_baseline', 'etcs_lss_vorhanden', 'passivschalter_vorhanden', 'resetschalter_vorhanden', 'resetsoftkey_vorhanden', 'etcs_lss_status', 'etcs_reset', 'bauart'], defaults=[None] * 37)
+STATUS_ETCS_EINSTELLUNGEN_STMSYSTEM = namedtuple("STATUS_ETCS_EINSTELLUNGEN", ['index', 'name'], defaults=[None] * 2)
 llps[STATUS_ETCS_EINSTELLUNGEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 4), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 4, 1), 'zustand', ContentType.BYTE)
+    LLP(PID(2, 0x0a, 0x65, 4, 1), 'zustand', ContentType.BYTE, ETCS_ZUGDATEN),
+    LLP(PID(2, 0x0a, 0x65, 4, 2), 'stmsysteme', BasicNode, multipletimes=STATUS_ETCS_EINSTELLUNGEN_STMSYSTEM),
+    LLP(PID(2, 0x0a, 0x65, 4, 2, 1), 'index', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 4, 2, 2), 'name', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 4, 3), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 1), 'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 2), 'zugkategorie', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 3), 'zuglaenge', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 4), 'vmax_kmh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 5), 'achslast_kg', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 6), 'zugnummer', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 7), 'tfnummer', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 8), 'rbc_nummer', ContentType.CARDINAL),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 9), 'rbc_telefon', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 0x0a), 'rbc_id', ContentType.CARDINAL),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 0x0b), 'rbc_land', ContentType.CARDINAL),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 0x0c), 'gsmr_netz_id', ContentType.CARDINAL),
+    LLP(PID(2, 0x0a, 0x65, 4, 3, 0x0d), 'gsmr_status', ContentType.BYTE, ETCS_GSMR_MODUS),
+    LLP(PID(2, 0x0a, 0x65, 4, 4), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 4, 4, 1), 'reibwert', ContentType.BYTE, ETCS_REIBWERT),
+    LLP(PID(2, 0x0a, 0x65, 4, 5), 'passivschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 4, 6), 'stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 4, 7), 'luftabsperrhahn', ContentType.BYTE, ABSPERRHAHN),
+    LLP(PID(2, 0x0a, 0x65, 4, 8), 'quittierschalter', ContentType.BYTE, ETCS_QUITTIERSCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 4, 9), 'override_anforderung', ContentType.BYTE, ETCS_OVERRIDE),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x0a), 'start', ContentType.BYTE, ETCS_START),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x0b), 'level_einstellen', ContentType.WORD, ETCS_LEVEL),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x0c), 'stmindex_einstellen', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x0d), 'modus_einstellen', ContentType.WORD, ETCS_MODUS),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x0e), 'taf_modus', ContentType.BYTE, ETCS_TAF_MODUS),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x0f), 'zugneustart', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x10), 'infoton_fordern', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x11), 'funktionspruefung', ContentType.BYTE, ETCS_FUNKTIONSPRUEFUNG),    
+    LLP(PID(2, 0x0a, 0x65, 4, 0x12), 'evc_baseline', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x13), 'etcs_lss_vorhanden', ContentType.BYTE, JA_NEIN),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x14), 'passivschalter_vorhanden', ContentType.BYTE, JA_NEIN),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x15), 'resetschalter_vorhanden', ContentType.BYTE, JA_NEIN),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x16), 'resetsoftkey_vorhanden', ContentType.BYTE, JA_NEIN),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x17), 'etcs_lss_status', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x18), 'etcs_reset', ContentType.BYTE, ETCS_START),
+    LLP(PID(2, 0x0a, 0x65, 4, 0x19), 'bauart', ContentType.STRING),
 )
 msgidx[PID(2, 0x0a, 0x65, 4)] = STATUS_ETCS_EINSTELLUNGEN
 
