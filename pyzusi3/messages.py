@@ -958,14 +958,129 @@ msgidx[PID(2, 0x0a, 0x65, 4)] = STATUS_ETCS_EINSTELLUNGEN
 # STATUS_ETCS_BETRIEBSDATEN
 # Zusi -> Client (Submessage) 
 #
-# FIXME Platzhalter, muss noch vollständig umgesetzt werden
-STATUS_ETCS_BETRIEBSDATEN = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['aktiver_level'], defaults=[None])
+class ETCS_GRUND_ZWANGSBREMSUNG(Enum):
+    KEINE_ZWANGSBREMSUNG = 0
+    VMAX_UEBERWACHUNG = 6
+    FUNKTIONSPRUEFUNG = 7
+    RECHNERAUSFALL = 10
+    ETCS_NOTHALT_UEBERFAHREN = 11
+    ETCS_HALT_UEBERFAHREN = 15
+    STILLSTANDSUEBERWACHUNG = 16
+    NICHT_QUITTIERT = 17
+    FUNKAUSFALL = 18
+    BALISENSTOERUNG = 19
+    MANUELLER_LEVELWECHSEL = 20
+    ALLGEMEINE_STOERUNG = 27
+    STROMVERSORGUNG_FEHLT = 28
+class ETCS_QUITTIERUNG(Enum):
+    GAR_KEINE_QUITTIERUNG_NOETIG = 0
+    NOCH_KEINE_QUITTIERUNG_NOETIG = 1
+    NOETIGE_VORAUSSETZUNGEN_FEHLEN = 2
+    NOETIG = 3
+    QUITTIERT = 4
+    WIRKSAM = 5
+class ETCS_FUNKSTATUS(Enum):
+    KEINE_VERBINDUNG = 0
+    WIRD_AUFGEBAUT = 1
+    AUFGEBAUT = 2
+    NEUAUFBAU = 3
+    EINWAHLFEHLER = 4
+    AUSGEFALLEN = 5
+    KEIN_NETZ = 6
+    KANN_NICHT_HERGESTELLT_WERDEN_STOERUNG = 7
+class ETCS_VORSCHAUHERKUNFT(Enum):
+    UNBEKANNT = 0
+    STRECKE = 1
+    HAUPTSIGNAL = 3
+    RANGIERSIGNAL = 9
+    ETCS = 14
+    INFRASTRUKTUR = 17
+class ETCS_VORSCHAUPARAMETER(Enum):
+    STROMABNEHMER_HEBEN = 2
+    STROMABNEHMER_SENKEN = 4
+    HAUPTSCHALTER_AUS = 6
+    HAUPTSCHALTER_EIN = 8
+class ETCS_TAF_STATUS(Enum):
+    KEIN_TAF_AKTIV = 0
+    WIRD_NOETIG = 1
+    ANGEFORDERT = 2
+    QUITTIERT = 3
+    ABGELEHNT = 4
+class ETCS_NOTHALT_STATUS(Enum):
+    KEIN = 0
+    BEDINGT_AKTIV = 1
+    UNBEDINGT_AKTIV = 2
+class ETCS_EL_AUFTRAG(Enum):
+    UNBEKANNT = 0
+    ANKUENDIGUNG_HAUPTSCHALTER_AUS = 1
+    HAUPTSCHALTER_AUS = 2
+    HAUPTSCHALTER_EIN = 3
+    ANKUENDIGUNG_STROMABNEHMER_SENKEN = 8
+    STROMABNEHMER_SENKEN = 9
+    STROMABNEHMER_HEBEN = 10
+class ETCS_FUNKTIONSPRUEFUNG(Enum):
+    NORMAL = 0
+    BREMSEINGRIFF_ETCS = 1
+    SONSTIGER_BREMSEINGRIFF = 2
+    QUITTIERUNG_ERWARTET = 3
+    ERFOLGREICH = 4
+    NICHT_ERFOLGREICH = 5
+class ETCS_BOOTVORGANG(Enum):
+    UNBEKANNT = 0
+    START_SF_HL_ENTLUEFTET = 1
+    DISPLAY_ERLISCHT = 2
+    HL_FUELLT_MODUS_SB = 3
+    SELBSTTEST_OK = 4
+    STM_WERDEN_GEFUNDEN = 5
+STATUS_ETCS_BETRIEBSDATEN = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['aktiver_level', 'aktiver_modus', 'grund_zwangsbremsung', 'grund_zwangsbremsung_text', 'aktueller_stm_index', 'neuer_level', 'neuer_level_quittierung', 'neuer_modus', 'neuer_modus_quittierung', 'funkstatus', 'zielgeschwindigkeit', 'zielweg', 'abstand_bremseinsatzpunkt', 'entlassungsgeschwindigkeit', 'sollgeschwindigkeit', 'warngeschwindigkeit', 'bremsgeschwindigkeit', 'zwangsbremsgeschwindigkeit', 'bremskurve_aktiv', 'vorschaupunkte', 'taf_status', 'override_aktiv', 'nothalt_status', 'betriebszwangsbremsung', 'etcs_el_auftrag', 'funktionspruefung', 'bootvorgang', 'textmeldung_grund', 'textmeldung_freitext'], defaults=[None] * 29)
+STATUS_ETCS_BETRIEBSDATEN_VORSCHAUPUNKT = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['herkunft', 'geschwindigkeit', 'abstand', 'hoehenwert', 'parameter'], defaults=[None] * 5)
 llps[STATUS_ETCS_BETRIEBSDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 5), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 5, 1), 'aktiver_level', ContentType.WORD)
+    LLP(PID(2, 0x0a, 0x65, 5, 1), 'aktiver_level', ContentType.WORD, ETCS_LEVEL),
+    LLP(PID(2, 0x0a, 0x65, 5, 2), 'aktiver_modus', ContentType.WORD, ETCS_MODUS),
+    LLP(PID(2, 0x0a, 0x65, 5, 3), 'grund_zwangsbremsung', ContentType.WORD, ETCS_GRUND_ZWANGSBREMSUNG),
+    LLP(PID(2, 0x0a, 0x65, 5, 4), 'grund_zwangsbremsung_text', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 5, 5), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 5, 1), 'aktueller_stm_index', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 5, 6), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 6, 1), 'neuer_level', ContentType.WORD, ETCS_LEVEL),
+    LLP(PID(2, 0x0a, 0x65, 5, 6, 2), 'neuer_level_quittierung', ContentType.BYTE, ETCS_QUITTIERUNG),
+    LLP(PID(2, 0x0a, 0x65, 5, 7), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 7, 1), 'neuer_modus', ContentType.WORD, ETCS_MODUS),
+    LLP(PID(2, 0x0a, 0x65, 5, 7, 2), 'neuer_modus_quittierung', ContentType.BYTE, ETCS_QUITTIERUNG),
+    LLP(PID(2, 0x0a, 0x65, 5, 8), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 8, 1), 'funkstatus', ContentType.BYTE, ETCS_FUNKSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 5, 9), 'zielgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x0a), 'zielweg', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x0b), 'abstand_bremseinsatzpunkt', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x0c), 'entlassungsgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x0d), 'sollgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x0e), 'warngeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x0f), 'bremsgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x10), 'zwangsbremsgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x11), 'bremskurve_aktiv', ContentType.BYTE, JA_NEIN),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x12), 'vorschaupunkte', BasicNode, multipletimes=STATUS_ETCS_BETRIEBSDATEN_VORSCHAUPUNKT),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x12, 1), 'herkunft', ContentType.WORD, ETCS_VORSCHAUHERKUNFT),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x12, 2), 'geschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x12, 3), 'abstand', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x12, 4), 'hoehenwert', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x12, 5), 'parameter', ContentType.WORD, ETCS_VORSCHAUPARAMETER),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x13), 'taf_status', ContentType.BYTE, ETCS_TAF_STATUS),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x14), 'override_aktiv', ContentType.BYTE, JA_NEIN),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x15), 'nothalt_status', ContentType.BYTE, ETCS_NOTHALT_STATUS),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x16), 'betriebszwangsbremsung', ContentType.WORD, ETCS_GRUND_ZWANGSBREMSUNG),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x17), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x17, 1), 'etcs_el_auftrag', ContentType.BYTE, ETCS_EL_AUFTRAG),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x18), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x18, 1), 'funktionspruefung', ContentType.BYTE, ETCS_FUNKTIONSPRUEFUNG),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x19), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x19, 1), 'bootvorgang', ContentType.BYTE, ETCS_FUNKTIONSPRUEFUNG),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 1), 'textmeldung_grund', ContentType.WORD, ETCS_GRUND_ZWANGSBREMSUNG),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 1), 'textmeldung_freitext', ContentType.STRING, ETCS_FUNKTIONSPRUEFUNG)
 )
 msgidx[PID(2, 0x0a, 0x65, 5)] = STATUS_ETCS_BETRIEBSDATEN
 
