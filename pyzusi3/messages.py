@@ -1086,7 +1086,6 @@ llps[STATUS_ETCS_BETRIEBSDATEN] = (
 llps[STATUS_ETCS_BETRIEBSDATEN_VORSCHAUPUNKT] = llps[STATUS_ETCS_BETRIEBSDATEN]
 msgidx[PID(2, 0x0a, 0x65, 5)] = STATUS_ETCS_BETRIEBSDATEN
 
-
 #
 # STATUS_ZUB_EINSTELLUNGEN
 # Zusi -> Client (Submessage) 
@@ -1173,14 +1172,10 @@ llps[STATUS_ZBS_EINSTELLUNGEN] = (
     LLP(PID(2, 0x0a, 0x65, 8, 7), 'gewaehltes_altsystem', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 8, 8), 'zugneustart', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 8, 9), 'systemstatus', ContentType.BYTE, SYSTEMSTATUS),
-    LLP(PID(2, 0x0a, 0x65, 8, 0x0a), 'bauart', ContentType.STRING),
-
-    
-
+    LLP(PID(2, 0x0a, 0x65, 8, 0x0a), 'bauart', ContentType.STRING)
 )
 llps[STATUS_ZBS_EINSTELLUNGEN_ALTSYSTEM] = llps[STATUS_ZBS_EINSTELLUNGEN]
 msgidx[PID(2, 0x0a, 0x65, 8)] = STATUS_ZBS_EINSTELLUNGEN
-
 
 #
 # STATUS_ZBS_BETRIEBSDATEN
@@ -1231,7 +1226,6 @@ llps[STATUS_FAHRSPERRE_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65, 0x0b, 4), 'zaehler_ungewollte_vorbeifahrt', ContentType.CARDINAL)
 )
 msgidx[PID(2, 0x0a, 0x65, 0x0b)] = STATUS_FAHRSPERRE_BETRIEBSDATEN
-
 
 #
 # STATUS_TUEREN
