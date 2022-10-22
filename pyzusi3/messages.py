@@ -1181,14 +1181,31 @@ msgidx[PID(2, 0x0a, 0x65, 8)] = STATUS_ZBS_EINSTELLUNGEN
 # STATUS_ZBS_BETRIEBSDATEN
 # Zusi -> Client (Submessage) 
 #
-# FIXME Platzhalter, muss noch vollständig umgesetzt werden
-STATUS_ZBS_BETRIEBSDATEN = namedtuple("STATUS_ZBS_BETRIEBSDATEN", ['betriebszustand'], defaults=[None])
+class ZBS_ZWANGSBREMSUNG(Enum):
+    KEINE_ZWANGSBREMSUNG = 0
+    VMAX_UEBERWACHUNG = 6
+    FUNKTIONSPRUEFUNG = 7
+    RECHNERAUSFALL = 10
+    ZBS_HALT_UEBERFAHREN = 21
+    ZBS_BALISENSTOERUNG = 22
+    ZBS_ROLLUEBERWACHUNG = 23
+STATUS_ZBS_BETRIEBSDATEN = namedtuple("STATUS_ZBS_BETRIEBSDATEN", ['betriebszustand', 'grund_zwangsbremsung', 'aktives_altsystem', 'betriebszwangsbremsung', 'lm_ue', 'lm_g', 'lm_s', 'lm_a', 'zielgeschwindigkeit', 'freigabegeschwindigkeit', 'befehlsfahrt_aktiv'], defaults=[None] * 11)
 llps[STATUS_ZBS_BETRIEBSDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 9), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 9, 1), 'betriebszustand', ContentType.WORD)
+    LLP(PID(2, 0x0a, 0x65, 9, 1), 'betriebszustand', ContentType.WORD, ZBS_BETRIEBSZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 9, 2), 'grund_zwangsbremsung', ContentType.WORD, ZBS_ZWANGSBREMSUNG),
+    LLP(PID(2, 0x0a, 0x65, 9, 3), 'aktives_altsystem', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 9, 4), 'betriebszwangsbremsung', ContentType.WORD, ZBS_ZWANGSBREMSUNG),
+    LLP(PID(2, 0x0a, 0x65, 9, 5), 'lm_ue', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 9, 6), 'lm_g', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 9, 7), 'lm_s', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 9, 8), 'lm_a', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 9, 9), 'zielgeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 9, 0x0a), 'freigabegeschwindigkeit', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x65, 9, 0x0a), 'befehlsfahrt_aktiv', ContentType.BYTE)
 )
 msgidx[PID(2, 0x0a, 0x65, 9)] = STATUS_ZBS_BETRIEBSDATEN
 
