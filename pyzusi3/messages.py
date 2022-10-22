@@ -620,7 +620,7 @@ llps[STATUS_INDUSI_EINSTELLUNGEN] = (
     LLP(PID(2, 0x0a, 0x65, 2, 7), 'hauptschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x0a, 0x65, 2, 8), 'indusi_stoerschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0a), 'luftabsperrhahn', ContentType.BYTE, ABSPERRHAHN),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x0d), 'systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x0d), 'systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     LLP(PID(2, 0x0a, 0x65, 2, 0x0e), 'bauart', ContentType.STRING),
     # Indusi I60R/I80/PZB90
     LLP(PID(2, 0x0a, 0x65, 2, 2), 'tfnr', ContentType.STRING),
@@ -1177,7 +1177,7 @@ llps[STATUS_FAHRSPERRE_EINSTELLUNGEN] = (
     LLP(PID(2, 0x0a, 0x65, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 0x0a, 1), 'stoerschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x0a, 0x65, 0x0a, 2), 'hauptschalter', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x0a, 0x65, 0x0a, 3), 'systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 0x0a, 3), 'systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     LLP(PID(2, 0x0a, 0x65, 0x0a, 4), 'bauart', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x65, 0x0a, 8), 'zugneustart', ContentType.STRING)
 )
@@ -2065,7 +2065,7 @@ llps[INPUT] = (
     LLP(PID(2, 0x010a, 2, 2, 6, 4), 'lzb_a_vmz', ContentType.WORD),
     LLP(PID(2, 0x010a, 2, 2, 9), 'lzb_stoerschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x010a, 2, 2, 0x10), 'lzb_stoerschalterbaurt', ContentType.BYTE, INDUSI_STOERSCHALTERBAURT),
-    LLP(PID(2, 0x010a, 2, 2, 0x11), 'lzb_systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x010a, 2, 2, 0x11), 'lzb_systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     # ETCS
     # FIXME Platzhalter
     # ZBS
@@ -2074,7 +2074,7 @@ llps[INPUT] = (
     LLP(PID(2, 0x010a, 2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x010a, 2, 0x0a, 1), 'fahrsp_stoerschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x010a, 2, 0x0a, 2), 'fahrsp_hauptschalter', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x010a, 2, 0x0a, 3), 'fahrsp_systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x010a, 2, 0x0a, 3), 'fahrsp_systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     LLP(PID(2, 0x010a, 2, 0x0a, 4), 'fahrsp_bauart', ContentType.STRING),
     LLP(PID(2, 0x010a, 2, 0x0a, 8), 'fahrsp_zugneustart', ContentType.STRING),
     # Zugfunk
@@ -2144,7 +2144,6 @@ INPUT_INDUSI_FUNKTIONSPRUEFUNG_STARTEN = INDUSI_FUNKTIONSPRUEFUNG_STARTEN
 INPUT_INDUSI_KLARTEXTMELDUNGEN = INDUSI_KLARTEXTMELDUNGEN
 INPUT_INDUSI_MODUS = INDUSI_MODUS
 INPUT_INDUSI_STOERSCHALTERBAURT = INDUSI_STOERSCHALTERBAURT
-INPUT_INDUSI_SYSTEMSTATUS = INDUSI_SYSTEMSTATUS
 INPUT_INDUSI_ZUGART = INDUSI_ZUGART
 INPUT_ZUGFAHRDATEN_ABSPERRHAEHNE_HLL = ZUGFAHRDATEN_ABSPERRHAEHNE_HLL
 
