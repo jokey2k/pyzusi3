@@ -65,6 +65,7 @@ class TestInstantiation(unittest.TestCase):
         messages.STATUS_ZUB_EINSTELLUNGEN()
         messages.STATUS_ZUB_BETRIEBSDATEN()
         messages.STATUS_ZBS_EINSTELLUNGEN()
+        messages.STATUS_ZBS_EINSTELLUNGEN_ALTSYSTEM()
         messages.STATUS_ZBS_BETRIEBSDATEN()
         messages.STATUS_FAHRSPERRE_EINSTELLUNGEN()
         messages.STATUS_FAHRSPERRE_BETRIEBSDATEN()

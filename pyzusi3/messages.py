@@ -1138,17 +1138,49 @@ msgidx[PID(2, 0x0a, 0x65, 7)] = STATUS_ZUB_BETRIEBSDATEN
 # STATUS_ZBS_EINSTELLUNGEN
 # Zusi -> Client (Submessage) 
 #
-# FIXME Platzhalter, muss noch vollständig umgesetzt werden
-STATUS_ZBS_EINSTELLUNGEN = namedtuple("STATUS_ZBS_EINSTELLUNGEN", ['index'], defaults=[None])
+class ZBS_BETRIEBSZUSTAND(Enum):
+    UNDEFINIERT = 0
+    AUS_KALTSTART = 1
+    AUS_WARMSTART = 2
+    SYSTEMHOCHLAUF = 3
+    TEST_AUFFORDERUNG = 4
+    TEST_LAEUFT = 5
+    B = 6
+    X = 7
+    Z = 8
+    R = 9
+    STOERBETRIEB = 10
+STATUS_ZBS_EINSTELLUNGEN = namedtuple("STATUS_ZBS_EINSTELLUNGEN", ['altsysteme', 'brh', 'zl', 'vmz', 'zugnummer', 'tfnummer', 'stoerschalter', 'hauptschalter', 'luftabsperrhahn', 'betriebszustand_anfordern', 'gewaehltes_altsystem', 'zugneustart', 'systemstatus', 'bauart'], defaults=[None] * 14)
+STATUS_ZBS_EINSTELLUNGEN_ALTSYSTEM = namedtuple("STATUS_ZBS_EINSTELLUNGEN_ALTSYSTEM", ['index', 'name'], defaults=[None] * 2)
 llps[STATUS_ZBS_EINSTELLUNGEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 8), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 8, 1), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 8, 1, 1), 'zustand', ContentType.WORD)
+    LLP(PID(2, 0x0a, 0x65, 8, 1), 'altsysteme', BasicNode, multipletimes=STATUS_ZBS_EINSTELLUNGEN_ALTSYSTEM),
+    LLP(PID(2, 0x0a, 0x65, 8, 1, 1), 'index', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 8, 1, 2), 'name', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 8, 2), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 8, 2, 1), 'brh', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 8, 2, 2), 'zl', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 8, 2, 3), 'vmz', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 8, 2, 4), 'zugnummer', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 8, 2, 5), 'tfnummer', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 8, 3), 'stoerschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 8, 4), 'hauptschalter', ContentType.BYTE, SCHALTER),
+    LLP(PID(2, 0x0a, 0x65, 8, 5), 'luftabsperrhahn', ContentType.BYTE, ABSPERRHAHN),
+    LLP(PID(2, 0x0a, 0x65, 8, 6), 'betriebszustand_anfordern', ContentType.WORD, ZBS_BETRIEBSZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 8, 7), 'gewaehltes_altsystem', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 8, 8), 'zugneustart', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 8, 9), 'systemstatus', ContentType.BYTE, SYSTEMSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 8, 0x0a), 'bauart', ContentType.STRING),
+
+    
+
 )
+llps[STATUS_ZBS_EINSTELLUNGEN_ALTSYSTEM] = llps[STATUS_ZBS_EINSTELLUNGEN]
 msgidx[PID(2, 0x0a, 0x65, 8)] = STATUS_ZBS_EINSTELLUNGEN
+
 
 #
 # STATUS_ZBS_BETRIEBSDATEN
