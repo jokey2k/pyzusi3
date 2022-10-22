@@ -746,8 +746,8 @@ STATUS_INDUSI_BETRIEBSDATEN = namedtuple("STATUS_INDUSI_BETRIEBSDATEN", [
     'm_500hz', 'm_befehl_an', 'lm_o', 'lm_m', 'lm_u', 'lm_500hz', 'lm_befehl',
     'zusatzinfo_melderbild',
     'm_zugart_links', 'm_zugart_65', 'm_zugart_rechts', 'lm_zugart_rechts', 'lm_zugart_65', 'lm_zugart_links',
-    'lzb_zustand', 'lzb_ende_verfahren', 'lzb_falschfahrauftrag', 'lzb_vorsichtsauftrag', 'lzb_zielgeschwindigkeit_ausfall', 'lzb_zielgeschwindigkeit_modus', 'lzb_zielweg_cir_elke', 'lzb_nothalt', 'lzb_nothalt_gesendet', 'lzb_rechnerausfall', 'lzb_el_auftag', 'm_h', 'm_e40', 'm_ende', 'm_b', 'm_ue', 'm_g', 'm_el', 'm_v40', 'm_s', 'm_pruef_stoer', 'lzb_sollgeschwindigkeit', 'lzb_zielgeschwindigkeit', 'lzb_zielweg', 'lm_g', 'lm_pruef_stoer', 'lzb_cir_elke_modus', 'lzb_anzeigemodus', 'lm_h', 'lm_e40', 'lm_ende', 'lm_b', 'lm_ue', 'lm_el', 'lm_v40', 'lm_s'
-    ], defaults=([None] * 62))
+    'lzb_zustand', 'lzb_ende_verfahren', 'lzb_falschfahrauftrag', 'lzb_vorsichtsauftrag', 'lzb_zielgeschwindigkeit_ausfall', 'lzb_zielgeschwindigkeit_modus', 'lzb_zielweg_cir_elke', 'lzb_nothalt', 'lzb_nothalt_gesendet', 'lzb_rechnerausfall', 'lzb_el_auftag', 'm_h', 'm_e40', 'm_ende', 'm_b', 'm_ue', 'm_g', 'm_el', 'm_v40', 'm_s', 'm_pruef_stoer', 'lzb_sollgeschwindigkeit', 'lzb_zielgeschwindigkeit', 'lzb_zielweg', 'lm_g', 'lm_pruef_stoer', 'lzb_cir_elke_modus', 'lzb_anzeigemodus', 'alle_blinken', 'zeigt_fuehrungsgroessen', 'b_an_ue_aus', 'zwangsbremsung_aktiv', 'quittierung_erwartet', 'lm_h', 'lm_e40', 'lm_ende', 'lm_b', 'lm_ue', 'lm_el', 'lm_v40', 'lm_s'
+    ], defaults=([None] * 67))
 llps[STATUS_INDUSI_BETRIEBSDATEN] = (
     # Indusi Analogsysteme und Basisdaten
     LLP(PID(2), None, BasicNode),
@@ -821,12 +821,12 @@ llps[STATUS_INDUSI_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65, 3, 0x25), 'lm_pruef_stoer', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x26), 'lzb_cir_elke_modus', ContentType.BYTE, INDUSI_LZB_CIR_ELKE_MODUS),
     LLP(PID(2, 0x0a, 0x65, 3, 0x27), 'lzb_anzeigemodus', ContentType.BYTE, INDUSI_LZB_ANZEIGEMODUS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x28), None, BasicNode), # Funktionsprüfung läuft # FIXME how?????
-    LLP(PID(2, 0x0a, 0x65, 3, 0x28,1), None, BasicNode), # Alle Melder blinken
-    LLP(PID(2, 0x0a, 0x65, 3, 0x28,2), None, BasicNode), # Anzeige der Führungsgrößen
-    LLP(PID(2, 0x0a, 0x65, 3, 0x28,3), None, BasicNode), # B ist an, Ü ist aus
-    LLP(PID(2, 0x0a, 0x65, 3, 0x28,4), None, BasicNode), # Zwangsbremsung aktiv
-    LLP(PID(2, 0x0a, 0x65, 3, 0x28,5), None, BasicNode), # Quittierung erwartet
+    LLP(PID(2, 0x0a, 0x65, 3, 0x28), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x28, 1), 'alle_blinken', BasicNode, nodeasbool=True),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x28, 2), 'zeigt_fuehrungsgroessen', BasicNode, nodeasbool=True),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x28, 3), 'b_an_ue_aus', BasicNode, nodeasbool=True),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x28, 4), 'zwangsbremsung_aktiv', BasicNode, nodeasbool=True),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x28, 5), 'quittierung_erwartet', BasicNode, nodeasbool=True),
     LLP(PID(2, 0x0a, 0x65, 3, 0x38), 'lm_h', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x39), 'lm_e40', ContentType.BYTE, LMZUSTAND),
     LLP(PID(2, 0x0a, 0x65, 3, 0x3a), 'lm_ende', ContentType.BYTE, LMZUSTAND),
