@@ -136,11 +136,12 @@ class MainWindow(QMainWindow):
         if zusimsg.DATA_FTD in self.zusiClient.local_state:
             state = self.zusiClient.local_state[zusimsg.DATA_FTD]
 
-            stunde = int(state.uhrzeit_stunde)
-            minute = state.uhrzeit_minute
-            sekunde = int((minute - int(minute))*0.6*100)
-            minute = int(minute)
-            self.ui.uhrzeit.setText("%s:%s:%s" % (str(stunde).zfill(2), str(minute).zfill(2), str(sekunde).zfill(2)))
+            if state.uhrzeit_stunde is not None and state.uhrzeit_minute is not None:
+                stunde = int(state.uhrzeit_stunde)
+                minute = state.uhrzeit_minute
+                sekunde = int((minute - int(minute))*0.6*100)
+                minute = int(minute)
+                self.ui.uhrzeit.setText("%s:%s:%s" % (str(stunde).zfill(2), str(minute).zfill(2), str(sekunde).zfill(2)))
 
             self.ui.geschwindigkeit.setText(str(int(round(state.geschwindigkeit*3.6))))
             # enable cheat: self.ui.sollgeschwindigkeit.setText(str(int(state.streckenvmax*3.6)))
