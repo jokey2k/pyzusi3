@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGroupBox, QLabel, QLineEdit,
-    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStatusBar, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QGroupBox, QLabel,
+    QLineEdit, QMainWindow, QMenuBar, QPushButton,
+    QSizePolicy, QStatusBar, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -201,10 +201,13 @@ class Ui_MainWindow(object):
         self.label_4 = QLabel(self.centralwidget)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setGeometry(QRect(230, 210, 51, 16))
+        self.sollgeschwindigkeit_check = QCheckBox(self.centralwidget)
+        self.sollgeschwindigkeit_check.setObjectName(u"sollgeschwindigkeit_check")
+        self.sollgeschwindigkeit_check.setGeometry(QRect(360, 210, 85, 20))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 590, 24))
+        self.menubar.setGeometry(QRect(0, 0, 590, 33))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -242,5 +245,6 @@ class Ui_MainWindow(object):
         self.label_19.setText(QCoreApplication.translate("MainWindow", u"Ladezustand:", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Bremsdruck:", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Max:", None))
+        self.sollgeschwindigkeit_check.setText(QCoreApplication.translate("MainWindow", u"zeigen", None))
     # retranslateUi
 

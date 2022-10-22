@@ -654,6 +654,19 @@
      <string>Max:</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="sollgeschwindigkeit_check">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>210</y>
+      <width>85</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>zeigen</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -661,7 +674,7 @@
      <x>0</x>
      <y>0</y>
      <width>590</width>
-     <height>24</height>
+     <height>33</height>
     </rect>
    </property>
   </widget>
