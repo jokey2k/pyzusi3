@@ -1194,9 +1194,9 @@ llps[STATUS_FAHRSPERRE_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 0x0b), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'melder', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'zwangsbremsung', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'zaehler_gewollte_vorbeifahrt', ContentType.CARDINAL),
-    LLP(PID(2, 0x0a, 0x65, 0x0b, 1), 'zaehler_ungewollte_vorbeifahrt', ContentType.CARDINAL)
+    LLP(PID(2, 0x0a, 0x65, 0x0b, 2), 'zwangsbremsung', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 0x0b, 3), 'zaehler_gewollte_vorbeifahrt', ContentType.CARDINAL),
+    LLP(PID(2, 0x0a, 0x65, 0x0b, 4), 'zaehler_ungewollte_vorbeifahrt', ContentType.CARDINAL)
 )
 msgidx[PID(2, 0x0a, 0x65, 0x0b)] = STATUS_FAHRSPERRE_BETRIEBSDATEN
 
