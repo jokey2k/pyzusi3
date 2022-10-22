@@ -1114,7 +1114,7 @@ msgidx[PID(2, 0x0a, 0x65, 6)] = STATUS_ZUB_EINSTELLUNGEN
 # STATUS_ZUB_BETRIEBSDATEN
 # Zusi -> Client (Submessage) 
 #
-STATUS_ZUB_BETRIEBSDATEN = namedtuple("STATUS_ZUB_BETRIEBSDATEN", ['aktiver_level'], defaults=[None])
+STATUS_ZUB_BETRIEBSDATEN = namedtuple("STATUS_ZUB_BETRIEBSDATEN", ['m_gnt', 'm_gnt_ue', 'm_gnt_g', 'm_gnt_s', 'm_gnt_gst', 'm_gnt_gst_stoer', 'lm_gnt_ue', 'lm_gnt_g', 'lm_gnt_s', 'zwangsbremsung', 'zwangsbremsung_aktiv'], defaults=[None] * 11)
 llps[STATUS_ZUB_BETRIEBSDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
