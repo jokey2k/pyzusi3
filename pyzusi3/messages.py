@@ -73,6 +73,11 @@ class ABSPERRHAHN(Enum):
 class JA_NEIN(Enum):
     NEIN = 0
     JA = 1
+class SYSTEMSTATUS(Enum):
+    AUSGESCHALTET = 0
+    ABGESCHALTET = 1
+    UNTERDRUECKT = 2
+    AKTIV = 3
 #
 # HELLO
 # Client -> Zusi
@@ -583,11 +588,6 @@ class INDUSI_ZUGART(Enum):
     M = 3
     O = 4
     S_BAHN = 5
-class INDUSI_SYSTEMSTATUS(Enum):
-    AUSGESCHALTET = 0
-    ABGESCHALTET = 1
-    UNTERDRUECKT = 2
-    AKTIV = 3
 class INDUSI_MODUS(Enum):
     UNDEFINIERT = 0
     GRUNDDATEN = 4
@@ -650,7 +650,7 @@ llps[STATUS_INDUSI_EINSTELLUNGEN] = (
     LLP(PID(2, 0x0a, 0x65, 2, 6, 4), 'a_vmz', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x65, 2, 9), 'lzb_stoerschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x0a, 0x65, 2, 0x10), 'lzb_stoerschalterbaurt', ContentType.BYTE, INDUSI_STOERSCHALTERBAURT),
-    LLP(PID(2, 0x0a, 0x65, 2, 0x11), 'lzb_systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x0a, 0x65, 2, 0x11), 'lzb_systemstatus', ContentType.BYTE, SYSTEMSTATUS),
 )
 msgidx[PID(2, 0x0a, 0x65, 2)] = STATUS_INDUSI_EINSTELLUNGEN
 
@@ -2035,7 +2035,7 @@ llps[INPUT] = (
     LLP(PID(2, 0x010a, 2, 2, 7), 'indusi_hauptschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x010a, 2, 2, 8), 'indusi_stoerschalter', ContentType.BYTE, SCHALTER),
     LLP(PID(2, 0x010a, 2, 2, 0x0a), 'indusi_luftabsperrhahn', ContentType.BYTE, SCHALTER),
-    LLP(PID(2, 0x010a, 2, 2, 0x0d), 'indusi_systemstatus', ContentType.BYTE, INDUSI_SYSTEMSTATUS),
+    LLP(PID(2, 0x010a, 2, 2, 0x0d), 'indusi_systemstatus', ContentType.BYTE, SYSTEMSTATUS),
     LLP(PID(2, 0x010a, 2, 2, 0x0e), 'indusi_bauart', ContentType.STRING),
     # Indusi I60R/I80/PZB90
     LLP(PID(2, 0x010a, 2, 2, 2), 'indusi_tfnr', ContentType.STRING),
