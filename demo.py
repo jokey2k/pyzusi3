@@ -119,6 +119,54 @@ log.info("Sending LZB empty message")
 sock.sendall(message)
 log.info("Waiting for response")
 data = b""
+
+
+
+
+
+
+
+while True:
+    data += sock.recv(4096)
+    if data.endswith(b"\xFF\xFF\xFF\xFF"):
+        break
+
+log.debug("Got response with length %s" % len(data))
+
+
+
+message = b"\x00\x00\x00\x00"  # Knoten Start
+message += b"\x02\x00"  # ID 2 CLient Anwendung
+message += b"\x00\x00\x00\x00"  # Knoten Start
+message += b"\x0b\x01"  # Input Befehl
+message += b"\x00\x00\x00\x00"  # Knoten Start
+message += b"\x01\x00"  # Zugbeeinflussung einstellen x0002
+message += b"\x03\x00\x00\x00"  # Knoten Start
+message += b"\x07\x00"  # System aus der Indusi-Familie
+message += b"\x01"
+message += b"\xFF\xFF\xFF\xFF"  # Knoten Ende
+message += b"\xFF\xFF\xFF\xFF"  # Knoten Ende
+message += b"\xFF\xFF\xFF\xFF"  # Knoten Ende
+
+
+
+
+
+
+
+
+log.info("Sending LZB empty message")
+sock.sendall(message)
+log.info("Waiting for response")
+data = b""
+
+
+
+
+
+
+
+
 while True:
     data += sock.recv(1)
     if data.endswith(b"\xFF\xFF\xFF\xFF"):
@@ -298,6 +346,7 @@ async def zusitalk(ip, port):
                 pzb_haupt_gesendet = 0
                 sifa_haupt_gesendet = 0
                 sifa_stoer_gesendet = 0
+                rischa_gesendet = 1
                 definition = 1
 
             print(states)
@@ -336,6 +385,31 @@ async def zusitalk(ip, port):
                 log.info("Sending LZB off message")
                 # if name in states_alt and states_alt[name] == 1:
                 sock.sendall(message)
+            name = "rischa"
+            if name in states and states[name] == 1 and rischa_gesendet == 1:
+                rischa_gesendet = 0
+                print("rischa1")
+                log.debug("Preparing to send rischa message")
+                message = b"\x00\x00\x00\x00"  # Knoten Start
+                message += b"\x02\x00"  # ID 2 CLient Anwendung
+                message += b"\x00\x00\x00\x00"  # Knoten Start
+                message += b"\x0b\x01"  # Input Befehl
+                message += b"\x00\x00\x00\x00"  # Knoten Start
+                message += b"\x01\x00"  # Zugbeeinflussung einstellen x0002
+                message += b"\x03\x00\x00\x00"  # Knoten Start
+                message += b"\x07\x00"  # System aus der Indusi-Familie
+                message += b"\x01"
+                message += b"\xFF\xFF\xFF\xFF"  # Knoten Ende
+                message += b"\xFF\xFF\xFF\xFF"  # Knoten Ende
+                message += b"\xFF\xFF\xFF\xFF"  # Knoten Ende
+
+
+                log.info("Sending rischa message")
+                # if name in states_alt and states_alt[name] == 1:
+                sock.sendall(message)
+
+
+
             if name in states and states[name] == 0 and lzb_stoer_gesendet == 0:
                 lzb_stoer_gesendet = 1
                 ser.write(b"A_01_00\n")
