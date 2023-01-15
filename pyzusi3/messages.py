@@ -61,6 +61,7 @@ class LMZUSTAND_MIT_INVERS(Enum):
     AN = 1
     BLINKEND = 2
     BLINKEND_INVERS = 3
+    DUNKEL = 4
 # Steuerschalter / Lufthahn
 class SCHALTER(Enum):
     UNBEKANNT = 0
@@ -765,14 +766,14 @@ llps[STATUS_INDUSI_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65, 3, 0x2c), 'beeinflussung_1000hz', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x2d), 'beeinflussung_500hz', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x2e), 'beeinflussung_2000hz',  ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x2f), 'lm_1000hz', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x2f), 'lm_1000hz', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     # Indusi I60R/I80/PZB90
     LLP(PID(2, 0x0a, 0x65, 3, 0x0A), 'm_500hz', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x0B), 'm_befehl_an', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 3, 0x30), 'lm_o', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x65, 3, 0x31), 'lm_m', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x65, 3, 0x32), 'lm_u', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
-    LLP(PID(2, 0x0a, 0x65, 3, 0x33), 'lm_500hz', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 3, 0x33), 'lm_500hz', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x65, 3, 0x34), 'lm_befehl', ContentType.BYTE, LMZUSTAND),
     # PZB90
     LLP(PID(2, 0x0a, 0x65, 3, 0x0C), 'zusatzinfo_melderbild', ContentType.BYTE, INDUSI_PZB90_ZUSATZINFO_MELDERBILD),

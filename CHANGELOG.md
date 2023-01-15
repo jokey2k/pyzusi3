@@ -1,3 +1,6 @@
+## Updated
+Changed STATUS_INDUSI_BETRIEBSDATEN so that 500Hz and 1000Hz add option to be in more states per https://forum.zusi.de/viewtopic.php?p=342503#p342503
+
 # 1.1.1 (2022-10-22)
 ## Updated
 Docs on README and CHANGELOG to be consistent across tar and website
