@@ -667,6 +667,35 @@
      <string>zeigen</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="autosifa_check">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>310</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Auto-Sifa aktivieren</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="autosifastatus">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>340</y>
+      <width>201</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -674,7 +703,7 @@
      <x>0</x>
      <y>0</y>
      <width>590</width>
-     <height>33</height>
+     <height>17</height>
     </rect>
    </property>
   </widget>

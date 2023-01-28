@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.3.2
+## Created by: Qt User Interface Compiler version 6.4.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -204,10 +204,18 @@ class Ui_MainWindow(object):
         self.sollgeschwindigkeit_check = QCheckBox(self.centralwidget)
         self.sollgeschwindigkeit_check.setObjectName(u"sollgeschwindigkeit_check")
         self.sollgeschwindigkeit_check.setGeometry(QRect(360, 210, 85, 20))
+        self.autosifa_check = QCheckBox(self.centralwidget)
+        self.autosifa_check.setObjectName(u"autosifa_check")
+        self.autosifa_check.setGeometry(QRect(360, 310, 151, 20))
+        self.autosifastatus = QLineEdit(self.centralwidget)
+        self.autosifastatus.setObjectName(u"autosifastatus")
+        self.autosifastatus.setGeometry(QRect(360, 340, 201, 21))
+        self.autosifastatus.setAlignment(Qt.AlignCenter)
+        self.autosifastatus.setReadOnly(True)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 590, 33))
+        self.menubar.setGeometry(QRect(0, 0, 590, 17))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -246,5 +254,6 @@ class Ui_MainWindow(object):
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Bremsdruck:", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Max:", None))
         self.sollgeschwindigkeit_check.setText(QCoreApplication.translate("MainWindow", u"zeigen", None))
+        self.autosifa_check.setText(QCoreApplication.translate("MainWindow", u"Auto-Sifa aktivieren", None))
     # retranslateUi
 

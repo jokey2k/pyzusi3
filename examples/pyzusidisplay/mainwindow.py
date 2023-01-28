@@ -1,4 +1,5 @@
 import asyncio
+from enum import Enum
 import logging
 import math
 import time
@@ -10,6 +11,14 @@ from pyzusi3.client import ZusiClient
 from pyzusi3 import messages as zusimsg
 
 from ui_form import Ui_MainWindow
+
+
+class AutoSifaState(Enum):
+    INACTIVE = 0
+    WAITING_FOR_REQUEST = 1
+    SEND_PEDAL_DOWN = 2
+    SEND_PEDAL_UP = 3
+
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -28,6 +37,10 @@ class MainWindow(QMainWindow):
 
         self.timer_ui_update = QTimer()
         self.timer_ui_update.timeout.connect(self.update_ui)
+
+        self.timer_autosifa = QTimer()
+        self.timer_autosifa.timeout.connect(self.autosifa_run)
+        self.autosifa_state = AutoSifaState.INACTIVE
 
     def reset_led(self):
         self.previous_led_state = {
@@ -145,7 +158,7 @@ class MainWindow(QMainWindow):
 
             if state.geschwindigkeit:
                 self.ui.geschwindigkeit.setText(str(int(round(state.geschwindigkeit*3.6))))
-            if self.ui.sollgeschwindigkeit_check.isChecked():
+            if self.ui.sollgeschwindigkeit_check.isChecked() and state.streckenvmax:
                 self.ui.sollgeschwindigkeit.setText(str(int(state.streckenvmax*3.6)))
             else:
                 self.ui.sollgeschwindigkeit.clear()
@@ -197,6 +210,41 @@ class MainWindow(QMainWindow):
             self.ui.tuerenlinks.setText(str(state.links.name if state.links is not None else ''))
             self.ui.tuerenrechts.setText(str(state.rechts.name if state.rechts is not None else ''))
 
+        self.ui.autosifastatus.setText(str(self.autosifa_state))
+
+    def autosifa_run(self):
+        if self.zusiClient is None:
+            self.autosifa_state = AutoSifaState.INACTIVE
+            return
+
+        if self.autosifa_state == AutoSifaState.INACTIVE and not self.ui.autosifa_check.isChecked():
+            return
+
+        if zusimsg.STATUS_SIFA not in self.zusiClient.local_state:
+            self.autosifa_state = AutoSifaState.INACTIVE
+            return
+
+        state = self.zusiClient.local_state[zusimsg.STATUS_SIFA]
+
+        if self.autosifa_state == AutoSifaState.INACTIVE:
+            if self.ui.autosifa_check.isChecked():
+                self.autosifa_state = AutoSifaState.WAITING_FOR_REQUEST
+        elif self.autosifa_state == AutoSifaState.WAITING_FOR_REQUEST:
+            if state.lm == zusimsg.LMZUSTAND.AN or \
+                state.hupe == zusimsg.STATUS_SIFA_HUPE.HUPE_WARNUNG or \
+                state.hupe == zusimsg.STATUS_SIFA_HUPE.HUPE_ZWANGSBREMSUNG:
+                self.autosifa_state = AutoSifaState.SEND_PEDAL_DOWN
+            elif not self.ui.autosifa_check.isChecked():
+                self.autosifa_state = AutoSifaState.INACTIVE
+        elif self.autosifa_state == AutoSifaState.SEND_PEDAL_DOWN:
+            msg = zusimsg.INPUT(zusimsg.INPUT_TASTATURZUORDNUNG.SIFA, zusimsg.INPUT_TASTATURKOMMANDO.Unbestimmt, zusimsg.INPUT_TASTATURAKTION.Down, tastatur_schalterposition=0)
+            self.zusiClient.send_input(msg)
+            self.autosifa_state = AutoSifaState.SEND_PEDAL_UP
+        elif self.autosifa_state == AutoSifaState.SEND_PEDAL_UP:
+            msg = zusimsg.INPUT(zusimsg.INPUT_TASTATURZUORDNUNG.SIFA, zusimsg.INPUT_TASTATURKOMMANDO.Unbestimmt, zusimsg.INPUT_TASTATURAKTION.Up, tastatur_schalterposition=0)
+            self.zusiClient.send_input(msg)
+            self.autosifa_state = AutoSifaState.WAITING_FOR_REQUEST
+
     def reset_textfields(self):
         self.ui.geschwindigkeit.clear()
         self.ui.druckhll.clear()
@@ -215,11 +263,13 @@ class MainWindow(QMainWindow):
         self.ui.zugnummer.clear()
         self.ui.fahrplan.clear()
         self.ui.ladezustand.clear()
+        self.ui.autosifastatus.clear()
 
     @Slot()
     def on_connectButton_clicked(self):
         self.ui.connectButton.setEnabled(False)
         self.timer_ui_update.start(500)
+        self.timer_autosifa.start(500)
         self.zusiThread = threading.Thread(target=lambda: self.run_zusi_loop(), daemon=True)
         self.zusiThread.start()
 
@@ -243,6 +293,7 @@ class MainWindow(QMainWindow):
                 zusimsg.FAHRPULT_ANZEIGEN.STATUS_SIFA,
                 zusimsg.FAHRPULT_ANZEIGEN.STATUS_ZUGBEEINFLUSSUNG
             ],
+            control=True,
             programdata=[
                 zusimsg.PROGRAMMDATEN.ZUGDATEI,
                 zusimsg.PROGRAMMDATEN.ZUGNUMMER,
