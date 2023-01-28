@@ -242,3 +242,8 @@ class ZusiClient:
         self.connected = False
 
         client_log.info("Connection closed")
+
+        # check if communication failed for a good reason
+        check_exc = reader_task.exception()
+        if not isinstance(check_exc, KeyboardInterrupt):
+            raise check_exc

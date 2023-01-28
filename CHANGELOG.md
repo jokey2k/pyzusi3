@@ -1,3 +1,6 @@
+## Updated
+When async client reader task raises an exception, it is no longer swallowed but reraised
+
 # 1.2.1 (2023-01-28)
 ## Updated
 Fix missing message mapping name in STATUS_TUEREN
