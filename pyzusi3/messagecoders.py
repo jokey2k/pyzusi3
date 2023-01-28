@@ -103,6 +103,20 @@ class MessageDecoder:
             # https://forum.zusi.de/viewtopic.php?f=55&t=18246
             return
 
+        if current_pid in [
+            ParameterId(2, 10, 171, 1, 10),
+            ParameterId(2, 10, 171, 1, 10, 1),
+            ParameterId(2, 10, 171, 1, 10, 2),
+            ParameterId(2, 10, 171, 1, 12),
+            ParameterId(2, 10, 171, 1, 13),
+            ParameterId(2, 10, 171, 1, 14),
+            ParameterId(2, 10, 171, None, None, 1),
+            ParameterId(2, 10, 171, None, None, 2),
+        ]:
+            # whitelist broken Zusi 3.5 beta message PIDs, will be fixed once API is known
+            # https://forum.zusi.de/viewtopic.php?f=73&t=18445
+            return
+
         mapping_parameter = sorted([param for param in self.lowlevel_parameter if param.parameterid == current_pid])
         if len(mapping_parameter) > 1:
             raise NotImplementedError("Parameter %s is not unique for %s, programming error!" % (current_pid, self.message_class))
