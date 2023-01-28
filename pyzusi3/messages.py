@@ -1267,8 +1267,8 @@ class TUEREN_SEITENWAHL(Enum):
     BEIDE = 3
 STATUS_TUEREN = namedtuple("STATUS_TUEREN", [
     'bauart','links', 'rechts', 'traktionssperre', 'zustand',
-    'seitenwahl', 'm_links', 'm_rechts', 'lm_links', 'lm_rechts', 'm_zwnagsschliessen', 'lm_zwangsschliessen', 'm_rechts_links', 'lm_rechts_links', 'm_zentrales_oeffnen_links', 'm_zentrales_oeffnen_rechts', 'lm_zentrales_oeffnen_links', 'lm_zentrales_oeffnen_rechts', 'm_gruenschleife'
-    ],defaults=[None] * 19)
+    'seitenwahl', 'm_links', 'm_rechts', 'lm_links', 'lm_rechts', 'm_zwnagsschliessen', 'lm_zwangsschliessen', 'm_rechts_links', 'lm_rechts_links', 'm_zentrales_oeffnen_links', 'm_zentrales_oeffnen_rechts', 'lm_zentrales_oeffnen_links', 'lm_zentrales_oeffnen_rechts', 'm_gruenschleife', 'lm_gruenschleife'
+    ],defaults=[None] * 20)
 llps[STATUS_TUEREN] = (
     # Grunddaten
     LLP(PID(2), None, BasicNode),

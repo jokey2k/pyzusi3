@@ -1,3 +1,6 @@
+## Updated
+Fix missing message mapping name in STATUS_TUEREN
+
 # 1.2.0 (2023-01-15)
 ## Updated
 Changed STATUS_INDUSI_BETRIEBSDATEN so that 500Hz and 1000Hz add option to be in more states per https://forum.zusi.de/viewtopic.php?p=342503#p342503
