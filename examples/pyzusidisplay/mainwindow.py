@@ -143,7 +143,8 @@ class MainWindow(QMainWindow):
                 minute = int(minute)
                 self.ui.uhrzeit.setText("%s:%s:%s" % (str(stunde).zfill(2), str(minute).zfill(2), str(sekunde).zfill(2)))
 
-            self.ui.geschwindigkeit.setText(str(int(round(state.geschwindigkeit*3.6))))
+            if state.geschwindigkeit:
+                self.ui.geschwindigkeit.setText(str(int(round(state.geschwindigkeit*3.6))))
             if self.ui.sollgeschwindigkeit_check.isChecked():
                 self.ui.sollgeschwindigkeit.setText(str(int(state.streckenvmax*3.6)))
             else:
