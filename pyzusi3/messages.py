@@ -1325,18 +1325,27 @@ class FAHRZEUG_SANDER(Enum):
 class FAHRZEUG_BREMSPROBEZUSTAND(Enum):
     NORMALBETRIEB = 0
     AKTIV = 1
-STATUS_FAHRZEUG = namedtuple("STATUS_FAHRZEUG", ['grund_nullstellungszwang', 'grund_traktionssperre', 'status_fahrschalter', 'status_dynamische_bremse', 'sanderzustand', 'bremsprobezustand', 'stellung_richtungsschalter'],defaults=[None] * 7)
+class FAHRZEUG_ANGLEICHERZUSTAND(Enum):
+    NORMALBETRIEB = 0
+    ANGLEICHER_FUELLT = 1
+    DRUCK_AUF_NORMALNIVEAU = 2
+class FAHRZEUG_LUFTPRESSERZUSTAND(Enum):
+    AUS = 0
+    ARBEITET = 1
+STATUS_FAHRZEUG = namedtuple("STATUS_FAHRZEUG", ['grund_nullstellungszwang', 'grund_traktionssperre', 'status_fahrschalter', 'status_dynamische_bremse', 'sanderzustand', 'bremsprobezustand', 'stellung_richtungsschalter', 'angleicherzustand', 'luftpresserzustand'], defaults=[None] * 7)
 llps[STATUS_FAHRZEUG] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x8d), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x8d,0x01), 'grund_nullstellungszwang', ContentType.WORD, FAHRZEUG_NULLSTELLUNGSZWANG),
-    LLP(PID(2, 0x0a, 0x8d,0x02), 'grund_traktionssperre', ContentType.WORD, FAHRZEUG_TRAKTIONSSPERRE),
-    LLP(PID(2, 0x0a, 0x8d,0x03), 'status_fahrschalter', ContentType.BYTE, FAHRZEUG_SCHALTERSTATUS),
-    LLP(PID(2, 0x0a, 0x8d,0x04), 'status_dynamische_bremse', ContentType.BYTE, FAHRZEUG_SCHALTERSTATUS),
-    LLP(PID(2, 0x0a, 0x8d,0x06), 'sanderzustand', ContentType.BYTE, FAHRZEUG_SANDER),
-    LLP(PID(2, 0x0a, 0x8d,0x07), 'bremsprobezustand', ContentType.WORD, FAHRZEUG_BREMSPROBEZUSTAND),
-    LLP(PID(2, 0x0a, 0x8d,0x08), 'stellung_richtungsschalter', ContentType.WORD)
+    LLP(PID(2, 0x0a, 0x8d, 0x01), 'grund_nullstellungszwang', ContentType.WORD, FAHRZEUG_NULLSTELLUNGSZWANG),
+    LLP(PID(2, 0x0a, 0x8d, 0x02), 'grund_traktionssperre', ContentType.WORD, FAHRZEUG_TRAKTIONSSPERRE),
+    LLP(PID(2, 0x0a, 0x8d, 0x03), 'status_fahrschalter', ContentType.BYTE, FAHRZEUG_SCHALTERSTATUS),
+    LLP(PID(2, 0x0a, 0x8d, 0x04), 'status_dynamische_bremse', ContentType.BYTE, FAHRZEUG_SCHALTERSTATUS),
+    LLP(PID(2, 0x0a, 0x8d, 0x06), 'sanderzustand', ContentType.BYTE, FAHRZEUG_SANDER),
+    LLP(PID(2, 0x0a, 0x8d, 0x07), 'bremsprobezustand', ContentType.WORD, FAHRZEUG_BREMSPROBEZUSTAND),
+    LLP(PID(2, 0x0a, 0x8d, 0x08), 'stellung_richtungsschalter', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x8d, 0x09), 'angleicherzustand', ContentType.WORD, FAHRZEUG_ANGLEICHERZUSTAND),
+    LLP(PID(2, 0x0a, 0x8d, 0x0a), 'luftpresserzustand', ContentType.WORD, FAHRZEUG_LUFTPRESSERZUSTAND)
 )
 msgidx[PID(2, 0x0a, 0x8d)] = STATUS_FAHRZEUG
 
