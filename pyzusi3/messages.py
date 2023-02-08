@@ -539,8 +539,8 @@ llps[STATUS_NOTBREMSSYSTEM] = (
     LLP(PID(2, 0x0a, 0x22, 3), 'm_system_bereit', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x22, 4), 'm_notbremsung', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x22, 5), 'modus', ContentType.BYTE, STATUS_NB_TEST),
-    LLP(PID(2, 0x0a, 0x22, 6), 'lm_system_bereit', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x22, 7), 'lm_notbremsung', ContentType.BYTE, LMZUSTAND)
+    LLP(PID(2, 0x0a, 0x22, 6), 'lm_system_bereit', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x22, 7), 'lm_notbremsung', ContentType.BYTE, LMZUSTAND_MIT_INVERS)
 )
 msgidx[PID(2, 0x0a, 0x22)] = STATUS_NOTBREMSSYSTEM
 
