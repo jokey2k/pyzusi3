@@ -1128,9 +1128,9 @@ llps[STATUS_ZUB_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65, 7, 4), 'm_gnt_s', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 7, 5), 'm_gnt_gst', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x65, 7, 6), 'm_gnt_gst_stoer', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x65, 7, 7), 'lm_gnt_ue', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 7, 8), 'lm_gnt_g', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x65, 7, 9), 'lm_gnt_s', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 7, 7), 'lm_gnt_ue', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 7, 8), 'lm_gnt_g', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x65, 7, 9), 'lm_gnt_s', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x65, 7, 0x0a), 'zwangsbremsung', ContentType.WORD, INDUSI_ZWANGSBREMSUNG),
     LLP(PID(2, 0x0a, 0x65, 7, 0x0b), 'zwangsbremsung_aktiv', ContentType.BYTE)
 )
@@ -1285,18 +1285,18 @@ llps[STATUS_TUEREN] = (
     LLP(PID(2, 0x0a, 0x66, 0x05), 'seitenwahl', ContentType.BYTE, TUEREN_SEITENWAHL),
     LLP(PID(2, 0x0a, 0x66, 0x06), 'm_links', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x66, 0x07), 'm_rechts', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66, 0x08), 'lm_links', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66, 0x09), 'lm_rechts', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x08), 'lm_links', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x66, 0x09), 'lm_rechts', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x66, 0x0a), 'm_zwnagsschliessen', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66, 0x0b), 'lm_zwangsschliessen', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x0b), 'lm_zwangsschliessen', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x66, 0x0c), 'm_rechts_links', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66, 0x0d), 'lm_rechts_links', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x0d), 'lm_rechts_links', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x66, 0x0e), 'm_zentrales_oeffnen_links', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x66, 0x0f), 'm_zentrales_oeffnen_rechts', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66, 0x10), 'lm_zentrales_oeffnen_links', ContentType.BYTE, LMZUSTAND),
-    LLP(PID(2, 0x0a, 0x66, 0x11), 'lm_zentrales_oeffnen_rechts', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x10), 'lm_zentrales_oeffnen_links', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
+    LLP(PID(2, 0x0a, 0x66, 0x11), 'lm_zentrales_oeffnen_rechts', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
     LLP(PID(2, 0x0a, 0x66, 0x12), 'm_gruenschleife', ContentType.BYTE),
-    LLP(PID(2, 0x0a, 0x66, 0x13), 'lm_gruenschleife', ContentType.BYTE, LMZUSTAND),
+    LLP(PID(2, 0x0a, 0x66, 0x13), 'lm_gruenschleife', ContentType.BYTE, LMZUSTAND_MIT_INVERS),
 )
 msgidx[PID(2, 0x0a, 0x66)] = STATUS_TUEREN
 
