@@ -1332,7 +1332,7 @@ class FAHRZEUG_ANGLEICHERZUSTAND(Enum):
 class FAHRZEUG_LUFTPRESSERZUSTAND(Enum):
     AUS = 0
     ARBEITET = 1
-STATUS_FAHRZEUG = namedtuple("STATUS_FAHRZEUG", ['grund_nullstellungszwang', 'grund_traktionssperre', 'status_fahrschalter', 'status_dynamische_bremse', 'sanderzustand', 'bremsprobezustand', 'stellung_richtungsschalter', 'angleicherzustand', 'luftpresserzustand'], defaults=[None] * 7)
+STATUS_FAHRZEUG = namedtuple("STATUS_FAHRZEUG", ['grund_nullstellungszwang', 'grund_traktionssperre', 'status_fahrschalter', 'status_dynamische_bremse', 'sanderzustand', 'bremsprobezustand', 'stellung_richtungsschalter', 'angleicherzustand', 'luftpresserzustand'], defaults=[None] * 9)
 llps[STATUS_FAHRZEUG] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
