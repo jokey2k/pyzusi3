@@ -1436,16 +1436,40 @@ class ZV_LASTABHAENIGE_BREMSE(Enum):
 class ZV_ZUGTYP(Enum):
     GUETERZUG = 0
     REISEZUG = 1
-STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBAND",['fz_dateiname', 'beschreibung', 'vorgabe_bremsstellung', 'bauart_zugbeeinflussungssystem', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbauart', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellung', 'zugehoerige_bremsmasse', 'bremsstellung_wirksam', 'bezeichnung_bremsbauart', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkenzeichen', 'bauart_tuersystem', 'bauart_tuerwachlschalter', 'antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv', 'bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'lastabhaehnige_bremse', 'zugtyp'],defaults=[None] * 46)
+class ZV_BREMSSPERRE(Enum):
+    NORMAL = 0
+    ABGESPERRT = 1
+class ZV_ABSPERRHAEHNE(Enum):
+    KEINE_DARSTELLUNG = 0
+    EIN_HAHN = 1
+    ZWEI_HAEHNE = 2
+class ZV_PULTAKTIVIERUNG(Enum):
+    KEINE_DARSTELLUNG = 0
+    LEUCHTDRUCKTASTER = 1
+    MIT_BATTERIESCHALTER_KOMBINIERT = 2
+class ZV_BREMSPROBE(Enum):
+    KEINE_DARSTELLUNG = 0
+    DRUCKTASTER = 1
+class ZV_BATTERIEANZEIGE(Enum):
+    KEINE_DARSTELLUNG = 0
+    QUADRATISCH = 1
+    RUND = 2
+STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBAND", ['fahrzeuge', 'zugtyp', 'bremsstellung'], defaults=[None] * 3)
+STATUS_ZUGVERBAND_FAHRZEUG = namedtuple("STATUS_ZUGVERBAND_FAHRZEUG", ['beschreibung', 'fz_dateiname', 'vorgabe_bremsstellung', 'zugbeeinflussungssysteme', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbauart', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellungen', 'bezeichnung_bremsbauart', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkenzeichen', 'tuersysteme', 'bauart_tuerwachlschalter', 'antriebssysteme', 'bremssysteme', 'lastabhaehnige_bremse', 'direkte_bremse_1', 'direkte_bremse_2', 'indirekte_bremse_1', 'indirekte_bremse_2', 'federspeicher_bremse_1', 'federspeicher_bremse_2', 'absperrung_direkte_bremse', 'absperrung_indirekte_bremse', 'absperrung_federspeicher_bremse', 'schalter_pultaktivierung', 'schalter_bremsprobe', 'batteriespannung', 'batteriespannungsanzeige', 'stellung_tuersystemschalter', 'bremskraft_handbremse'], defaults=[None] * 54)
+STATUS_ZUGVERBAND_ZUGBEEINFLUSSUNGSSYSTEME = namedtuple("STATUS_ZUGVERBAND_ZUGBEEINFLUSSUNGSSYSTEME", ['bauart_zugbeeinflussungssystem'], defaults=[None] * 1)
+STATUS_ZUGVERBAND_TUERSCHLIESSSYSTEM = namedtuple("STATUS_ZUGVERBAND_TUERSCHLIESSSYSTEM", ['bauart_tuersystem'], defaults=[None] * 1)
+STATUS_ZUGVERBAND_BREMSSTELLUNG = namedtuple("STATUS_ZUGVERBAND_BREMSSTELLUNG", ['bremsstellung', 'zugehoerige_bremsmasse', 'bremsstellung_wirksam'], defaults=[None] * 3)
+STATUS_ZUGVERBAND_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGVERBAND_ANTRIEBSSYSTEM", ['antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv'], defaults=[None] * 3)
+STATUS_ZUGVERBAND_BREMSSYSTEM = namedtuple("STATUS_ZUGVERBAND_BREMSSYSTEM", ['bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'max_kraft'], defaults=[None] * 4)
 llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
     LLP(PID(2, 0x0a, 0x8e), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x8e, 0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8e, 0x01), 'fahrzeuge', BasicNode, multipletimes=STATUS_ZUGVERBAND_FAHRZEUG),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x01), 'fz_dateiname', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x02), 'beschreibung', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x03), 'vorgabe_bremsstellung', ContentType.WORD, ZV_BREMSART),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x04), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x04), 'zugbeeinflussungssysteme', BasicNode, multipletimes=STATUS_ZUGVERBAND_ZUGBEEINFLUSSUNGSSYSTEME),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x04, 0x01), 'bauart_zugbeeinflussungssystem', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x05), 'fz_vmax', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x06), 'baureihe', ContentType.STRING),
@@ -1469,7 +1493,7 @@ llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x18), 'anzahl_achsen', ContentType.WORD),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x19), 'bauart_batteriehauptschalter', ContentType.BYTE, ZV_BATTERIEHAUPTSCHALTER),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1a), 'bauart_stromabnehmerwahlschalter', ContentType.BYTE, ZV_STROMABNEHMERWAHLSCHALTER),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b), 'bremsstellungen', BasicNode, multipletimes=STATUS_ZUGVERBAND_BREMSSTELLUNG),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b, 0x01), 'bremsstellung', ContentType.BYTE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b, 0x02), 'zugehoerige_bremsmasse', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x1b, 0x03), 'bremsstellung_wirksam', ContentType.BYTE, ZV_BREMSSTELLUNG),
@@ -1480,20 +1504,43 @@ llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x20), 'lokstatus', ContentType.BYTE, ZV_LOKSTATUS),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x21), 'interne_fz_nr', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x22), 'gefahrgutkenzeichen', ContentType.STRING),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x23), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x23), 'tuersysteme', BasicNode, multipletimes=STATUS_ZUGVERBAND_TUERSCHLIESSSYSTEM),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x23, 0x01), 'bauart_tuersystem', ContentType.STRING),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x24), 'bauart_tuerwachlschalter', ContentType.BYTE, ZV_TUERSCHALTER),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25), 'antriebssysteme', BasicNode, multipletimes=STATUS_ZUGVERBAND_ANTRIEBSSYSTEM),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x01), 'antriebstyp', ContentType.BYTE, ZV_ANTRIEBSTYP),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x02), 'stromtyp_antriebssystem', ContentType.BYTE, ZV_STROMTYP),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x03), 'antrieb_aktiv', ContentType.BYTE, ZV_AKTIV),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26), 'bremssysteme', BasicNode, multipletimes=STATUS_ZUGVERBAND_BREMSSYSTEM),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x01), 'bremstyp', ContentType.BYTE, ZV_BREMSTYP),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x02), 'stromtyp_bremse', ContentType.BYTE, ZV_STROMTYP),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x03), 'bremse_aktiv', ContentType.BYTE, ZV_AKTIV),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x04), 'max_kraft', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x27), 'lastabhaehnige_bremse', ContentType.BYTE, ZV_LASTABHAENIGE_BREMSE),
-    LLP(PID(2, 0x0a, 0x8e, 0x02), 'zugtyp', ContentType.BYTE, ZV_ZUGTYP)
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x28), 'direkte_bremse_1', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x29), 'direkte_bremse_2', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x2a), 'indirekte_bremse_1', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x2b), 'indirekte_bremse_2', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x2c), 'federspeicher_bremse_1', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x2d), 'federspeicher_bremse_2', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x2e), 'absperrung_direkte_bremse', ContentType.BYTE, ZV_ABSPERRHAEHNE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x2f), 'absperrung_indirekte_bremse', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x30), 'absperrung_federspeicher_bremse', ContentType.BYTE, ZV_BREMSSPERRE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x31), 'schalter_pultaktivierung', ContentType.BYTE, ZV_PULTAKTIVIERUNG),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x32), 'schalter_bremsprobe', ContentType.BYTE, ZV_BREMSPROBE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x33), 'batteriespannung', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x34), 'batteriespannungsanzeige', ContentType.BYTE, ZV_BATTERIEANZEIGE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x35), 'stellung_tuersystemschalter', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x35), 'bremskraft_handbremse', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x8e, 0x02), 'zugtyp', ContentType.BYTE, ZV_ZUGTYP),
+    LLP(PID(2, 0x0a, 0x8e, 0x03), 'bremsstellung', ContentType.WORD, ZV_BREMSART)
 )
+llps[STATUS_ZUGVERBAND_FAHRZEUG] = llps[STATUS_ZUGVERBAND]
+llps[STATUS_ZUGVERBAND_ZUGBEEINFLUSSUNGSSYSTEME] = llps[STATUS_ZUGVERBAND]
+llps[STATUS_ZUGVERBAND_TUERSCHLIESSSYSTEM] = llps[STATUS_ZUGVERBAND]
+llps[STATUS_ZUGVERBAND_BREMSSTELLUNG] = llps[STATUS_ZUGVERBAND]
+llps[STATUS_ZUGVERBAND_ANTRIEBSSYSTEM] = llps[STATUS_ZUGVERBAND]
+llps[STATUS_ZUGVERBAND_BREMSSYSTEM] = llps[STATUS_ZUGVERBAND]
 msgidx[PID(2, 0x0a, 0x8e)] = STATUS_ZUGVERBAND
 
 #
