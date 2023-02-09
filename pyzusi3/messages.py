@@ -1660,9 +1660,9 @@ class ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION(Enum):
     NICHT_BESTROMT = 1
     HEBT_NICHT = 2
 STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'], defaults=[None] * 1)
-STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'motordrehzahl_2'],defaults=[None] * 8)
+STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'antriebssysteme', 'dynamische_bremssysteme', 'bremszylinderdruck_2', 'absperrhaehne', 'magnetschienenbremse', 'feststellbremse', 'magnetbremsenmanipulation'],defaults=[None] * 14)
 STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM",['lfdnr', 'zugkraft', 'dieselmotordrehzahl', 'dieselmotorstatus'], defaults=[None] * 4)
-STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM",['lfdnr'], defaults=[None])
+STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM",['lfdnr', 'unused_undocumented_stuff'], defaults=[None] * 2)
 llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -1682,16 +1682,15 @@ llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x04), 'dieselmotorstatus', ContentType.BYTE, ZUGFAHRDATEN_DIESELMOTORSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b), 'dynamische_bremssysteme', BasicNode, multipletimes=STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x01), 'lfdnr', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x02), 'unused_undocumented_stuff', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0c), 'bremszylinderdruck_2', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0d), 'absperrhaehne', ContentType.BYTE, ZUGFAHRDATEN_HAHNSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0e), 'magnetschienenbremse', ContentType.BYTE, ZUGFAHRDATEN_MAGNETBREMSSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0f), 'feststellbremse', ContentType.BYTE, ZUGFAHRDATEN_FESTSTELLBREMSSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x10), 'magnetbremsenmanipulation', ContentType.BYTE, ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION),
-    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0d), 'absperrhaehne', ContentType.BYTE, ZUGFAHRDATEN_HAHNSTATUS),
-
-    ##### FIXME
 )
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG] = llps[STATUS_ZUGFAHRDATEN]
+llps[STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM] = llps[STATUS_ZUGFAHRDATEN]
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM] = llps[STATUS_ZUGFAHRDATEN]
 msgidx[PID(2, 0x0a, 0xab)] = STATUS_ZUGFAHRDATEN
 
