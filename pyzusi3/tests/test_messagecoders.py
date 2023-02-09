@@ -331,7 +331,6 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
                     maximal_moegliche_zugkraft=41262.99609375,
                     maximale_dynamische_bremskraft=18000.0,
                     motordrehzahl_1=0.0,
-                    motordrehzahl_2=0.0,
                     zugkraft=0.0),
                 messages.STATUS_ZUGFAHRDATEN_FAHRZEUG(
                     absperrhaehne_hll = messages.ZUGFAHRDATEN_ABSPERRHAEHNE_HLL.STANDARD,
@@ -340,7 +339,6 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
                     maximal_moegliche_zugkraft=41262.99609375,
                     maximale_dynamische_bremskraft=18000.0,
                     motordrehzahl_1=0.0,
-                    motordrehzahl_2=0.0,
                     zugkraft=0.0),
             ]
         )

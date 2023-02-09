@@ -1634,8 +1634,35 @@ class ZUGFAHRDATEN_ABSPERRHAEHNE_HLL(Enum):
     BEIDE_HAEHNE_OFFEN = 3
     BEIDE_HAEHNE_ZU = 4
     STANDARD_WIEDERHERSTELLEN = 5
-STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'], defaults=[None])
-STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'motordrehzahl_2'],defaults=[None,None,None,None,None,None,None,None])
+class ZUGFAHRDATEN_DIESELMOTORSTATUS(Enum):
+    STEHT = 0
+    LAEUFT = 1
+    STARTET = 2
+    STELLT_AB = 3
+class ZUGFAHRDATEN_HAHNSTATUS(Enum):
+    STANDARD = 0
+    VORNE_GEOEFFNET = 1
+    HINTEN_GEOEFFNET = 2
+    BEIDE_GEOEFFNET = 3
+    BEIDE_ZU = 4
+class ZUGFAHRDATEN_MAGNETBREMSSTATUS(Enum):
+    UNBEKANNT = 0
+    MAGNET_OBEN_NICHT_BESTROMT = 1
+    MAGNET_UNTEN_NICHT_BESTROMT = 2
+    MAGNET_OBEN_BESTROMT = 3
+    MAGNET_UNTEN_BESTROMT = 4
+class ZUGFAHRDATEN_FESTSTELLBREMSSTATUS(Enum):
+    UNBEKANNT = 0
+    GELOEST = 1
+    ANGELEGT = 2
+class ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION(Enum):
+    SENKT_NICHT_AB = 0
+    NICHT_BESTROMT = 1
+    HEBT_NICHT = 2
+STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'], defaults=[None] * 1)
+STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'motordrehzahl_2'],defaults=[None] * 8)
+STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM",['lfdnr', 'zugkraft', 'dieselmotordrehzahl', 'dieselmotorstatus'], defaults=[None] * 4)
+STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM",['lfdnr'], defaults=[None])
 llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -1648,9 +1675,24 @@ llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x05),'maximal_moegliche_zugkraft',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x06),'maximale_dynamische_bremskraft',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x07),'absperrhaehne_hll',ContentType.BYTE, ZUGFAHRDATEN_ABSPERRHAEHNE_HLL),
-    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a),'motordrehzahl_2',ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a),'antriebssysteme', BasicNode, multipletimes=STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x01), 'lfdnr', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x02), 'zugkraft', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x03), 'dieselmotordrehzahl', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x04), 'dieselmotorstatus', ContentType.BYTE, ZUGFAHRDATEN_DIESELMOTORSTATUS),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b), 'dynamische_bremssysteme', BasicNode, multipletimes=STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x01), 'lfdnr', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0c), 'bremszylinderdruck_2', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0d), 'absperrhaehne', ContentType.BYTE, ZUGFAHRDATEN_HAHNSTATUS),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0e), 'magnetschienenbremse', ContentType.BYTE, ZUGFAHRDATEN_MAGNETBREMSSTATUS),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0f), 'feststellbremse', ContentType.BYTE, ZUGFAHRDATEN_FESTSTELLBREMSSTATUS),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x10), 'magnetbremsenmanipulation', ContentType.BYTE, ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0d), 'absperrhaehne', ContentType.BYTE, ZUGFAHRDATEN_HAHNSTATUS),
+
+    ##### FIXME
 )
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG] = llps[STATUS_ZUGFAHRDATEN]
+llps[STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM] = llps[STATUS_ZUGFAHRDATEN]
 msgidx[PID(2, 0x0a, 0xab)] = STATUS_ZUGFAHRDATEN
 
 #
@@ -1753,6 +1795,7 @@ class DATAOPS_TASTATURZUORDNUNG(AutoNumber):
     FAHRZEUGINTERN_19 = ()
     FAHRZEUGINTERN_20 = ()
     FUEHRERTISCH_DEAKTIVIEREN = ()
+    ANTRIEBSAKTIVIERUNG = ()
 class DATAOPS_TASTATURKOMMANDO(AutoNumber):
     """Aus Doku übernommen"""
     Unbestimmt = ()
@@ -1892,6 +1935,10 @@ class DATAOPS_TASTATURKOMMANDO(AutoNumber):
     SifaPruefmodus_Up = ()
     SifaFusspedal_Down = ()
     SifaFusspedal_Up = ()
+    AntriebsaktivierungAuf_Down = ()
+    AntriebsaktivierungAuf_Up = ()
+    AntriebsaktivierungAb_Down = ()
+    AntriebsaktivierungAb_Up = ()
 class DATAOPS_TASTATURAKTION(AutoNumber):
     Default = ()
     Down = ()
@@ -2038,6 +2085,7 @@ class DATAOPS_SCHALTERFUNKTION(AutoNumber):
     FAHRZEUGINTERN_19 = ()
     FAHRZEUGINTERN_20 = ()
     FUEHRERTISCH_DEAKTIVIERT = ()
+    ANTRIEB_UMSCHALTEN = ()
 class DATAOPS_MAUSKLICK(Enum):
     ANFANG = 0
     ENDE = 1
