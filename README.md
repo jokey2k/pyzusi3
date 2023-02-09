@@ -1,3 +1,6 @@
+# WARNING
+Zusi 3.5 introduced breaking changes without increasing API version, so ensure to use pyzusi 1.2.1 for Zusi 3.4 and below
+
 # pyzusi3
 Library to talk to Zusi3 without any specialized purpose.
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyzusi3"
-version = "1.2.1"
+version = "2.0.0"
 description = "Zusi3 TCP Client library with async support and no deps"
 readme = "README.md"
 requires-python = ">=3.10.7" # 3.10.6 contains a bug in asyncio we hit here occasionally

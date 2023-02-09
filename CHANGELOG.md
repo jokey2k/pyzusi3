@@ -1,5 +1,9 @@
+# 2.0.0 (2023-02-09)
+## Added
+Auto-SIFA feature in pyzusidisplay
 ## Updated
 When async client reader task raises an exception, it is no longer swallowed but reraised
+Make lib compatible to Zusi 3.5. As it introduced breaking changes in API, we update our major as well. use 1.2.1. for Zusi 3.4 and below
 
 # 1.2.1 (2023-01-28)
 ## Updated
