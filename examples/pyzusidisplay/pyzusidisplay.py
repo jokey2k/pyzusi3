@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QApplication
 from mainwindow import MainWindow
 
 #logging.basicConfig(level=logging.INFO)
+#logging.getLogger("pyzusi3.messagecoders.MessageDecoder").setLevel(logging.DEBUG)
 
 # Important:
 # You need to run the following command to (re)generate the ui_form.py file
