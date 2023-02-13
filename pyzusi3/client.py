@@ -245,5 +245,5 @@ class ZusiClient:
 
         # check if communication failed for a good reason
         check_exc = reader_task.exception()
-        if not isinstance(check_exc, KeyboardInterrupt):
+        if not (isinstance(check_exc, KeyboardInterrupt) or isinstance(check_exc, StopAsyncIteration)):
             raise check_exc
