@@ -46,5 +46,9 @@ if __name__ == "__main__":
 ## Interaction simulation
 see [interactiondemo.py](https://github.com/jokey2k/pyzusi3/blob/main/examples/interactiondemo.py)
 
+## AutoSifa Tool
+Can be downloaded here, built as one file python executable, digitally signed
+![ZusiData](https://github.com/jokey2k/pyzusi3/blob/main/examples/autosifa/screenshot.png?raw=true)
+
 ## PySide6 UI
 ![ZusiData](https://github.com/jokey2k/pyzusi3/blob/main/examples/pyzusidisplay/screenshot.png?raw=true)
