@@ -9,8 +9,8 @@ from mainwindow import MainWindow
 #logging.getLogger("pyzusi3.messagecoders.MessageDecoder").setLevel(logging.DEBUG)
 
 # Important:
-# You need to run the following command to (re)generate the ui_form.py file
-#     pyside6-uic form.ui -o ui_form.py
+# You need to run the following command to (re)generate the form_ui.py file
+#     pyside6-uic form.ui -o form_ui.py
 
 def main():
     app = QApplication(sys.argv)

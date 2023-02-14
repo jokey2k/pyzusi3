@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Zusi 3 AutoSifa</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="form.qrc">
+    <normaloff>:/icons/appicon.png</normaloff>:/icons/appicon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="lm_sifa">
     <property name="geometry">
@@ -188,6 +192,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="form.qrc"/>
+ </resources>
  <connections/>
 </ui>

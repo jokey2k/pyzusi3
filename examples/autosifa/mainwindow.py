@@ -7,7 +7,8 @@ from PySide6.QtCore import QTimer, Slot, QSettings
 from pyzusi3.client import ZusiClient
 from pyzusi3 import messages as zusimsg
 
-from ui_form import Ui_MainWindow
+from form_ui import Ui_MainWindow
+import form_rc
 
 __version__ = "1.0.0"
 
