@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>590</width>
-    <height>692</height>
+    <height>697</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -666,6 +666,9 @@
     <property name="text">
      <string>zeigen</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="autosifa_check">
     <property name="geometry">
@@ -678,6 +681,9 @@
     </property>
     <property name="text">
      <string>Auto-Sifa aktivieren</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLineEdit" name="autosifastatus">
@@ -696,6 +702,60 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>620</y>
+      <width>111</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Türschalter:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="tuerwahlschalter">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>620</y>
+      <width>201</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QDial" name="bremsdruckanzeige">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>220</y>
+      <width>50</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+    <property name="notchTarget">
+     <double>10.000000000000000</double>
+    </property>
+    <property name="notchesVisible">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -703,7 +763,7 @@
      <x>0</x>
      <y>0</y>
      <width>590</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

@@ -10,7 +10,7 @@ from PySide6.QtCore import QTimer, Slot
 from pyzusi3.client import ZusiClient
 from pyzusi3 import messages as zusimsg
 
-from ui_form import Ui_MainWindow
+from form_ui import Ui_MainWindow
 
 
 class AutoSifaState(Enum):
@@ -34,6 +34,9 @@ class MainWindow(QMainWindow):
         self.led_init = True
         self.reset_led()
         self.reset_textfields()
+
+        self.timer_led_update = QTimer()
+        self.timer_led_update.timeout.connect(self.update_leds)
 
         self.timer_ui_update = QTimer()
         self.timer_ui_update.timeout.connect(self.update_ui)
@@ -88,12 +91,6 @@ class MainWindow(QMainWindow):
 
         return led_state
 
-    def update_ui(self):
-        self.setUpdatesEnabled(False)
-        self.update_leds()
-        self.update_text()
-        self.setUpdatesEnabled(True)
-
     def update_leds(self):
         if not self.led_init:
             if self.zusiClient is None:
@@ -117,6 +114,8 @@ class MainWindow(QMainWindow):
             led_off_states.append(zusimsg.LMZUSTAND.BLINKEN)
             led_off_states.append(zusimsg.LMZUSTAND_MIT_INVERS.BLINKEND)
 
+        self.setUpdatesEnabled(False)
+
         for statevar, uielement, on_color, off_color in [
             ('u', self.ui.lm_u, 'dodgerblue', 'mediumblue'),
             ('m', self.ui.lm_m, 'dodgerblue', 'mediumblue'),
@@ -134,6 +133,13 @@ class MainWindow(QMainWindow):
                     uielement.setStyleSheet("color: black; background-color: %s;" % off_color)
                 else:
                     uielement.setStyleSheet("color: black; background-color: %s;" % on_color)
+
+        self.setUpdatesEnabled(True)
+
+    def update_ui(self):
+        self.setUpdatesEnabled(False)
+        self.update_text()
+        self.setUpdatesEnabled(True)
 
     def update_text(self):
         if self.zusiClient is None:
@@ -170,6 +176,11 @@ class MainWindow(QMainWindow):
                 fahrzeug = state.fahrzeuge[0]
                 self.ui.druckhll.setText(str(round(fahrzeug.hll_druck, 1)))
                 self.ui.bremsdruck.setText(str(round(fahrzeug.bremszylinderdruck, 1)))
+                self.ui.bremsdruckanzeige.setValue(int(fahrzeug.hll_druck*10))
+                if fahrzeug.hll_druck > 6.0:
+                    self.ui.bremsdruckanzeige.setStyleSheet('background-color: red;')
+                else:
+                    self.ui.bremsdruckanzeige.setStyleSheet('')
 
         if zusimsg.STATUS_ZUGBEEINFLUSSUNG_GRUND in self.zusiClient.local_state:
             state = self.zusiClient.local_state[zusimsg.STATUS_ZUGBEEINFLUSSUNG_GRUND]
@@ -208,9 +219,22 @@ class MainWindow(QMainWindow):
             state = self.zusiClient.local_state[zusimsg.STATUS_TUEREN]
 
             self.ui.tuerenlinks.setText(str(state.links.name if state.links is not None else ''))
+            if state.links == zusimsg.TUEREN_SEITE.SCHLIESSEND:
+                self.ui.tuerenlinks.setStyleSheet('background-color: yellow;')
+            elif state.links in [zusimsg.TUEREN_SEITE.OEFFNEND, zusimsg.TUEREN_SEITE.OFFEN]:
+                self.ui.tuerenlinks.setStyleSheet('background-color: green;')
+            else:
+                self.ui.tuerenlinks.setStyleSheet('')
             self.ui.tuerenrechts.setText(str(state.rechts.name if state.rechts is not None else ''))
+            if state.rechts == zusimsg.TUEREN_SEITE.SCHLIESSEND:
+                self.ui.tuerenrechts.setStyleSheet('background-color: yellow;')
+            elif state.rechts in [zusimsg.TUEREN_SEITE.OEFFNEND, zusimsg.TUEREN_SEITE.OFFEN]:
+                self.ui.tuerenrechts.setStyleSheet('background-color: green;')
+            else:
+                self.ui.tuerenrechts.setStyleSheet('')
+            self.ui.tuerwahlschalter.setText(str(state.seitenwahl.name if state.seitenwahl is not None else ''))
 
-        self.ui.autosifastatus.setText(str(self.autosifa_state))
+        self.ui.autosifastatus.setText(str(self.autosifa_state.name))
 
     def autosifa_run(self):
         if self.zusiClient is None:
@@ -268,7 +292,8 @@ class MainWindow(QMainWindow):
     @Slot()
     def on_connectButton_clicked(self):
         self.ui.connectButton.setEnabled(False)
-        self.timer_ui_update.start(500)
+        self.timer_led_update.start(250)
+        self.timer_ui_update.start(250)
         self.timer_autosifa.start(500)
         self.zusiThread = threading.Thread(target=lambda: self.run_zusi_loop(), daemon=True)
         self.zusiThread.start()

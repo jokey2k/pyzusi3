@@ -15,15 +15,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QGroupBox, QLabel,
-    QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QStatusBar, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QDial, QGroupBox,
+    QLabel, QLineEdit, QMainWindow, QMenuBar,
+    QPushButton, QSizePolicy, QStatusBar, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(590, 692)
+        MainWindow.resize(590, 697)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.label = QLabel(self.centralwidget)
@@ -204,18 +204,36 @@ class Ui_MainWindow(object):
         self.sollgeschwindigkeit_check = QCheckBox(self.centralwidget)
         self.sollgeschwindigkeit_check.setObjectName(u"sollgeschwindigkeit_check")
         self.sollgeschwindigkeit_check.setGeometry(QRect(360, 210, 85, 20))
+        self.sollgeschwindigkeit_check.setChecked(True)
         self.autosifa_check = QCheckBox(self.centralwidget)
         self.autosifa_check.setObjectName(u"autosifa_check")
         self.autosifa_check.setGeometry(QRect(360, 310, 151, 20))
+        self.autosifa_check.setChecked(True)
         self.autosifastatus = QLineEdit(self.centralwidget)
         self.autosifastatus.setObjectName(u"autosifastatus")
         self.autosifastatus.setGeometry(QRect(360, 340, 201, 21))
         self.autosifastatus.setAlignment(Qt.AlignCenter)
         self.autosifastatus.setReadOnly(True)
+        self.label_20 = QLabel(self.centralwidget)
+        self.label_20.setObjectName(u"label_20")
+        self.label_20.setGeometry(QRect(30, 620, 111, 16))
+        self.tuerwahlschalter = QLineEdit(self.centralwidget)
+        self.tuerwahlschalter.setObjectName(u"tuerwahlschalter")
+        self.tuerwahlschalter.setGeometry(QRect(150, 620, 201, 21))
+        self.tuerwahlschalter.setAlignment(Qt.AlignCenter)
+        self.tuerwahlschalter.setReadOnly(True)
+        self.bremsdruckanzeige = QDial(self.centralwidget)
+        self.bremsdruckanzeige.setObjectName(u"bremsdruckanzeige")
+        self.bremsdruckanzeige.setEnabled(False)
+        self.bremsdruckanzeige.setGeometry(QRect(410, 220, 50, 64))
+        self.bremsdruckanzeige.setMaximum(100)
+        self.bremsdruckanzeige.setInvertedAppearance(False)
+        self.bremsdruckanzeige.setNotchTarget(10.000000000000000)
+        self.bremsdruckanzeige.setNotchesVisible(True)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 590, 17))
+        self.menubar.setGeometry(QRect(0, 0, 590, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -255,5 +273,6 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Max:", None))
         self.sollgeschwindigkeit_check.setText(QCoreApplication.translate("MainWindow", u"zeigen", None))
         self.autosifa_check.setText(QCoreApplication.translate("MainWindow", u"Auto-Sifa aktivieren", None))
+        self.label_20.setText(QCoreApplication.translate("MainWindow", u"T\u00fcrschalter:", None))
     # retranslateUi
 
