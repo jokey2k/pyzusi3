@@ -45,6 +45,14 @@ class MainWindow(QMainWindow):
         self.timer_autosifa.timeout.connect(self.autosifa_run)
         self.autosifa_state = AutoSifaState.INACTIVE
 
+        self.timer_tueren_links_delayed = QTimer()
+        self.timer_tueren_links_delayed.setSingleShot(True)
+        self.timer_tueren_links_delayed.timeout.connect(self.tueren_links_delayed)
+
+        self.timer_tueren_rechts_delayed = QTimer()
+        self.timer_tueren_rechts_delayed.setSingleShot(True)
+        self.timer_tueren_rechts_delayed.timeout.connect(self.tueren_rechts_delayed)
+
     def reset_led(self):
         self.previous_led_state = {
             'u': None,
@@ -137,14 +145,14 @@ class MainWindow(QMainWindow):
         self.setUpdatesEnabled(True)
 
     def update_ui(self):
+        if self.zusiClient is None:
+            return
+
         self.setUpdatesEnabled(False)
         self.update_text()
         self.setUpdatesEnabled(True)
 
     def update_text(self):
-        if self.zusiClient is None:
-            return
-
         if zusimsg.DATA_PROG in self.zusiClient.local_state:
             state = self.zusiClient.local_state[zusimsg.DATA_PROG]
     
@@ -190,7 +198,6 @@ class MainWindow(QMainWindow):
         if zusimsg.STATUS_INDUSI_EINSTELLUNGEN in self.zusiClient.local_state:
             state = self.zusiClient.local_state[zusimsg.STATUS_INDUSI_EINSTELLUNGEN]
 
- 
         if zusimsg.STATUS_INDUSI_BETRIEBSDATEN in self.zusiClient.local_state:
             state = self.zusiClient.local_state[zusimsg.STATUS_INDUSI_BETRIEBSDATEN]
 
@@ -236,6 +243,63 @@ class MainWindow(QMainWindow):
 
         self.ui.autosifastatus.setText(str(self.autosifa_state.name))
 
+    def reset_textfields(self):
+        self.ui.geschwindigkeit.clear()
+        self.ui.druckhll.clear()
+        self.ui.indusistatus.clear()
+        self.ui.sifastatus.clear()
+        self.ui.uhrzeit.clear()
+        self.ui.nbuestatus.clear()
+        self.ui.sifabauart.clear()
+        self.ui.indusibauart.clear()
+        self.ui.nbuebauart.clear()
+        self.ui.indusizwangsbremsung.clear()
+        self.ui.indusizusatzinfo.clear()
+        self.ui.sollgeschwindigkeit.clear()
+        self.ui.tuerenlinks.clear()
+        self.ui.tuerenrechts.clear()
+        self.ui.tuerwahlschalter.clear()
+        self.ui.zugnummer.clear()
+        self.ui.fahrplan.clear()
+        self.ui.ladezustand.clear()
+        self.ui.autosifastatus.clear()
+
+    @Slot()
+    def on_tueren_links_clicked(self):
+        if self.zusiClient is None:
+            return
+
+        if self.timer_tueren_rechts_delayed.isActive() or self.timer_tueren_links_delayed.isActive():
+            return
+
+        msg = zusimsg.INPUT(zusimsg.INPUT_TASTATURZUORDNUNG.TUEREN, zusimsg.INPUT_TASTATURKOMMANDO.TuerenLi_Down,
+                            zusimsg.INPUT_TASTATURAKTION.Default, tastatur_schalterposition=0)
+        self.zusiClient.send_input(msg)
+        self.timer_tueren_links_delayed.start(100)
+
+    def tueren_links_delayed(self):
+        msg = zusimsg.INPUT(zusimsg.INPUT_TASTATURZUORDNUNG.TUEREN, zusimsg.INPUT_TASTATURKOMMANDO.TuerenLi_Up,
+                            zusimsg.INPUT_TASTATURAKTION.Default, tastatur_schalterposition=0)
+        self.zusiClient.send_input(msg)
+
+    @Slot()
+    def on_tueren_rechts_clicked(self):
+        if self.zusiClient is None:
+            return
+
+        if self.timer_tueren_rechts_delayed.isActive() or self.timer_tueren_links_delayed.isActive():
+            return
+
+        msg = zusimsg.INPUT(zusimsg.INPUT_TASTATURZUORDNUNG.TUEREN, zusimsg.INPUT_TASTATURKOMMANDO.TuerenRe_Down,
+                            zusimsg.INPUT_TASTATURAKTION.Default, tastatur_schalterposition=0)
+        self.zusiClient.send_input(msg)
+        self.timer_tueren_rechts_delayed.start(100)
+
+    def tueren_rechts_delayed(self):
+        msg = zusimsg.INPUT(zusimsg.INPUT_TASTATURZUORDNUNG.TUEREN, zusimsg.INPUT_TASTATURKOMMANDO.TuerenRe_Up,
+                            zusimsg.INPUT_TASTATURAKTION.Default, tastatur_schalterposition=0)
+        self.zusiClient.send_input(msg)
+
     def autosifa_run(self):
         if self.zusiClient is None:
             self.autosifa_state = AutoSifaState.INACTIVE
@@ -268,26 +332,6 @@ class MainWindow(QMainWindow):
             msg = zusimsg.INPUT(zusimsg.INPUT_TASTATURZUORDNUNG.SIFA, zusimsg.INPUT_TASTATURKOMMANDO.Unbestimmt, zusimsg.INPUT_TASTATURAKTION.Up, tastatur_schalterposition=0)
             self.zusiClient.send_input(msg)
             self.autosifa_state = AutoSifaState.WAITING_FOR_REQUEST
-
-    def reset_textfields(self):
-        self.ui.geschwindigkeit.clear()
-        self.ui.druckhll.clear()
-        self.ui.indusistatus.clear()
-        self.ui.sifastatus.clear()
-        self.ui.uhrzeit.clear()
-        self.ui.nbuestatus.clear()
-        self.ui.sifabauart.clear()
-        self.ui.indusibauart.clear()
-        self.ui.nbuebauart.clear()
-        self.ui.indusizwangsbremsung.clear()
-        self.ui.indusizusatzinfo.clear()
-        self.ui.sollgeschwindigkeit.clear()
-        self.ui.tuerenlinks.clear()
-        self.ui.tuerenrechts.clear()
-        self.ui.zugnummer.clear()
-        self.ui.fahrplan.clear()
-        self.ui.ladezustand.clear()
-        self.ui.autosifastatus.clear()
 
     @Slot()
     def on_connectButton_clicked(self):

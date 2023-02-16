@@ -230,6 +230,12 @@ class Ui_MainWindow(object):
         self.bremsdruckanzeige.setInvertedAppearance(False)
         self.bremsdruckanzeige.setNotchTarget(10.000000000000000)
         self.bremsdruckanzeige.setNotchesVisible(True)
+        self.tueren_links = QPushButton(self.centralwidget)
+        self.tueren_links.setObjectName(u"tueren_links")
+        self.tueren_links.setGeometry(QRect(370, 620, 75, 24))
+        self.tueren_rechts = QPushButton(self.centralwidget)
+        self.tueren_rechts.setObjectName(u"tueren_rechts")
+        self.tueren_rechts.setGeometry(QRect(490, 620, 75, 24))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -274,5 +280,7 @@ class Ui_MainWindow(object):
         self.sollgeschwindigkeit_check.setText(QCoreApplication.translate("MainWindow", u"zeigen", None))
         self.autosifa_check.setText(QCoreApplication.translate("MainWindow", u"Auto-Sifa aktivieren", None))
         self.label_20.setText(QCoreApplication.translate("MainWindow", u"T\u00fcrschalter:", None))
+        self.tueren_links.setText(QCoreApplication.translate("MainWindow", u"Links", None))
+        self.tueren_rechts.setText(QCoreApplication.translate("MainWindow", u"Rechts", None))
     # retranslateUi
 
