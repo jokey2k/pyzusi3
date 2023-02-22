@@ -53,6 +53,9 @@ class MainWindow(QMainWindow):
         self.timer_tueren_rechts_delayed.setSingleShot(True)
         self.timer_tueren_rechts_delayed.timeout.connect(self.tueren_rechts_delayed)
 
+        self.last_z_value = 0.0
+        self.z_inc = 0
+
     def reset_led(self):
         self.previous_led_state = {
             'u': None,
@@ -177,6 +180,16 @@ class MainWindow(QMainWindow):
             else:
                 self.ui.sollgeschwindigkeit.clear()
 
+            if state.z_koordinate:
+                if self.z_inc == 0 or self.z_inc > 3:
+                    self.z_inc = 0
+                    previous_z = self.last_z_value
+                    new_z = state.z_koordinate
+                    diff = new_z - previous_z
+                    self.last_z_value = new_z
+                    self.ui.steigung.setText(str(round(diff, 2)))
+                self.z_inc += 1
+
         if zusimsg.STATUS_ZUGFAHRDATEN in self.zusiClient.local_state:
             state = self.zusiClient.local_state[zusimsg.STATUS_ZUGFAHRDATEN]
 
@@ -263,6 +276,7 @@ class MainWindow(QMainWindow):
         self.ui.fahrplan.clear()
         self.ui.ladezustand.clear()
         self.ui.autosifastatus.clear()
+        self.ui.steigung.clear()
 
     @Slot()
     def on_tueren_links_clicked(self):
@@ -355,7 +369,7 @@ class MainWindow(QMainWindow):
                 zusimsg.FAHRPULT_ANZEIGEN.UHRZEIT_STUNDE,
                 zusimsg.FAHRPULT_ANZEIGEN.UHRZEIT_MINUTE,
                 zusimsg.FAHRPULT_ANZEIGEN.STRECKENVMAX,
-
+                zusimsg.FAHRPULT_ANZEIGEN.Z_KOORDINATE,
                 zusimsg.FAHRPULT_ANZEIGEN.STATUS_ZUGFAHRDATEN,
                 zusimsg.FAHRPULT_ANZEIGEN.STATUS_NOTBREMSSYSTEM,
                 zusimsg.FAHRPULT_ANZEIGEN.STATUS_TUEREN,
