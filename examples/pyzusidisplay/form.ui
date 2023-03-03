@@ -805,7 +805,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Strecckensteigung:</string>
+     <string>Streckensteigung:</string>
     </property>
    </widget>
   </widget>

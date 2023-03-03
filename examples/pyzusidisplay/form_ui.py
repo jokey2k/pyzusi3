@@ -289,6 +289,6 @@ class Ui_MainWindow(object):
         self.label_20.setText(QCoreApplication.translate("MainWindow", u"T\u00fcrschalter:", None))
         self.tueren_links.setText(QCoreApplication.translate("MainWindow", u"Links", None))
         self.tueren_rechts.setText(QCoreApplication.translate("MainWindow", u"Rechts", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Strecckensteigung:", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Streckensteigung:", None))
     # retranslateUi
 
