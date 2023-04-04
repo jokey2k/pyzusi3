@@ -1,4 +1,5 @@
 import asyncio
+import argparse
 import logging
 import os.path
 import sys
@@ -10,7 +11,7 @@ import serial_asyncio
 
 ZUSI_IP = "127.0.0.1"
 ZUSI_PORT = "1436"
-COM_PORT = "COM3"
+COM_PORT = "COM4"
 COM_RATE = 115200
 
 logging.basicConfig(level=logging.WARNING)
@@ -278,7 +279,6 @@ async def zusi_fahrpult_interact(client: ZusiClient, protcol: ArduinoProtocol):
 #
 # Event loop
 #
-
 def handle_exception(loop, context):
     """Dummy handler to log errors in demo to console"""
     msg = context.get("exception", context["message"])
@@ -318,9 +318,17 @@ async def main(ip, port, arduino_protocol):
         await asyncio.sleep(1)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Fahrpult Zusi Interface")
+    parser.add_argument('com_port', metavar="COM_PORT", nargs=1, help="COM Port (COM1 on windows, /dev/ttyUSB0 on linux)")
+    parser.add_argument('--com_baudrate', type=int, default=115200, help='COM Port Baudrate, defaults to 115200')
+    parser.add_argument('--ip', default='127.0.0.1', help="Zusi IP")
+    parser.add_argument('--port', type=int, default=1436, help="Zusi Port")
+
+    args = parser.parse_args()
+
     run_loop = asyncio.new_event_loop()
     run_loop.set_exception_handler(handle_exception)
-    coro = serial_asyncio.create_serial_connection(run_loop, ArduinoProtocol, COM_PORT, baudrate=COM_RATE)
+    coro = serial_asyncio.create_serial_connection(run_loop, ArduinoProtocol, str(args.com_port[0]), baudrate=args.com_baudrate)
     transport, arduino_protocol = run_loop.run_until_complete(coro)
-    run_loop.create_task(main(ZUSI_IP, ZUSI_PORT, arduino_protocol))
+    run_loop.create_task(main(args.ip, args.port, arduino_protocol))
     run_loop.run_forever()
