@@ -153,6 +153,7 @@ ZusiSendQueue = asyncio.Queue()
 zusi_status_mappings = {
     messages.DATA_FTD: [
         ('zustand_federspeicherbremse', [
+            (2.0, ArduinoOutputMsgs.FEDERSPEICHERBREMSE_LM_BLINK),
             (1.0, ArduinoOutputMsgs.FEDERSPEICHERBREMSE_LM_EIN),
             (0.0, ArduinoOutputMsgs.FEDERSPEICHERBREMSE_LM_AUS)
         ])
@@ -179,19 +180,19 @@ zusi_status_mappings = {
     ],
     messages.STATUS_TUEREN: [
         ('lm_links', [
-            (messages.LMZUSTAND.AN, ArduinoOutputMsgs.TUER_LINKS_LM_EIN),
-            (messages.LMZUSTAND.AUS, ArduinoOutputMsgs.TUER_LINKS_LM_AUS),
-            (messages.LMZUSTAND.BLINKEN, ArduinoOutputMsgs.TUER_LINKS_LM_BLINK),
+            (messages.LMZUSTAND_MIT_INVERS.AN, ArduinoOutputMsgs.TUER_LINKS_LM_EIN),
+            (messages.LMZUSTAND_MIT_INVERS.AUS, ArduinoOutputMsgs.TUER_LINKS_LM_AUS),
+            (messages.LMZUSTAND_MIT_INVERS.BLINKEND, ArduinoOutputMsgs.TUER_LINKS_LM_BLINK),
         ]),
         ('lm_rechts', [
-            (messages.LMZUSTAND.AN, ArduinoOutputMsgs.TUER_RECHTS_LM_EIN),
-            (messages.LMZUSTAND.AUS, ArduinoOutputMsgs.TUER_RECHTS_LM_AUS),
-            (messages.LMZUSTAND.BLINKEN, ArduinoOutputMsgs.TUER_RECHTS_LM_BLINK),
+            (messages.LMZUSTAND_MIT_INVERS.AN, ArduinoOutputMsgs.TUER_RECHTS_LM_EIN),
+            (messages.LMZUSTAND_MIT_INVERS.AUS, ArduinoOutputMsgs.TUER_RECHTS_LM_AUS),
+            (messages.LMZUSTAND_MIT_INVERS.BLINKEND, ArduinoOutputMsgs.TUER_RECHTS_LM_BLINK),
         ]),
         ('lm_zwangsschliessen', [
-            (messages.LMZUSTAND.AN, ArduinoOutputMsgs.TUER_ZU_LM_EIN),
-            (messages.LMZUSTAND.AUS, ArduinoOutputMsgs.TUER_ZU_LM_AUS),
-            (messages.LMZUSTAND.BLINKEN, ArduinoOutputMsgs.TUER_ZU_LM_BLINK),
+            (messages.LMZUSTAND_MIT_INVERS.AN, ArduinoOutputMsgs.TUER_ZU_LM_EIN),
+            (messages.LMZUSTAND_MIT_INVERS.AUS, ArduinoOutputMsgs.TUER_ZU_LM_AUS),
+            (messages.LMZUSTAND_MIT_INVERS.BLINKEND, ArduinoOutputMsgs.TUER_ZU_LM_BLINK),
         ]),
     ]
 }
