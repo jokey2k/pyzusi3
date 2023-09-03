@@ -296,6 +296,7 @@ class FAHRPULT_ANZEIGEN(Enum):
     STW_MOTORDREHMOMENT_2 = 175
     STW_MOTORSTROM_2 = 176
     STW_MOTORSPANNUNG_2_ = 177
+    STATUS_SIGNALE = 180
 class PROGRAMMDATEN(Enum):
     ZUGDATEI = 1
     ZUGNUMMER = 2
@@ -1693,6 +1694,21 @@ llps[STATUS_ZUGFAHRDATEN_FAHRZEUG] = llps[STATUS_ZUGFAHRDATEN]
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM] = llps[STATUS_ZUGFAHRDATEN]
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM] = llps[STATUS_ZUGFAHRDATEN]
 msgidx[PID(2, 0x0a, 0xab)] = STATUS_ZUGFAHRDATEN
+
+#
+# STATUS_SIGNALE
+# Zusi -> Client
+#
+STATUS_SIGNALE = namedtuple("STATUS_SIGNALE", ['hauptsignalabstand', 'hauptsignalgeschwindigkeit'], defaults=[None] * 2)
+llps[STATUS_SIGNALE] = (
+    LLP(PID(2), None, BasicNode),
+    LLP(PID(2, 0x0a), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xb4), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xb4, 0x01), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xb4, 0x01, 0x01),'hauptsignalabstand', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xb4, 0x01, 0x02),'hauptsignalgeschwindigkeit',ContentType.SINGLE)
+)
+msgidx[PID(2, 0x0a, 0xb4)] = STATUS_SIGNALE
 
 #
 # DATA_OPERATION

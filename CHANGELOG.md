@@ -1,3 +1,7 @@
+
+# 3.0.0 (2023-09-03)
+## Added
+Add message STATUS_SIGNALE thanks to Wolfgang Evers
 # 2.0.0 (2023-02-09)
 ## Added
 Auto-SIFA feature in pyzusidisplay

@@ -84,6 +84,7 @@ class TestInstantiation(unittest.TestCase):
         messages.STATUS_LM_ZUSIDISPLAY_DISPLAY()
         messages.STATUS_ZUGFAHRDATEN()
         messages.STATUS_ZUGFAHRDATEN_FAHRZEUG()
+        messages.STATUS_SIGNALE()
         messages.DATA_OPERATION()
         messages.DATA_OPERATION_BETAETIGUNG()
         messages.DATA_OPERATION_KOMBISCHALTER()
