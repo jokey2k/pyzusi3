@@ -1,7 +1,7 @@
-
 # 3.0.0 (2023-09-03)
 ## Added
 Add message STATUS_SIGNALE thanks to Wolfgang Evers
+Breaking: Now unknown message IDs or bad message content is ignored by default to support future Zusi Versions as they seem to have no idea what API versioning is used for
 # 2.0.0 (2023-02-09)
 ## Added
 Auto-SIFA feature in pyzusidisplay
