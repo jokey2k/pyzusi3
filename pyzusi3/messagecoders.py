@@ -19,7 +19,10 @@ def decode_data(data, contenttype, enumtype):
         return
 
     if contenttype == ContentType.BYTE:
-        result = int.from_bytes(data, byteorder='little')
+        if len(data) == 1:
+            result = int.from_bytes(data, byteorder='little')
+        else:
+            raise NotImplementedError("Data type BYTE with length more than one byte is not allowed as per documentation")
     elif contenttype == ContentType.SHORTINT:
         result = struct.unpack("<b", data)[0]
     elif contenttype == ContentType.WORD:
@@ -50,8 +53,10 @@ def decode_data(data, contenttype, enumtype):
 
 
 class MessageDecoder:
-    def __init__(self) -> None:
+    def __init__(self, ignore_unknown_message_ids=True, ignore_bad_message_content=True) -> None:
         self.log = logging.getLogger("pyzusi3.messagecoders.MessageDecoder")
+        self.ignore_unknown_message_ids = ignore_unknown_message_ids
+        self.ignore_bad_message_content = ignore_bad_message_content
         self.reset()
 
     def reset(self):
@@ -62,7 +67,14 @@ class MessageDecoder:
     
     def parse(self, root_node, start_level=1):
         if not self.message_class:
-            self.init_msg_params(root_node)
+            try:
+                self.init_msg_params(root_node)
+            except NotImplementedError as e:
+                if not self.ignore_unknown_message_ids:
+                    raise e
+                else:
+                    self.log.debug("Ignored unknown message: %s" % str(e))
+                    return None, None
 
         self.map_parameters(root_node, self.message_pid, start_level)
 
@@ -124,7 +136,7 @@ class MessageDecoder:
                 return
 
             # Handle submessage as we found a new root id for it
-            submsg_decoder = MessageDecoder()
+            submsg_decoder = MessageDecoder(self.ignore_unknown_message_ids, self.ignore_bad_message_content)
             submsg_decoder.message_class = submessage_class
             submsg_decoder.message_pid = check_param_index
             submsg_decoder.lowlevel_parameter = lowlevel_parameters[submessage_class]
@@ -138,7 +150,7 @@ class MessageDecoder:
         if mapping_parameter.contenttype is BasicNode and mapping_parameter.multipletimes is not None:
             # handle multipletimes-style submessages
             multi_msg_class = mapping_parameter.multipletimes
-            multi_msg_decoder = MessageDecoder()
+            multi_msg_decoder = MessageDecoder(self.ignore_unknown_message_ids, self.ignore_bad_message_content)
             multi_msg_decoder.message_class = multi_msg_class
             multi_msg_decoder.message_pid = current_pid
             multi_msg_decoder.lowlevel_parameter = lowlevel_parameters[multi_msg_class]
@@ -156,7 +168,14 @@ class MessageDecoder:
             return
         if current_node.content:
             # Decode binary content
-            decoded_content = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+            try:
+                decoded_content = decode_data(current_node.content, mapping_parameter.contenttype, mapping_parameter.enumtype)
+            except (struct.error, ValueError, NotImplementedError) as e:
+                if not self.ignore_bad_message_content:
+                    raise e
+                else:
+                    self.log.debug("Ignored bad message content in current node: %s with error: %s, forcing None as content" % (str(current_node), str(e)))
+                    decoded_content = None
             if mapping_parameter.multipletimes == True:
                 if mapping_parameter.parametername not in self.mapped_parameters:
                     self.mapped_parameters[mapping_parameter.parametername] = []

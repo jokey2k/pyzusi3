@@ -31,7 +31,7 @@ class TestMessageDecoderSimple(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])        
         self.assertEqual(submessages, [])
 
@@ -68,7 +68,7 @@ class TestMessageDecoderSimple(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])        
         self.assertEqual(submessages, [])
 
@@ -141,7 +141,7 @@ class TestMessageDecoderEdgeCases(unittest.TestCase):
         decoded_tree = decoder.decode(bytes_written)
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 2)
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[1])        
         # should not raise any issue
 
@@ -184,7 +184,7 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])
         self.assertEqual(submessages, [])
 
@@ -221,7 +221,7 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])
         self.assertEqual(submessages, [])
         self.assertEqual(basemessage, msg)
@@ -244,7 +244,7 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])
         self.assertEqual(submessages, [])
         self.assertEqual(basemessage, msg)
@@ -318,7 +318,7 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])
 
         expected_basemessage = messages.DATA_FTD()
@@ -384,7 +384,7 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)        
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])
         self.assertEqual(submessages, [])
 
@@ -785,7 +785,7 @@ class TestMessageEncoderDecoderRoundtrips(unittest.TestCase):
         nodes = [node for node in decoded_tree]
         self.assertEqual(len(nodes), 1)        
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])
         pass
 
@@ -823,7 +823,7 @@ class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
             nodes.append(node)
 
         self.assertEqual(len(nodes), 1)
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])        
         self.assertEqual(submessages, [])
 
@@ -881,9 +881,172 @@ class TestAsyncMessageDecoder(unittest. IsolatedAsyncioTestCase):
 
         self.assertEqual(len(nodes), 2)
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[0])
 
-        messagedecoder = MessageDecoder()
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
         basemessage, submessages = messagedecoder.parse(nodes[1])
-        
+
+
+class TestMessageDecoderIgnoreBadDataCases(unittest.TestCase):
+    def test_ignore_unknown_message(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x44\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=True, ignore_bad_message_content=False)
+        basemessage, submessages = messagedecoder.parse(nodes[0])        
+        # should not raise any issue
+        self.assertIsNone(basemessage)
+        self.assertIsNone(submessages)
+    
+    def test_not_ignore_unknown_message(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x44\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
+        with self.assertRaises(NotImplementedError):
+            basemessage, submessages = messagedecoder.parse(nodes[0])        
+
+    def test_default_ignore_unknown_message(self):
+        bytes_written = b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x44\x00' + \
+            b'\x06\x00\x00\x00' + \
+            b'\xa9\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\xff\xff\xff\xff' + \
+            b'\xff\xff\xff\xff'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])        
+
+        # should not raise any issue
+        self.assertIsNone(basemessage)
+        self.assertIsNone(submessages)
+
+    def test_ignore_bad_value(self):
+        bytes_written = b'' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x09\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x33\x2E\x30\x2E\x31\x2E\x30' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x30' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\xFF\xFF' + \
+            b'\x0A\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'\x00\x00\x00\x00\xD0\x35\xE4\x40' + \
+            b'\xFF\xFF\xFF\xFF' + \
+            b'\xFF\xFF\xFF\xFF'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=True)
+        basemessage, submessages = messagedecoder.parse(nodes[0])        
+        self.assertEqual(submessages, [])
+
+        expected_message = messages.ACK_HELLO(
+            zusiversion = "3.0.1.0",
+            verbindungsinfo = "0",
+            status = None,
+            startdatum = 41390.5,
+            protokollversion = None
+        )
+        self.assertEqual(basemessage, expected_message)
+
+    def test_raise_bad_value(self):
+        bytes_written = b'' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x09\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x33\x2E\x30\x2E\x31\x2E\x30' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x30' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\xFF\xFF' + \
+            b'\x0A\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'\x00\x00\x00\x00\xD0\x35\xE4\x40' + \
+            b'\xFF\xFF\xFF\xFF' + \
+            b'\xFF\xFF\xFF\xFF'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+        messagedecoder = MessageDecoder(ignore_unknown_message_ids=False, ignore_bad_message_content=False)
+        with self.assertRaises(NotImplementedError):
+            basemessage, submessages = messagedecoder.parse(nodes[0])        
+
+    def test_default_ignore_bad_value(self):
+        bytes_written = b'' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x00\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x09\x00\x00\x00' + \
+            b'\x01\x00' + \
+            b'\x33\x2E\x30\x2E\x31\x2E\x30' + \
+            b'\x03\x00\x00\x00' + \
+            b'\x02\x00' + \
+            b'\x30' + \
+            b'\x04\x00\x00\x00' + \
+            b'\x03\x00' + \
+            b'\xFF\xFF' + \
+            b'\x0A\x00\x00\x00' + \
+            b'\x04\x00' + \
+            b'\x00\x00\x00\x00\xD0\x35\xE4\x40' + \
+            b'\xFF\xFF\xFF\xFF' + \
+            b'\xFF\xFF\xFF\xFF'
+        decoder = StreamDecoder()
+        decoded_tree = decoder.decode(bytes_written)
+        nodes = [node for node in decoded_tree]
+        self.assertEqual(len(nodes), 1)
+        messagedecoder = MessageDecoder()
+        basemessage, submessages = messagedecoder.parse(nodes[0])        
+        self.assertEqual(submessages, [])
+
+        expected_message = messages.ACK_HELLO(
+            zusiversion = "3.0.1.0",
+            verbindungsinfo = "0",
+            status = None,
+            startdatum = 41390.5,
+            protokollversion = None
+        )
+        self.assertEqual(basemessage, expected_message)
+
