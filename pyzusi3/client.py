@@ -47,6 +47,8 @@ class ZusiClient:
         self.connected = False
         self.requested_status = None
 
+        self._tcpwriter = None
+
     async def _decode_bytes(self, stream_bytes):
         """Generator to get decoded messages from a stream"""
 
@@ -196,6 +198,7 @@ class ZusiClient:
     async def connect(self):
         client_log.info("Connecting to Zusi3")
         tcpreader, tcpwriter = await asyncio.open_connection(self.ip, self.port)
+        self._tcpwriter = tcpwriter
         self.connected = True
 
         client_log.info("Starting reader and writer task")
@@ -236,6 +239,11 @@ class ZusiClient:
         writer_task.cancel()
         update_task.cancel()
 
+        # check if communication failed for a good reason
+        check_exc = reader_task.exception()
+        if not (isinstance(check_exc, KeyboardInterrupt) or isinstance(check_exc, StopAsyncIteration)):
+            raise check_exc
+
         tcpwriter.close()
         await tcpwriter.wait_closed()
 
@@ -243,7 +251,10 @@ class ZusiClient:
 
         client_log.info("Connection closed")
 
-        # check if communication failed for a good reason
-        check_exc = reader_task.exception()
-        if not (isinstance(check_exc, KeyboardInterrupt) or isinstance(check_exc, StopAsyncIteration)):
-            raise check_exc
+    def disconnect(self):
+        if not 'reader' in self.task_registry:
+            return
+
+        self.task_registry['reader'].cancel()
+        self._tcpwriter.close()
+        self.connected = False
