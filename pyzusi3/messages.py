@@ -1705,7 +1705,7 @@ class ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION(Enum):
     NICHT_BESTROMT = 1
     HEBT_NICHT = 2
 STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'], defaults=[None] * 1)
-STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'antriebssysteme', 'dynamische_bremssysteme', 'bremszylinderdruck_2', 'absperrhaehne_hbl', 'magnetschienenbremse', 'feststellbremse', 'magnetbremsenmanipulation', 'bremskraft_druckluftbremse'],defaults=[None] * 15)
+STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'antriebssysteme', 'dynamische_bremssysteme', 'bremszylinderdruck_2', 'absperrhaehne_hbl', 'magnetschienenbremse', 'feststellbremse', 'magnetbremsenmanipulation', 'bremskraft_druckluftbremse', 'oberstrombegrenzung', 'automatische_oberstrombegrenzung', 'stromabnehmerstellung', 'tuerzustand_rechts_a', 'tuerzustand_rechts_b', 'tuerzustand_rechts_c', 'tuerzustand_rechts_d', 'tuerzustand_links_a', 'tuerzustand_links_b', 'tuerzustand_links_c', 'tuerzustand_links_d', 'tuerzustand_absperrungen', 'hauptschalter'],defaults=[None] * 28)
 STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM",['antrieb_lfdnr', 'zugkraft', 'dieselmotordrehzahl', 'dieselmotorstatus', 'zugkraft_soll', 'angetriebene_achsen', 'antrieb_oberstrom'], defaults=[None] * 7)
 STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM",['bremse_lfdnr', 'bremskraft', 'bremskraft_soll', 'gebremste_achsen', 'bremse_oberstrom'], defaults=[None] * 5)
 llps[STATUS_ZUGFAHRDATEN] = (
@@ -1740,6 +1740,20 @@ llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0f), 'feststellbremse', ContentType.BYTE, ZUGFAHRDATEN_FESTSTELLBREMSSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x10), 'magnetbremsenmanipulation', ContentType.BYTE, ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x11), 'bremskraft_druckluftbremse', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x12), 'oberstrombegrenzung', ContentType.SMALLINT),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x13), 'automatische_oberstrombegrenzung', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x14), 'stromabnehmerstellung', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15), None, BasicNode),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x01), 'tuerzustand_rechts_a', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x02), 'tuerzustand_rechts_b', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x03), 'tuerzustand_rechts_c', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x04), 'tuerzustand_rechts_d', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x05), 'tuerzustand_links_a', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x06), 'tuerzustand_links_b', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x07), 'tuerzustand_links_c', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x08), 'tuerzustand_links_d', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x15, 0x09), 'tuerzustand_absperrungen', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x16), 'hauptschalter', ContentType.BYTE),
 )
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG] = llps[STATUS_ZUGFAHRDATEN]
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM] = llps[STATUS_ZUGFAHRDATEN]
