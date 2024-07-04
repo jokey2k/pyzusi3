@@ -85,7 +85,11 @@ class MessageDecoder:
         self.lowlevel_parameter = lowlevel_parameters[self.message_class]
 
     def finalize(self):
-        basemessage = self.message_class(**self.mapped_parameters)
+        try:
+            basemessage = self.message_class(**self.mapped_parameters)
+        except TypeError as e:
+            self.log.debug("Discarded message content due to bad formatting for %s, just created empty message" % (str(self.message_class)))
+            basemessage = self.message_class()
         return basemessage, self.submessages
 
     def find_messageclass(self, root_node):
@@ -132,7 +136,7 @@ class MessageDecoder:
                     self.log.debug("Found submessage of type %s" % submessage_class)
                     break
             if submessage_class is None:
-                self.log.warning("Parameter %s is not known for %s and no submessage, discarding" % (current_pid, self.message_class))
+                self.log.debug("Parameter %s is not known for %s and no submessage, discarding" % (current_pid, self.message_class))
                 return
 
             # Handle submessage as we found a new root id for it

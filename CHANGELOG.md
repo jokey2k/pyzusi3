@@ -1,3 +1,7 @@
+# 3.1.0 (2024-07-04)
+## Updated
+Make reading unknown or bad formatted messages a non-fatal error to account for new Zusi versions not incrementing protocol versions
+
 # 3.0.0 (2023-09-03)
 ## Added
 Add message STATUS_SIGNALE thanks to Wolfgang Evers
