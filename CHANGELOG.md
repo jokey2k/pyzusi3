@@ -3,6 +3,7 @@
 Support client disconnect call
 ## Updated
 Make reading unknown or bad formatted messages a non-fatal error to account for new Zusi versions not incrementing protocol versions
+Update some message parameters as contributed by Wolfgang Evers from TH Köln
 
 # 3.0.0 (2023-09-03)
 ## Added

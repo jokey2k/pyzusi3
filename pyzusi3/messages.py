@@ -287,7 +287,7 @@ class FAHRPULT_ANZEIGEN(Enum):
     FAHRZEUGINTERN_18 = 166
     FAHRZEUGINTERN_19 = 167
     FAHRZEUGINTERN_20 = 168
-    STATUS_LM_ZUSIPISPLAY = 169
+    STATUS_LM_ZUSIDISPLAY = 169
     AUSSENHELLIGKEIT = 170
     STATUS_ZUGFAHRDATEN = 171
     FUEHRERSTAND_DEAKTIVIERT = 172
@@ -299,6 +299,9 @@ class FAHRPULT_ANZEIGEN(Enum):
     ZWANGSBREMSUNG = 178
     DRUCK_BREMSZYLINDER_2 = 179
     STATUS_SIGNALE = 180
+    DREHWINKEL_X = 181
+    DREHWINKEL_Y = 182
+    DREHWINKEL_Z = 183
 class PROGRAMMDATEN(Enum):
     ZUGDATEI = 1
     ZUGNUMMER = 2
@@ -340,7 +343,8 @@ msgidx[PID(2, 4)] = ACK_NEEDED_DATA
 # DATA_FTD
 # Zusi -> Client
 #
-DATA_FTD = namedtuple("DATA_FTD", ['geschwindigkeit', 'druck_hauptluftleitung', 'druck_bremszylinder_1', 'druck_hauptluftbehaelter', 'luftpresser_laeuft', 'luftstrom_fbv', 'luftstrom_zbv', 'luefter_an', 'zugkraft_gesamt', 'zugkraft_pro_achse', 'zugkraft_soll_gesamt', 'zugkraft_soll_pro_achse', 'oberstrom', 'fahrleitungsspannung', 'motordrehzahl_1', 'uhrzeit_stunde', 'uhrzeit_minute', 'uhrzeit_sekunde', 'hauptschalter', 'trennschuetz', 'fahrstufe', 'afb_sollgeschwindigkeit', 'druck_hilfsluftbehaelter', 'zurueckgelegter_gesamtweg', 'lm_getriebe', 'lm_schleudern', 'lm_gleiten', 'lm_mg_bremse', 'lm_h_bremse', 'lm_r_bremse', 'lm_hochabbremsung', 'lm_schnellbremsung', 'lm_uhrzeit', 'lm_drehzahlverstellung', 'lm_fahrtrichtung_vor', 'lm_fahrtrichtung_zurueck', 'lm_fahrtrichtung_m', 'motordrehmoment_1', 'motorlast_normiert', 'tunnel', 'schienenstoss_weiche', 'stahlbruecke', 'steinbruecke', 'x_koordinate', 'y_koordinate', 'z_koordinate', 'utm_referenzpunkt_x', 'utm_referenzpunkt_y', 'utm_zone', 'utm_zone_2', 'afb_an', 'fahrpultintern_01', 'fahrpultintern_02', 'fahrpultintern_03', 'fahrpultintern_04', 'fahrpultintern_05', 'fahrpultintern_06', 'fahrpultintern_07', 'fahrpultintern_08', 'fahrpultintern_09', 'fahrpultintern_10', 'fahrpultintern_11', 'fahrpultintern_12', 'fahrpultintern_13', 'fahrpultintern_14', 'fahrpultintern_15', 'fahrpultintern_16', 'fahrpultintern_17', 'fahrpultintern_18', 'fahrpultintern_19', 'fahrpultintern_20', 'datum', 'gleiskruemmung', 'streckenvmax', 'zugkraftvorschlag_autopilot', 'beschleunigung_x', 'beschleunigung_y', 'beschleunigung_z', 'drehbeschleunigung_x', 'drehbeschleunigung_y', 'drehbeschleunigung_z', 'stromabnehmer', 'lm_federspeicherbremse_angelegt', 'zustand_federspeicherbremse', 'stw_lm_getriebe', 'stw_lm_schleudern', 'stw_lm_gleiten', 'stw_lm_h_bremse', 'stw_lm_r_bremse', 'stw_lm_drehzahlverstellung', 'druck_zeitbehaelter', 'geschwindigkeit_absolut', 'zug_ist_entgleist', 'kilometrierung', 'motorstrom_1', 'motorspannung_1', 'fahrpultintern_21', 'fahrpultintern_22', 'fahrpultintern_23', 'fahrpultintern_24', 'fahrpultintern_25', 'fahrpultintern_26', 'fahrpultintern_27', 'fahrpultintern_28', 'fahrpultintern_29', 'fahrpultintern_30', 'fahrpultintern_31', 'fahrpultintern_32', 'fahrpultintern_33', 'fahrpultintern_34', 'fahrpultintern_35', 'fahrpultintern_36', 'fahrpultintern_37', 'fahrpultintern_38', 'fahrpultintern_39', 'fahrpultintern_40', 'stw_luefter_an', 'stw_zugkraft_gesamt', 'stw_zugkraft_pro_achse', 'stw_zugkraft_soll_gesamt', 'stw_zugkraft_soll_pro_achse', 'stw_oberstrom', 'stw_fahrleitungsspannung', 'stw_motordrehzahl_1', 'stw_hauptschalter', 'stw_trennschuetz', 'stw_fahrstufe', 'stw_motordrehmoment_1', 'stw_motorlast_normiert', 'stw_stromabnehmer', 'stw_motorstrom_1', 'stw_motorspannung_1', 'geschwindigkeit_absolut_mit_schleudern', 'batteriehauptschalter_aus', 'bremsprobefunktion', 'zug_und_bremskraft_normiert', 'stw_zug_und_bremskraft_normiert', 'zug_und_bremskraft_absolut_normiert', 'stw_zug_und_bremskraft_absolut_normiert', 'fahrzeugintern_01', 'fahrzeugintern_02', 'fahrzeugintern_03', 'fahrzeugintern_04', 'fahrzeugintern_05', 'fahrzeugintern_06', 'fahrzeugintern_07', 'fahrzeugintern_08', 'fahrzeugintern_09', 'fahrzeugintern_10', 'fahrzeugintern_11', 'fahrzeugintern_12', 'fahrzeugintern_13', 'fahrzeugintern_14', 'fahrzeugintern_15', 'fahrzeugintern_16', 'fahrzeugintern_17', 'fahrzeugintern_18', 'fahrzeugintern_19', 'fahrzeugintern_20', 'aussenhelligkeit', 'fuehrerstand_deaktiviert', 'solldruck_hl', 'motordrehzahl_2', 'motordrehmoment_2', 'motorstrom_2', 'motorspannung_2', 'zwangsbremsung', 'druck_bremszylinder_2'], defaults=[None] * 168)
+DATA_FTD = namedtuple("DATA_FTD", ['geschwindigkeit', 'druck_hauptluftleitung', 'druck_bremszylinder_1', 'druck_hauptluftbehaelter', 'luftpresser_laeuft', 'luftstrom_fbv', 'luftstrom_zbv', 'luefter_an', 'zugkraft_gesamt', 'zugkraft_pro_achse', 'zugkraft_soll_gesamt', 'zugkraft_soll_pro_achse', 'oberstrom', 'fahrleitungsspannung', 'motordrehzahl_1', 'uhrzeit_stunde', 'uhrzeit_minute', 'uhrzeit_sekunde', 'hauptschalter', 'trennschuetz', 'fahrstufe', 'afb_sollgeschwindigkeit', 'druck_hilfsluftbehaelter', 'zurueckgelegter_gesamtweg', 'lm_getriebe', 'lm_schleudern', 'lm_gleiten', 'lm_mg_bremse', 'lm_h_bremse', 'lm_r_bremse', 'lm_hochabbremsung', 'lm_schnellbremsung', 'lm_uhrzeit', 'lm_drehzahlverstellung', 'lm_fahrtrichtung_vor', 'lm_fahrtrichtung_zurueck', 'lm_fahrtrichtung_m', 'motordrehmoment_1', 'motorlast_normiert', 'tunnel', 'schienenstoss_weiche', 'stahlbruecke', 'steinbruecke', 'x_koordinate', 'y_koordinate', 'z_koordinate', 'utm_referenzpunkt_x', 'utm_referenzpunkt_y', 'utm_zone', 'utm_zone_2', 'afb_an', 'fahrpultintern_01', 'fahrpultintern_02', 'fahrpultintern_03', 'fahrpultintern_04', 'fahrpultintern_05', 'fahrpultintern_06', 'fahrpultintern_07', 'fahrpultintern_08', 'fahrpultintern_09', 'fahrpultintern_10', 'fahrpultintern_11', 'fahrpultintern_12', 'fahrpultintern_13', 'fahrpultintern_14', 'fahrpultintern_15', 'fahrpultintern_16', 'fahrpultintern_17', 'fahrpultintern_18', 'fahrpultintern_19', 'fahrpultintern_20', 'datum', 'gleiskruemmung', 'streckenvmax', 'zugkraftvorschlag_autopilot', 'beschleunigung_x', 'beschleunigung_y', 'beschleunigung_z', 'drehbeschleunigung_x', 'drehbeschleunigung_y', 'drehbeschleunigung_z', 'stromabnehmer', 'lm_federspeicherbremse_angelegt', 'zustand_federspeicherbremse', 'stw_lm_getriebe', 'stw_lm_schleudern', 'stw_lm_gleiten', 'stw_lm_h_bremse', 'stw_lm_r_bremse', 'stw_lm_drehzahlverstellung', 'druck_zeitbehaelter', 'geschwindigkeit_absolut', 'zug_ist_entgleist', 'kilometrierung', 'motorstrom_1', 'motorspannung_1', 'fahrpultintern_21', 'fahrpultintern_22', 'fahrpultintern_23', 'fahrpultintern_24', 'fahrpultintern_25', 'fahrpultintern_26', 'fahrpultintern_27', 'fahrpultintern_28', 'fahrpultintern_29', 'fahrpultintern_30', 'fahrpultintern_31', 'fahrpultintern_32', 'fahrpultintern_33', 'fahrpultintern_34', 'fahrpultintern_35', 'fahrpultintern_36', 'fahrpultintern_37', 'fahrpultintern_38', 'fahrpultintern_39', 'fahrpultintern_40', 'stw_luefter_an', 'stw_zugkraft_gesamt', 'stw_zugkraft_pro_achse', 'stw_zugkraft_soll_gesamt', 'stw_zugkraft_soll_pro_achse', 'stw_oberstrom', 'stw_fahrleitungsspannung', 'stw_motordrehzahl_1', 'stw_hauptschalter', 'stw_trennschuetz', 'stw_fahrstufe', 'stw_motordrehmoment_1', 'stw_motorlast_normiert', 'stw_stromabnehmer', 'stw_motorstrom_1', 'stw_motorspannung_1', 'geschwindigkeit_absolut_mit_schleudern', 'batteriehauptschalter_aus', 'bremsprobefunktion', 'zug_und_bremskraft_normiert', 'stw_zug_und_bremskraft_normiert', 'zug_und_bremskraft_absolut_normiert', 'stw_zug_und_bremskraft_absolut_normiert', 'fahrzeugintern_01', 'fahrzeugintern_02', 'fahrzeugintern_03', 'fahrzeugintern_04', 'fahrzeugintern_05', 'fahrzeugintern_06', 'fahrzeugintern_07', 'fahrzeugintern_08', 'fahrzeugintern_09', 'fahrzeugintern_10', 'fahrzeugintern_11', 'fahrzeugintern_12', 'fahrzeugintern_13', 'fahrzeugintern_14', 'fahrzeugintern_15', 'fahrzeugintern_16', 'fahrzeugintern_17', 'fahrzeugintern_18', 'fahrzeugintern_19', 'fahrzeugintern_20', 'aussenhelligkeit', 'fuehrerstand_deaktiviert', 'solldruck_hl', 'motordrehzahl_2', 'motordrehmoment_2', 'motorstrom_2', 'motorspannung_2', 'zwangsbremsung', 'druck_bremszylinder_2',
+'drehwinkel_x','drehwinkel_y','drehwinkel_z',], defaults=[None] * 171)
 llps[DATA_FTD] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 10), None, BasicNode),
@@ -512,7 +516,10 @@ llps[DATA_FTD] = (
     LLP(PID(2, 10, 0xb0), 'motorstrom_2', ContentType.SINGLE),
     LLP(PID(2, 10, 0xb1), 'motorspannung_2', ContentType.SINGLE),
     LLP(PID(2, 10, 0xb2), 'zwangsbremsung', ContentType.SINGLE),
-    LLP(PID(2, 10, 0xb3), 'druck_bremszylinder_2', ContentType.SINGLE)
+    LLP(PID(2, 10, 0xb3), 'druck_bremszylinder_2', ContentType.SINGLE),
+    LLP(PID(2, 10, 0xb5), 'drehwinkel_x', ContentType.SINGLE),
+    LLP(PID(2, 10, 0xb6), 'drehwinkel_y', ContentType.SINGLE),
+    LLP(PID(2, 10, 0xb7), 'drehwinkel_z', ContentType.SINGLE)
 )
 msgidx[PID(2, 10)] = DATA_FTD
 
@@ -695,8 +702,8 @@ class INDUSI_ZWANGSBREMSUNG(Enum):
     STROMVERSORGUNG_FEHLT = 28
 class INDUSI_HUPE(Enum):
     AUS = 0
-    HUPE = 1
-    ZWANGSBREMSUNG = 2
+    ZWANGSBREMSUNG = 1
+    HUPE = 2
 class INDUSI_PZB90_ZUSATZINFO_MELDERBILD(Enum):
     NORMALZUSTAND = 0
     TAUSEND_HZ_NACH_700M = 1
@@ -713,13 +720,13 @@ class INDUSI_LZB_ZUSTAND(Enum):
     NACHFAHRAUFTAG = 5
     FUNKTIONSPRUEFUNG = 6
 class INDUSI_LZB_ENDE_VERFAHREN(Enum):
-    EINGELETITET = 1
+    EINGELEITET = 1
     QUITTIERT = 2
 class INDUSI_LZB_FALSCHFAHRAUFTRAG(Enum):
-    EINGELETITET = 1
+    EINGELEITET = 1
     QUITTIERT = 2
 class INDUSI_LZB_VORSICHTSAUFTRAG(Enum):
-    EINGELETITET = 1
+    EINGELEITET = 1
     QUITTIERT = 2
     FAHRT_AUF_SICHT = 3
 class INDUSI_LZB_UEBETRAGUNGSAUSFALL(Enum):
@@ -1039,8 +1046,14 @@ class ETCS_BOOTVORGANG(Enum):
     HL_FUELLT_MODUS_SB = 3
     SELBSTTEST_OK = 4
     STM_WERDEN_GEFUNDEN = 5
-STATUS_ETCS_BETRIEBSDATEN = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['aktiver_level', 'aktiver_modus', 'grund_zwangsbremsung', 'grund_zwangsbremsung_text', 'aktueller_stm_index', 'neuer_level', 'neuer_level_quittierung', 'neuer_modus', 'neuer_modus_quittierung', 'funkstatus', 'zielgeschwindigkeit', 'zielweg', 'abstand_bremseinsatzpunkt', 'entlassungsgeschwindigkeit', 'sollgeschwindigkeit', 'warngeschwindigkeit', 'bremsgeschwindigkeit', 'zwangsbremsgeschwindigkeit', 'bremskurve_aktiv', 'vorschaupunkte', 'taf_status', 'override_aktiv', 'nothalt_status', 'betriebszwangsbremsung', 'etcs_el_auftrag', 'funktionspruefung', 'bootvorgang', 'textmeldung_grund', 'textmeldung_freitext'], defaults=[None] * 29)
+class ETCS_SHUNTING_ZUSTAND(Enum):
+    GRUNDZUSTAND = 0
+    SH_ANFRAGE_AN_RBC = 1
+    RBC_SH_ZUGESTIMMT = 2
+    RBC_SH_ABGELEHNT = 3
+STATUS_ETCS_BETRIEBSDATEN = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['aktiver_level', 'aktiver_modus', 'grund_zwangsbremsung', 'grund_zwangsbremsung_text', 'aktueller_stm_index', 'neuer_level', 'neuer_level_quittierung', 'neuer_modus', 'neuer_modus_quittierung', 'funkstatus', 'zielgeschwindigkeit', 'zielweg', 'abstand_bremseinsatzpunkt', 'entlassungsgeschwindigkeit', 'sollgeschwindigkeit', 'warngeschwindigkeit', 'bremsgeschwindigkeit', 'zwangsbremsgeschwindigkeit', 'bremskurve_aktiv', 'vorschaupunkte', 'taf_status', 'override_aktiv', 'nothalt_status', 'betriebszwangsbremsung', 'etcs_el_auftrag', 'funktionspruefung', 'bootvorgang', 'textmeldungen', 'shunting_zustand', 'balisenkennung'], defaults=[None] * 30)
 STATUS_ETCS_BETRIEBSDATEN_VORSCHAUPUNKT = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['herkunft', 'geschwindigkeit', 'abstand', 'hoehenwert', 'parameter'], defaults=[None] * 5)
+STATUS_ETCS_BETRIEBSDATEN_TEXTMELDUNGEN = namedtuple("STATUS_ETCS_BETRIEBSDATEN", ['textmeldung_id', 'textmeldung_zeitstempel', 'textmeldung_zusikennung', 'textmeldung_typ', 'textmeldung_text', 'textmeldung_fuelltext', 'textmeldung_quittierpflicht'], defaults=[None] * 7)
 llps[STATUS_ETCS_BETRIEBSDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -1085,11 +1098,21 @@ llps[STATUS_ETCS_BETRIEBSDATEN] = (
     LLP(PID(2, 0x0a, 0x65, 5, 0x18, 1), 'funktionspruefung', ContentType.BYTE, ETCS_FUNKTIONSPRUEFUNG),
     LLP(PID(2, 0x0a, 0x65, 5, 0x19), None, BasicNode),
     LLP(PID(2, 0x0a, 0x65, 5, 0x19, 1), 'bootvorgang', ContentType.BYTE, ETCS_FUNKTIONSPRUEFUNG),
-    LLP(PID(2, 0x0a, 0x65, 5, 0x1a), None, BasicNode),
-    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 1), 'textmeldung_grund', ContentType.WORD, ETCS_GRUND_ZWANGSBREMSUNG),
-    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 1), 'textmeldung_freitext', ContentType.STRING, ETCS_FUNKTIONSPRUEFUNG)
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a), 'textmeldungen', BasicNode, multipletimes=STATUS_ETCS_BETRIEBSDATEN_TEXTMELDUNGEN),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 1), 'textmeldung_id', ContentType.CARDINAL),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 2), 'textmeldung_zeitstempel', ContentType.DOUBLE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 3), 'textmeldung_zusikennung', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 4), 'textmeldung_typ', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 5), 'textmeldung_text', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 6), 'textmeldung_fuelltext', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1a, 7), 'textmeldung_quittierpflicht', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1b), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1b, 1), 'shunting_zustand', ContentType.BYTE, ETCS_SHUNTING_ZUSTAND),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1c), None, BasicNode),
+    LLP(PID(2, 0x0a, 0x65, 5, 0x1c, 1), 'balisenkennung', ContentType.STRING)
 )
 llps[STATUS_ETCS_BETRIEBSDATEN_VORSCHAUPUNKT] = llps[STATUS_ETCS_BETRIEBSDATEN]
+llps[STATUS_ETCS_BETRIEBSDATEN_TEXTMELDUNGEN] = llps[STATUS_ETCS_BETRIEBSDATEN]
 msgidx[PID(2, 0x0a, 0x65, 5)] = STATUS_ETCS_BETRIEBSDATEN
 
 #
@@ -1385,6 +1408,7 @@ class ZV_BREMSBAUART(Enum):
     K_BREMSSOHLE = 3
     LL_BREMSSOHLE = 4
     MATROSSOW_BREMSE = 5
+    SCHEIBENBREMSE_AUSGESCHALTET = 6
 class ZV_BATTERIEHAUPTSCHALTER(Enum):
     DREHTATSTER = 0
     KEINER = 1
@@ -1459,13 +1483,21 @@ class ZV_BATTERIEANZEIGE(Enum):
     KEINE_DARSTELLUNG = 0
     QUADRATISCH = 1
     RUND = 2
+class ZV_LOESEZUGBAUART(Enum):
+    AUTOMATISCH = 0
+    MANUELL = 1
+    DRUCKTASTER = 2
+class ZV_LASTWECHSEL(Enum):
+    UNBESTIMMT = 0
+    LEER = 1
+    BELADEN = 2
 STATUS_ZUGVERBAND = namedtuple("STATUS_ZUGVERBAND", ['fahrzeuge', 'zugtyp', 'bremsstellung'], defaults=[None] * 3)
-STATUS_ZUGVERBAND_FAHRZEUG = namedtuple("STATUS_ZUGVERBAND_FAHRZEUG", ['beschreibung', 'fz_dateiname', 'vorgabe_bremsstellung', 'zugbeeinflussungssysteme', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbauart', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellungen', 'bezeichnung_bremsbauart', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkennzeichen', 'tuersysteme', 'bauart_tuerwachlschalter', 'antriebssysteme', 'bremssysteme', 'lastabhaehnige_bremse', 'direkte_bremse_1', 'direkte_bremse_2', 'indirekte_bremse_1', 'indirekte_bremse_2', 'federspeicher_bremse_1', 'federspeicher_bremse_2', 'absperrung_direkte_bremse', 'absperrung_indirekte_bremse', 'absperrung_federspeicher_bremse', 'schalter_pultaktivierung', 'schalter_bremsprobe', 'batteriespannung', 'batteriespannungsanzeige', 'stellung_tuersystemschalter', 'bremskraft_handbremse', 'varianten_haupt_id', 'varianten_neben_id', 'fs_dateiname'], defaults=[None] * 57)
+STATUS_ZUGVERBAND_FAHRZEUG = namedtuple("STATUS_ZUGVERBAND_FAHRZEUG", ['beschreibung', 'fz_dateiname', 'vorgabe_bremsstellung', 'zugbeeinflussungssysteme', 'fz_vmax', 'baureihe', 'farbgebung', 'traktionsmodus', 'stromabnehmerschaltung', 'maximaler_bremszylinder_druck', 'nvr_nr', 'sitzplaetze_1_klasse', 'sitzplaetze_2_klasse', 'fz_drehung', 'fz_gattung', 'fuehrerstandsmodus', 'fz_laenge', 'fz_masse', 'ladungsmasse', 'bremsbauart', 'bremsmasse_handbremse', 'aktive_bremsmasse', 'aktive_bremssmasse_inkl_dynamische', 'anzahl_achsen', 'bauart_batteriehauptschalter', 'bauart_stromabnehmerwahlschalter', 'bremsstellungen', 'bezeichnung_bremsbauart', 'grafik_seitenansicht', 'hbl', 'fz_verbund', 'lokstatus', 'interne_fz_nr', 'gefahrgutkennzeichen', 'tuersysteme', 'bauart_tuerwachlschalter', 'antriebssysteme', 'bremssysteme', 'lastabhaehnige_bremse', 'direkte_bremse_1', 'direkte_bremse_2', 'indirekte_bremse_1', 'indirekte_bremse_2', 'federspeicher_bremse_1', 'federspeicher_bremse_2', 'absperrung_direkte_bremse', 'absperrung_indirekte_bremse', 'absperrung_federspeicher_bremse', 'schalter_pultaktivierung', 'schalter_bremsprobe', 'batteriespannung', 'batteriespannungsanzeige', 'stellung_tuersystemschalter', 'bremskraft_handbremse', 'varianten_haupt_id', 'varianten_neben_id', 'fs_dateiname', 'bodenbedienbare_handbremse', 'umstellgesicht_lastwechsel', 'loesezugbauart', 'zustand_lastwechsel'], defaults=[None] * 61)
 STATUS_ZUGVERBAND_ZUGBEEINFLUSSUNGSSYSTEME = namedtuple("STATUS_ZUGVERBAND_ZUGBEEINFLUSSUNGSSYSTEME", ['bauart_zugbeeinflussungssystem'], defaults=[None] * 1)
 STATUS_ZUGVERBAND_TUERSCHLIESSSYSTEM = namedtuple("STATUS_ZUGVERBAND_TUERSCHLIESSSYSTEM", ['bauart_tuersystem'], defaults=[None] * 1)
 STATUS_ZUGVERBAND_BREMSSTELLUNG = namedtuple("STATUS_ZUGVERBAND_BREMSSTELLUNG", ['bremsstellung', 'zugehoerige_bremsmasse', 'bremsstellung_wirksam'], defaults=[None] * 3)
-STATUS_ZUGVERBAND_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGVERBAND_ANTRIEBSSYSTEM", ['antriebstyp', 'stromtyp_antriebssystem', 'antrieb_aktiv', 'max_kraft'], defaults=[None] * 4)
-STATUS_ZUGVERBAND_BREMSSYSTEM = namedtuple("STATUS_ZUGVERBAND_BREMSSYSTEM", ['bremstyp', 'stromtyp_bremse', 'bremse_aktiv', 'max_kraft'], defaults=[None] * 4)
+STATUS_ZUGVERBAND_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGVERBAND_ANTRIEBSSYSTEM", ['antriebstyp', 'antrieb_stromtyp', 'antrieb_aktiv', 'antrieb_max_kraft'], defaults=[None] * 4)
+STATUS_ZUGVERBAND_BREMSSYSTEM = namedtuple("STATUS_ZUGVERBAND_BREMSSYSTEM", ['bremstyp', 'bremse_stromtyp', 'bremse_aktiv', 'bremse_max_kraft'], defaults=[None] * 4)
 llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -1514,14 +1546,14 @@ llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x24), 'bauart_tuerwachlschalter', ContentType.BYTE, ZV_TUERSCHALTER),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25), 'antriebssysteme', BasicNode, multipletimes=STATUS_ZUGVERBAND_ANTRIEBSSYSTEM),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x01), 'antriebstyp', ContentType.BYTE, ZV_ANTRIEBSTYP),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x02), 'stromtyp_antriebssystem', ContentType.BYTE, ZV_STROMTYP),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x02), 'antrieb_stromtyp', ContentType.BYTE, ZV_STROMTYP),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x03), 'antrieb_aktiv', ContentType.BYTE, ZV_AKTIV),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x04), 'max_kraft', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x25, 0x04), 'antrieb_max_kraft', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26), 'bremssysteme', BasicNode, multipletimes=STATUS_ZUGVERBAND_BREMSSYSTEM),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x01), 'bremstyp', ContentType.BYTE, ZV_BREMSTYP),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x02), 'stromtyp_bremse', ContentType.BYTE, ZV_STROMTYP),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x02), 'bremse_stromtyp', ContentType.BYTE, ZV_STROMTYP),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x03), 'bremse_aktiv', ContentType.BYTE, ZV_AKTIV),
-    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x04), 'max_kraft', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x26, 0x04), 'bremse_max_kraft', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x27), 'lastabhaehnige_bremse', ContentType.BYTE, ZV_LASTABHAENIGE_BREMSE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x28), 'direkte_bremse_1', ContentType.BYTE, ZV_BREMSSPERRE),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x29), 'direkte_bremse_2', ContentType.BYTE, ZV_BREMSSPERRE),
@@ -1541,6 +1573,10 @@ llps[STATUS_ZUGVERBAND] = (
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x37), 'varianten_haupt_id', ContentType.INTEGER),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x38), 'varianten_neben_id', ContentType.INTEGER),
     LLP(PID(2, 0x0a, 0x8e, 0x01, 0x39), 'fs_dateiname', ContentType.STRING),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x3a), 'bodenbedienbare_handbremse', ContentType.BYTE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x3b), 'umstellgesicht_lastwechsel', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x3c), 'loesezugbauart', ContentType.BYTE, ZV_LOESEZUGBAUART),
+    LLP(PID(2, 0x0a, 0x8e, 0x01, 0x3d), 'zustand_lastwechsel', ContentType.BYTE, ZV_LASTWECHSEL),
     LLP(PID(2, 0x0a, 0x8e, 0x02), 'zugtyp', ContentType.BYTE, ZV_ZUGTYP),
     LLP(PID(2, 0x0a, 0x8e, 0x03), 'bremsstellung', ContentType.WORD, ZV_BREMSART)
 )
@@ -1669,9 +1705,9 @@ class ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION(Enum):
     NICHT_BESTROMT = 1
     HEBT_NICHT = 2
 STATUS_ZUGFAHRDATEN = namedtuple("STATUS_ZUGFAHRDATEN", ['fahrzeuge'], defaults=[None] * 1)
-STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'antriebssysteme', 'dynamische_bremssysteme', 'bremszylinderdruck_2', 'absperrhaehne_hbl', 'magnetschienenbremse', 'feststellbremse', 'magnetbremsenmanipulation'],defaults=[None] * 14)
-STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM",['lfdnr', 'zugkraft', 'dieselmotordrehzahl', 'dieselmotorstatus'], defaults=[None] * 4)
-STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM",['lfdnr', 'unused_undocumented_stuff'], defaults=[None] * 2)
+STATUS_ZUGFAHRDATEN_FAHRZEUG = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG",['bremszylinderdruck', 'hll_druck', 'zugkraft', 'motordrehzahl_1', 'maximal_moegliche_zugkraft', 'maximale_dynamische_bremskraft', 'absperrhaehne_hll', 'antriebssysteme', 'dynamische_bremssysteme', 'bremszylinderdruck_2', 'absperrhaehne_hbl', 'magnetschienenbremse', 'feststellbremse', 'magnetbremsenmanipulation', 'bremskraft_druckluftbremse'],defaults=[None] * 15)
+STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM",['antrieb_lfdnr', 'zugkraft', 'dieselmotordrehzahl', 'dieselmotorstatus', 'zugkraft_soll', 'angetriebene_achsen', 'antrieb_oberstrom'], defaults=[None] * 7)
+STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM = namedtuple("STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM",['bremse_lfdnr', 'bremskraft', 'bremskraft_soll', 'gebremste_achsen', 'bremse_oberstrom'], defaults=[None] * 5)
 llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2), None, BasicNode),
     LLP(PID(2, 0x0a), None, BasicNode),
@@ -1685,18 +1721,25 @@ llps[STATUS_ZUGFAHRDATEN] = (
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x06),'maximale_dynamische_bremskraft',ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x07),'absperrhaehne_hll',ContentType.BYTE, ZUGFAHRDATEN_ABSPERRHAEHNE_HLL),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a),'antriebssysteme', BasicNode, multipletimes=STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM),
-    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x01), 'lfdnr', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x01), 'antrieb_lfdnr', ContentType.WORD),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x02), 'zugkraft', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x03), 'dieselmotordrehzahl', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x04), 'dieselmotorstatus', ContentType.BYTE, ZUGFAHRDATEN_DIESELMOTORSTATUS),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x05), 'zugkraft_soll', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x06), 'angetriebene_achsen', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0a, 0x07), 'antrieb_oberstrom', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b), 'dynamische_bremssysteme', BasicNode, multipletimes=STATUS_ZUGFAHRDATEN_FAHRZEUG_DYNAMISCHESBREMSSYSTEM),
-    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x01), 'lfdnr', ContentType.WORD),
-    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x02), 'unused_undocumented_stuff', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x01), 'bremse_lfdnr', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x02), 'bremskraft', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x05), 'bremskraft_soll', ContentType.SINGLE),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x06), 'gebremste_achsen', ContentType.WORD),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x0b, 0x07), 'bremse_oberstrom', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0c), 'bremszylinderdruck_2', ContentType.SINGLE),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0d), 'absperrhaehne_hbl', ContentType.BYTE, ZUGFAHRDATEN_HAHNSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0e), 'magnetschienenbremse', ContentType.BYTE, ZUGFAHRDATEN_MAGNETBREMSSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x0f), 'feststellbremse', ContentType.BYTE, ZUGFAHRDATEN_FESTSTELLBREMSSTATUS),
     LLP(PID(2, 0x0a, 0xab, 0x01, 0x10), 'magnetbremsenmanipulation', ContentType.BYTE, ZUGFAHRDATEN_MAGNETBREMSENMANIPULATION),
+    LLP(PID(2, 0x0a, 0xab, 0x01, 0x11), 'bremskraft_druckluftbremse', ContentType.SINGLE),
 )
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG] = llps[STATUS_ZUGFAHRDATEN]
 llps[STATUS_ZUGFAHRDATEN_FAHRZEUG_ANTRIEBSSYSTEM] = llps[STATUS_ZUGFAHRDATEN]
@@ -1962,6 +2005,8 @@ class DATAOPS_TASTATURKOMMANDO(AutoNumber):
     AntriebsaktivierungAuf_Up = ()
     AntriebsaktivierungAb_Down = ()
     AntriebsaktivierungAb_Up = ()
+    LokbremseEntlueften_Down = ()
+    LokbremseEntlueften_Up = ()
 class DATAOPS_TASTATURAKTION(AutoNumber):
     Default = ()
     Down = ()
