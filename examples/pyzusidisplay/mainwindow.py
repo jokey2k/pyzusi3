@@ -153,6 +153,12 @@ class MainWindow(QMainWindow):
 
         self.setUpdatesEnabled(False)
         self.update_text()
+
+        if self.zusiClient.connected:
+            self.ui.connectButton.setText("Disconnect")
+        else:
+            self.ui.connectButton.setText("Connect")
+
         self.setUpdatesEnabled(True)
 
     def update_text(self):
@@ -349,12 +355,18 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_connectButton_clicked(self):
-        self.ui.connectButton.setEnabled(False)
-        self.timer_led_update.start(250)
-        self.timer_ui_update.start(250)
-        self.timer_autosifa.start(500)
-        self.zusiThread = threading.Thread(target=lambda: self.run_zusi_loop(), daemon=True)
-        self.zusiThread.start()
+        if self.zusiClient is None:
+            self.timer_led_update.start(250)
+            self.timer_ui_update.start(250)
+            self.timer_autosifa.start(500)
+            self.zusiThread = threading.Thread(target=lambda: self.run_zusi_loop(), daemon=True)
+            self.zusiThread.start()
+        else:
+            if not self.zusiClient.connected:
+                self.zusiThread = threading.Thread(target=lambda: self.run_zusi_loop(), daemon=True)
+                self.zusiThread.start()
+            else:
+                self.zusiClient.disconnect()
 
     def run_zusi_loop(self):
         asyncio.set_event_loop(self.zusiLoop)
